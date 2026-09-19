@@ -1,0 +1,29 @@
+services:
+  api:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz')"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+  postgres:
+    image: postgres:16-alpine
+    profiles: ["database"]
+    environment:
+      POSTGRES_USER: voice_bench
+      POSTGRES_PASSWORD: local_only
+      POSTGRES_DB: voice_bench
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - benchmark-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U voice_bench -d voice_bench"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  benchmark-db:
