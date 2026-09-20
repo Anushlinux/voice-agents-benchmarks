@@ -3,16 +3,23 @@
 import tomllib
 from decimal import Decimal
 from pathlib import Path
+from uuid import UUID
 
 from pydantic import Field, field_validator
 
 from voice_bench.contracts import CounterpartConfig, JudgeConfig, RuntimeConfig
+from voice_bench.evaluation.jev import JevConfig
 from voice_bench.models import Channel, Contract
 
 
 class TargetConfig(Contract):
     agent_ref: str = ""
     deployed_version: str = ""
+    task_variable: str = Field(
+        default="benchmark_user_task", pattern=r"^[A-Za-z][A-Za-z0-9_]{0,63}$"
+    )
+    plivo_sip_trunk_id: UUID | None = None
+    plivo_termination_uri: str = ""
 
 
 class RunLimits(Contract):
@@ -31,6 +38,7 @@ class BenchmarkConfig(Contract):
     limits: RunLimits
     counterpart: CounterpartConfig = Field(default_factory=CounterpartConfig)
     judge: JudgeConfig = Field(default_factory=JudgeConfig)
+    jev: JevConfig = Field(default_factory=JevConfig)
     runtime: RuntimeConfig = Field(default_factory=RuntimeConfig)
 
     @field_validator("channels")

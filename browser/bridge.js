@@ -9,6 +9,7 @@ let eventChain = Promise.resolve();
 let queuedEvents = 0;
 let failed = false;
 const clears = new Map();
+const captureElements = [];
 
 function emit(event) {
   if (failed) return;
@@ -43,7 +44,16 @@ microphone.port.onmessage = ({data}) => {
 const destination = context.createMediaStreamDestination();
 microphone.connect(destination);
 
-function captureStream(stream) {
+async function captureStream(stream) {
+  // Chromium needs a playing media element to activate remote WebRTC audio,
+  // even when samples are consumed through Web Audio rather than speakers.
+  const element = document.createElement('audio');
+  element.srcObject = stream;
+  element.volume = 0;
+  document.body.appendChild(element);
+  captureElements.push(element);
+  try { await element.play(); }
+  catch { emit({type: 'bridge_error', reason: 'capture_playback_failed'}); return; }
   const source = context.createMediaStreamSource(stream);
   const capture = new AudioWorkletNode(context, 'benchmark-audio', {
     processorOptions: {mode: 'capture'}, outputChannelCount: [1]});
@@ -89,9 +99,22 @@ window.bridge = {
     while (pendingSamples > 0) await new Promise(resolve => setTimeout(resolve, 20));
     await eventChain;
   },
-  async close() { await this.clear(); await room.disconnect(); await context.close(); },
+  async close() {
+    try { await this.clear(); }
+    finally {
+      try { await room.disconnect(); }
+      finally {
+        for (const element of captureElements) {
+          element.pause(); element.srcObject = null; element.remove();
+        }
+        captureElements.length = 0;
+        await context.close();
+      }
+    }
+  },
   // Local validation bypasses room signaling but uses the real browser audio worklet.
   async testStart() { await context.resume(); microphone.connect(context.destination); },
+  testCaptureStream(stream) { captureStream(stream); },
   testInput() {
     const oscillator = context.createOscillator();
     const stream = context.createMediaStreamDestination();

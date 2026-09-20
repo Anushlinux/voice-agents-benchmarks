@@ -2,9 +2,11 @@
 
 Benchmark a **hosted Rumik assistant acting on a user's behalf**. Rumik receives the user's assignment and speaks with a simulated restaurant employee, delivery agent, driver, or support representative. OpenAI Realtime plays that other person. Only Rumik is the target being evaluated; this is not a Rumik-versus-OpenAI comparison.
 
-This follows the Rumik team direction relayed by the user on 2026-09-20. It supersedes the earlier assumption that Rumik represents a business answering an OpenAI customer's request. Indian settings, Hinglish, booking, cancellation, negotiation and delivery coordination guide the intended dataset; domain workflows and coverage remain a separate workstream.
+This follows the Rumik team direction relayed by the user on 2026-09-20. It supersedes the earlier assumption that Rumik represents a business answering an OpenAI customer's request. Indian settings, spoken Hinglish, booking, cancellation, negotiation and delivery coordination guide the intended dataset; domain workflows and coverage remain a separate workstream.
 
-**Status: role-separated single-call implementation; live qualification pending.** The harness delivers a private user task through its authenticated before-call callback, gives the counterpart separately scoped business tools, records audio/actions, and grades final state. No live provider success is claimed. The only supplied workflow is an infrastructure fixture.
+Dataset instructions may be written in English. Explicitly instruct Rumik to speak Hinglish during the call; do not translate the dataset into Hinglish merely to set the speaking language.
+
+**Status: role-separated single-call implementation; live qualification pending.** The harness delivers a private user task through its authenticated before-call callback, gives the counterpart separately scoped business tools, records audio/actions, and grades final state. No live provider success is claimed. Alongside the infrastructure fixture, a mock restaurant reservation workflow supports [one explicitly selected Taskmaster-derived browser pilot](docs/RESTAURANT_PILOT.md). Its source and reconstructed dataset files remain local and ignored by Git. [Three harder Hinglish variants](docs/RESTAURANT_HARD_CASES.md) add negotiation, dietary accommodation and observable correction opportunities while preserving that baseline. No live results are claimed.
 
 ```mermaid
 flowchart LR
@@ -23,6 +25,17 @@ Rumik receives only the user's assignment and information it is entitled to acce
 The current browser and phone adapters connect a **single conversation**. The phone adapter dials into Rumik, so it measures conversation behavior only. Rumik choosing and dialing a destination, tasks spanning several calls and user approvals, and operating District/Uber apps are not implemented. Cases requesting outbound initiation or multiple calls are rejected before dispatch; they are never silently reduced to one inbound call. A longer duration limit permits a longer conversation, not a multi-call task.
 
 Read [the role and scope contract](docs/SCOPE.md) and [case migration instructions](docs/RUNNING.md#supply-workflows-and-cases) before supplying new data.
+
+Dataset-independent additions include [Rumik task setup and Plivo SIP checks](docs/RUMIK_PLIVO_SETUP.md)
+and [Jev shadow evaluation](docs/JEV.md). Jev compares saved text evidence without
+changing benchmark verdicts. The Rumik outbound client operation is implemented,
+but a complete outbound executor, multi-call tasks and native user-report delivery
+remain unsupported. No new live qualification is claimed.
+
+[Reusable benchmark design](docs/BENCHMARK_DESIGN.md) adds opt-in counterpart
+behavior profiles, bounded scenario policies and explicit restaurant metric rubrics.
+`voice-bench design prepare` produces a new case version offline while preserving
+the source task and business state. Existing cases and saved results retain their semantics.
 
 ## Start without providers
 

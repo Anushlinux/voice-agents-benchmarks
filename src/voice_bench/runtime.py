@@ -59,7 +59,9 @@ def validate_live(config, cases):
             raise ValueError("Workflow implementation is not registered")
         workflow = WORKFLOWS[(case.workflow, case.workflow_version)]
         workflow.initialize(case.initial_state)
-        if not set(case.target_tools + case.counterpart_tools).issubset(workflow.tools):
+        if not set(case.target_tools).issubset(workflow.tools | {"submit_user_report"}) or not set(
+            case.counterpart_tools
+        ).issubset(workflow.tools):
             raise ValueError("A participant tool is not declared by the workflow")
         if not set(case.counterpart_tools).issubset(workflow.tool_definitions):
             raise ValueError("Counterpart tools require descriptions and parameter schemas")
@@ -68,12 +70,45 @@ def validate_live(config, cases):
         required += ["PLIVO_AUTH_ID", "PLIVO_AUTH_TOKEN"]
         if not config.runtime.caller_number or not config.runtime.target_number:
             raise ValueError("Intended benchmark phone endpoints are required")
+        if not config.target.plivo_sip_trunk_id or not config.target.plivo_termination_uri:
+            raise ValueError("An existing Plivo SIP trunk ID and termination URI are required")
     if any(not os.environ.get(key) for key in required):
         missing = [key for key in required if not os.environ.get(key)]
         raise ValueError("Missing runtime settings: " + ", ".join(missing))
 
 
 async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resume_batch=None):
+    from voice_bench.restaurant_case import CASE_ID
+    from voice_bench.restaurant_hard_cases import HARD_IDS
+
+    if any(case.case_id in HARD_IDS for case in cases) and (
+        not {c.case_id for c in cases}.issubset(HARD_IDS)
+        or repetitions != 1
+        or config.channels != ("browser",)
+        or config.limits.max_attempts_per_case != 1
+        or config.limits.max_concurrent_calls != 1
+        or config.limits.max_call_seconds > 600
+        or config.counterpart.interrupt_after_ms is not None
+    ):
+        raise ValueError(
+            "Hard restaurant variants require browser, one attempt each, concurrency "
+            "one, at most 600 seconds and no timed counterpart interruption; "
+            "run the unchanged baseline separately"
+        )
+
+    if any(case.case_id == CASE_ID for case in cases) and (
+        len(cases) != 1
+        or repetitions != 1
+        or config.channels != ("browser",)
+        or config.limits.max_attempts_per_case != 1
+        or config.limits.max_concurrent_calls != 1
+        or config.limits.max_call_seconds > 300
+        or config.counterpart.interrupt_after_ms is not None
+    ):
+        raise ValueError(
+            "Restaurant pilot requires one case, one browser attempt, concurrency one, "
+            "at most 300 seconds and no injected interruption"
+        )
     validate_live(config, cases)
     import uvicorn
 
@@ -96,9 +131,15 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
         else None
     )
     hub = PhoneHub(store, config, carrier) if carrier else None
+    batch_id = resume_batch or uuid4()
     server = uvicorn.Server(
         uvicorn.Config(
-            create_app(store, os.environ["BENCH_TOOLS_SECRET"], hub),
+            create_app(
+                store,
+                os.environ["BENCH_TOOLS_SECRET"],
+                hub,
+                callback_log=config.artifact_root / str(batch_id) / "callback-requests.jsonl",
+            ),
             host="0.0.0.0",
             port=port,
             log_level="warning",
@@ -106,7 +147,6 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
         )
     )
     serving = asyncio.create_task(server.serve())
-    batch_id = resume_batch or uuid4()
     results = []
     created = False
     stop_reason = None
@@ -117,7 +157,9 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
                     serving.result()
                     raise RuntimeError("Callback server failed to start")
                 await asyncio.sleep(0.05)
-        snapshot = await target.snapshot(config.target.agent_ref)
+        snapshot = await target.snapshot(
+            config.target.agent_ref, sip_trunk_id=config.target.plivo_sip_trunk_id
+        )
         qualify_snapshot(snapshot, config)
         if hub:
             hub.agent_id = snapshot["agent"]["id"]
@@ -182,7 +224,9 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
                 failed_execution = latest.get("result", {}).get("error") or latest.get("recovery")
                 if not failed_execution or len(attempts) >= config.limits.max_attempts_per_case:
                     continue
-            current = await target.snapshot(config.target.agent_ref)
+            current = await target.snapshot(
+                config.target.agent_ref, sip_trunk_id=config.target.plivo_sip_trunk_id
+            )
             if snapshot_digest(current) != identity:
                 stop_reason = "target_configuration_drift"
                 break
@@ -195,7 +239,15 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
                 config.counterpart, os.environ["OPENAI_API_KEY"], business=BusinessService(store)
             )
             controller = Controller(
-                store, config, channel, counterpart, target, target_agent_id=snapshot["agent"]["id"]
+                store,
+                config,
+                channel,
+                counterpart,
+                target,
+                target_agent_id=snapshot["agent"]["id"],
+                target_agent_aliases=[
+                    value for value in (snapshot["agent"].get("handle"),) if value
+                ],
             )
             result = await controller.execute(plan, case_lookup[plan.case_id], config_digest)
             results.append(result.model_dump(mode="json"))

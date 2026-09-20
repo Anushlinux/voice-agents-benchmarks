@@ -38,7 +38,7 @@ Old inputs with `caller` are intentionally rejected for new execution. Do not si
 
 Only `single_call` with `harness_connected` can execute. Other combinations may be planned for dataset design but are rejected before provider calls. The telephone route dials into Rumik and tests conversation behavior, not outbound initiation. App operation and multi-call user tasks are not implemented.
 
-Implement a versioned workflow in `business/environment.py` and register it in `WORKFLOWS`. It validates/clones supplied initial state, declares tools and `tool_definitions` (descriptions and JSON parameter schemas for counterpart functions), validates arguments, applies business rules, and returns `ok` plus either a result or a stable error code. Mutations to a rejected operation's working copy are discarded. Do not load executable code from case files. The included `harness_record` workflow is the only initial fixture; it supplies no real business coverage.
+Implement a versioned workflow and register it in `business/environment.py`'s `WORKFLOWS`. It validates/clones supplied initial state, declares tools and `tool_definitions` (descriptions and JSON parameter schemas for counterpart functions), validates arguments, applies business rules, and returns `ok` plus either a result or a stable error code. Its `execute` method accepts keyword-only `context` for trusted actor, attempt, operation and optional evidence information; it must not derive these identities from model arguments. Mutations to a rejected operation's working copy are discarded. Do not load executable code from case files. `harness_record` remains the infrastructure fixture. See [the restaurant pilot](RESTAURANT_PILOT.md) for the separately authorized mock reservation workflow and one local adapted case.
 
 Deterministic criteria currently support `state_equals` (each entry has a list-valued `path` and expected `value`), `forbidden_tools` for target actions, `state_any_of` for acceptable alternative lists of state checks, and optional `required_tool_order` as a partial ordering. `required_metrics` explicitly selects the metrics required to pass. `rubrics` supplies conversation instructions to the judge. Alternative permitted paths are accepted unless a supplied ordering rule makes order relevant. Audits identify the acting party. `counterpart_actions` detects forbidden simulator operations and invalidates the test; `policy_actions` evaluates target operations. Actor-scoped operation IDs prevent cross-party replay collisions. Rubric content and thresholds belong to the dataset/evaluation workstream.
 
@@ -63,20 +63,20 @@ Copy `configs/live.example.toml` to `configs/live.local.toml` (ignored by Git). 
 
 Export credentials from your secret manager: `DATABASE_URL`, `RUMIK_API_KEY`, `OPENAI_API_KEY`, `BENCH_TOOLS_SECRET`, and phone `PLIVO_AUTH_ID`/`PLIVO_AUTH_TOKEN`. The application does not automatically load `.env` files. Long-lived credentials remain in the backend. The Chromium page receives only ephemeral LiveKit room access.
 
-Configure the hosted Rumik agent as the user's personal assistant outside this program. It must consume `user_task` from the before-call response before speaking: follow `request`, preserve user facts, respect `constraints`, and act only within `permissions`. It should speak with the assigned business/person, not answer as that business. Do not put scenario-private counterpart rules in the target prompt. The harness does not deploy or rewrite the hosted agent.
+Prepare its tool/variable wiring with `voice-bench target prepare`; see [Rumik and Plivo setup](RUMIK_PLIVO_SETUP.md). Configure the hosted Rumik agent as the user's personal assistant outside this program. It must consume `user_task` from the before-call response before speaking: follow `request`, preserve user facts, respect `constraints`, and act only within `permissions`. It should speak with the assigned business/person, not answer as that business. Do not put scenario-private counterpart rules in the target prompt. The harness does not deploy or rewrite the hosted agent.
 
 Its tools must call:
 
 - `POST /tools/rumik/before-call` with the trusted Rumik `call_id`, canonical `agent_id`, and caller `phone_number` for telephone correlation;
 - `POST /tools/rumik/<tool_name>` with `call_id`, a stable `operation_id`, and an `arguments` object.
 
-The before-call response is `{ "benchmark_ready": true, "user_task": { ... } }`. It contains no counterpart brief, initial state or criteria. The canonical agent ID must match the target snapshot. The controller waits for this task response before starting the counterpart; a missing response prevents conversation execution. Serving the response is local proof only; confirm hosted task consumption during live qualification. Ordinary target tool requests must also appear in `target_tools`. The counterpart uses worker-bound tools rather than these public Rumik endpoints.
+The before-call response contains `benchmark_ready`, the structured `user_task`, and `user_task_json` (the same assignment serialized for the hosted prompt variable). It contains no counterpart brief, initial state or criteria. The canonical agent ID must match the target snapshot. The controller waits for this task response before starting the counterpart; a missing response prevents conversation execution. Serving the response is local proof only; confirm hosted task consumption during live qualification. Ordinary target tool requests must also appear in `target_tools`. The counterpart uses worker-bound tools rather than these public Rumik endpoints.
 
 Both require `Authorization: Bearer <BENCH_TOOLS_SECRET>`. Bind `call_id` and before-call fields from Rumik's authenticated call context, never from language-model arguments. Do not define account variables or model parameters that shadow `call_id`, `agent_id`, `phone_number`, or `user_id`; preflight rejects those collisions. Keep the same operation ID for a retransmission. Reusing it with different tool arguments is rejected and audited.
 
 Make the worker's configured public HTTPS/WSS URL reach its callback server. Terminate TLS at your existing ingress. Plivo signatures are checked against that exact public URL, not an untrusted Host header. Stream connections also require an attempt-specific secret and can attach once. Protect PostgreSQL and object storage separately; only authenticated business routes and provider callbacks need external access. Health routes expose no control actions.
 
-This single-call phone qualification requires a Rumik-connected number and a supported voice engine. The adapter checks the deployed agent's inbound number and the provider's phone-capability metadata. Paired execution rejects browser-only engines. One caller-number/target-agent route is reserved before dialing and held until termination is confirmed.
+This single-call phone qualification requires a Rumik-connected number and a supported voice engine. The adapter checks the configured Plivo SIP trunk's number, assigned agent and termination URI, plus the provider's phone-capability metadata. Paired execution rejects browser-only engines. One caller-number/target-agent route is reserved before dialing and held until termination is confirmed.
 
 Only after a separately authorized qualification run:
 
@@ -95,6 +95,28 @@ voice-bench evaluate "$ATTEMPT_DIRECTORY" --version judged-v1 --with-model --con
 ```
 
 The judge receives the user assignment and counterpart brief separately and knows that received audio is Rumik while sent/played audio is the counterpart. It assesses `counterpart_validity`; an invalid simulated person cannot produce a valid Rumik pass or failure. Legacy saved cases retain their old roles and `caller_validity`. The judge first transcribes captured audio, then receives those transcripts, private rules, state and audit evidence. A target-provided transcript never replaces captured-audio transcription. Submitted counterpart audio may contain unplayed speech and is labeled accordingly. Structured verdicts must cite real checksummed artifacts; event sequences and audio ranges are validated. The judge cannot replace deterministic metrics. Text does not establish audio quality: export a review and listen to the recordings.
+
+The judge also receives the sealed final-report receipt, execution result and
+evidence gaps. This lets it compare Rumik's actual report against the committed
+booking without treating a harness interruption as an agent mistake. Played audio
+is preferred over sent audio; both are not transcribed redundantly. Each side's
+transcript retains its recording source and range, without inventing a shared
+turn timeline. Listening-only checks remain uncertain.
+Chunks with a measured PCM16 peak amplitude of at most 2 out of 32768 are
+recorded as near-silence and skipped by transcription. The raw audio, measured
+peak and source range remain available. This prevents a silent tail from being
+treated as speech solely because a transcription model invents text.
+
+Model evaluation saves transcription chunks, the judge request and raw response
+under its new evaluation version. Earlier rules-only results and raw call evidence
+remain unchanged. Missing, duplicate or unexpected rubric metrics are rejected.
+The model selects evidence source IDs from a schema-constrained list. The harness
+resolves each selected ID to the sealed artifact's full path and checksum, so the
+model does not have to reproduce long paths or hashes. Source selection still
+needs review: a valid citation does not prove that it supports the judgment.
+An OpenAI counterpart used during the call does not automatically enable this
+separate judge. Jev is an optional TypeSafe comparison described in `JEV.md`;
+it is not an OpenAI model and is not required to run the OpenAI judge.
 
 ## Recovery, reports and storage
 
@@ -118,3 +140,31 @@ Reports retain all attempts, distinguish planned items from retries, show not-ru
 S3 uploads use immutable batch/attempt/version keys, SHA-256 checksums, and conditional writes. A repeated upload compares existing bytes; conflicting content is rejected. Configure a compatible endpoint, bucket, region, and normal AWS credential-chain settings. Bucket provisioning and access policy are outside this command. Back up the PostgreSQL database and batch-level config/completion files alongside uploaded attempt bundles.
 
 Worker completion records show that this process stopped scheduling and closed its owned server/clients. They do not claim the host VM has been deallocated. Execution completion, completed grading/review, and cloud compute shutdown are separate qualification checks.
+
+## Hard restaurant variants
+
+The [four-case restaurant guide](RESTAURANT_HARD_CASES.md) documents workflow version 2,
+optional `conversation_events`, fresh confirmation checks and separate task/voice
+reporting. Existing inputs default to no events. Keep the unchanged baseline in
+its five-minute batch and the three hard variants in a separate ten-minute batch.
+Both remain one-attempt, concurrency-one browser tests with live execution gated.
+
+## Jev comparison
+
+See [Jev shadow evaluation](JEV.md) for offline request preparation and explicitly funded TypeSafe evaluation of saved transcripts. These results cannot replace benchmark grades.
+
+### Browser startup diagnostics
+
+Browser callbacks can identify the target by its Rumik handle rather than its
+UUID. The worker accepts only the UUID and handle from the frozen provider
+snapshot, and still requires the exact registered call ID before serving a task.
+Each batch writes `callback-requests.jsonl` beside its attempt directories. This
+log records arrival, response status and validation stage; authenticated requests
+also retain call and agent identifiers. It excludes credentials and task bodies.
+
+Incoming browser audio is retained in a bounded startup buffer until the
+counterpart begins listening. Chromium remote WebRTC capture waits for a muted
+playback element to start before connecting the audio recorder. Cleanup failures
+are recorded separately and do not prevent checking the provider's final call
+status. A short audio qualification that reaches its duration cap is not a
+completed or graded task benchmark.

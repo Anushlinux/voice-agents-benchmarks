@@ -6,6 +6,7 @@ from pathlib import Path
 
 from pydantic import Field
 
+from voice_bench.evaluation.conversation_events import ConversationEventReview
 from voice_bench.evidence.local import digest, safe_path, verify_bundle, write_derived
 from voice_bench.models import Contract, EvidenceRef, MetricResult
 
@@ -21,6 +22,9 @@ class Review(Contract):
     outcome: str = Field(pattern="^(passed|failed|unresolved)$")
     explanation: str = Field(min_length=1)
     evidence: tuple[EvidenceRef, ...] = Field(min_length=1)
+    checks: tuple[MetricResult, ...] = ()
+    report_pointer: tuple[str | int, ...] = ()
+    conversation_events: tuple[ConversationEventReview, ...] = ()
 
 
 def load_bundle(directory):
@@ -184,6 +188,10 @@ def deterministic(directory):
                 + ", ".join(manifest["missing"] + manifest.get("integrity_issues", [])),
             )
         )
+    if case.get("workflow") == "mock_restaurant_reservation":
+        from voice_bench.evaluation.reservations import reservation_metrics
+
+        metrics.extend(reservation_metrics(directory, case, refs, final, audit))
     return metrics
 
 
@@ -227,14 +235,46 @@ def save_evaluation(directory, version, metrics, *, validity="unresolved", judge
         "judge": judge,
         "harness_fixture": case.get("harness_fixture", False),
     }
+    if case.get("evaluation_rubric"):
+        from voice_bench.evaluation.rubrics import EvaluationRubric, apply_rubric
+
+        decision = apply_rubric(
+            EvaluationRubric.model_validate(case["evaluation_rubric"]), metrics, validity
+        )
+        result.update(decision)
+        validity = decision["validity"]
+        by_name = {m.name: m for m in metrics}
+        for item in decision["metric_decisions"]:
+            original = by_name.get(item["name"])
+            by_name[item["name"]] = MetricResult(
+                name=item["name"],
+                status=item["status"],
+                explanation=item["reason"],
+                evidence=original.evidence if original else (),
+            )
+        result["metrics"] = [m.model_dump(mode="json") for m in by_name.values()]
+    if case.get("workflow") == "mock_restaurant_reservation":
+        from voice_bench.evaluation.reservations import dimension_summary, display_verdict
+
+        result["verdict"] = display_verdict(validity, result["outcome"])
+        if case.get("conversation_events"):
+            from voice_bench.evaluation.conversation_events import observe_events
+
+            _, refs = load_bundle(directory)
+            result["conversation_events"] = observe_events(directory, case, refs)
+        result["dimensions"] = dimension_summary(
+            case, result["metrics"], result.get("conversation_events", [])
+        )
     return write_derived(directory, "evaluation", version, result)
 
 
 def review_template(directory, evaluation_version):
     evaluation = safe_path(directory, f"evaluation/{evaluation_version}/result.json")
     data = json.loads(evaluation.read_text())
+    if data.get("mode") == "shadow":
+        raise ValueError("Shadow comparisons cannot be used as benchmark grades")
     _, refs = load_bundle(directory)
-    return {
+    template = {
         "reviewer": "",
         "evaluation_version": evaluation_version,
         "validity": data["validity"],
@@ -242,17 +282,98 @@ def review_template(directory, evaluation_version):
         "explanation": "",
         "evidence": [r.model_dump(mode="json") for r in refs.values()],
     }
+    case = json.loads((directory / "config/case.json").read_text())
+    if case.get("workflow") == "mock_restaurant_reservation":
+        from voice_bench.restaurant_hard_cases import human_checks
+
+        template["checks"] = [
+            {
+                "name": name,
+                "status": "uncertain",
+                "explanation": "Awaiting human review",
+                "evidence": [],
+            }
+            for name in human_checks(case)
+        ]
+        template["report_pointer"] = []
+        if case.get("conversation_events"):
+            template["conversation_events"] = [
+                {
+                    "event_id": e["event_id"],
+                    "delivered": "uncertain",
+                    "correction": "uncertain",
+                    "resumption": "uncertain",
+                    "explanation": "Awaiting listening review",
+                    "evidence": [],
+                }
+                for e in case["conversation_events"]
+            ]
+    if case.get("evaluation_rubric"):
+        template["explanation"] = "Review against the frozen rubric in config/case.json."
+    return template
 
 
 def import_review(directory, version, data):
     review = Review.model_validate(data)
     for ref in review.evidence:
         validate_reference(directory, ref)
+    for metric in review.checks:
+        for ref in metric.evidence:
+            validate_reference(directory, ref)
     evaluation = safe_path(directory, f"evaluation/{review.evaluation_version}/result.json")
     prior = json.loads(evaluation.read_text())
+    if prior.get("mode") == "shadow":
+        raise ValueError("Shadow comparisons cannot be used as benchmark grades")
     if review.validity != "valid" and review.outcome != "unresolved":
         raise ValueError("Invalid or unresolved tests cannot pass or fail the target")
     value = review.model_dump(mode="json")
+    case = json.loads((directory / "config/case.json").read_text())
+    if case.get("workflow") == "mock_restaurant_reservation":
+        from voice_bench.evaluation.reservations import (
+            dimension_summary,
+            display_verdict,
+            validate_reservation_review,
+        )
+        from voice_bench.restaurant_hard_cases import human_checks
+
+        report = validate_reservation_review(directory, review, prior)
+        value["user_report"] = report
+        value["verdict"] = display_verdict(review.validity, review.outcome)
+        if case.get("conversation_events"):
+            from voice_bench.evaluation.conversation_events import review_events
+
+            _, refs = load_bundle(directory)
+            value["conversation_events"] = review_events(
+                directory, case, refs, review.conversation_events
+            )
+        value["dimensions"] = dimension_summary(
+            case,
+            [m for m in prior["metrics"] if m["name"] not in human_checks(case)] + value["checks"],
+            value.get("conversation_events", []),
+            reviewed=True,
+        )
+    if case.get("evaluation_rubric"):
+        from voice_bench.evaluation.rubrics import EvaluationRubric, apply_rubric
+
+        merged = {m["name"]: MetricResult.model_validate(m) for m in prior["metrics"]}
+        merged.update({m.name: m for m in deterministic(directory)})
+        merged.update({m.name: m for m in review.checks})
+        if value.get("user_report"):
+            merged["user_report_presence"] = MetricResult(
+                name="user_report_presence",
+                status="met",
+                explanation="Reviewer identified native report text in the sealed provider record.",
+                evidence=review.evidence,
+            )
+        decision = apply_rubric(
+            EvaluationRubric.model_validate(case["evaluation_rubric"]),
+            list(merged.values()),
+            review.validity,
+            reviewed=True,
+        )
+        if (decision["validity"], decision["outcome"]) != (review.validity, review.outcome):
+            raise ValueError("Review verdict contradicts the frozen metric rubric")
+        value.update(decision)
     value["evaluation_sha256"] = digest(evaluation.read_bytes())
     value["disagrees"] = prior["outcome"] != review.outcome or prior["validity"] != review.validity
     return write_derived(directory, "review", version, value)

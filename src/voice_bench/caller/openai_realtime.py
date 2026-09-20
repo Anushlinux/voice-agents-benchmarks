@@ -15,18 +15,29 @@ class OpenAICounterpart:
         self.config, self.key, self.connector = config, key, connector
         self.business = business
 
-    async def converse(self, run, brief, session, evidence):
+    async def converse(
+        self, run, brief, session, evidence, *, conversation_events=(), scenario_policy=None
+    ):
         try:
-            return await self._converse(run, brief, session, evidence)
+            return await self._converse(
+                run, brief, session, evidence, conversation_events, scenario_policy
+            )
         except (HarnessFailure, TransportFailure):
             raise
         except Exception as exc:
             raise CallerFailure(type(exc).__name__) from exc
 
-    async def _converse(self, run, brief, session, evidence):
+    async def _converse(
+        self, run, brief, session, evidence, conversation_events=(), scenario_policy=None
+    ):
         import websockets
 
+        from voice_bench.caller.conversation_events import ConversationEventDriver
+
         config = self.config
+        if conversation_events and config.interrupt_after_ms is not None:
+            raise HarnessFailure("Counterpart speech opportunities cannot use timed interruptions")
+        event_driver = ConversationEventDriver(conversation_events, scenario_policy)
         connector = self.connector or websockets.connect
         url = f"wss://api.openai.com/v1/realtime?model={config.model}"
         instructions = (
@@ -37,6 +48,9 @@ class OpenAICounterpart:
             "Keep assigned facts and business rules fixed. Never invent availability, "
             "discounts, bookings or completed actions. Confirm business changes only after "
             "a successful tool result, and only when justified by the conversation. "
+            "If a tool returns reference_delivery, follow that delivery instruction: "
+            "spell the ONE issued reference using its spoken_characters and request a "
+            "readback before goodbye. This is a single identifier, never multiple codes. "
             "Use finish_counterpart only after your closing speech has finished.\n"
             + json.dumps(brief.model_dump(), ensure_ascii=False)
         )
@@ -139,6 +153,9 @@ class OpenAICounterpart:
                         # Record the rejected attempt without letting a guessed name execute.
                         await evidence.emit("caller", "forbidden_tool", {"tool": name})
                         raise CallerFailure("Counterpart attempted a tool outside its role")
+                    evidence_args = {}
+                    if tool in {"record_reservation", "prepare_confirmation"}:
+                        evidence_args["observations"] = await evidence.event_snapshot()
                     result = await asyncio.to_thread(
                         self.business.execute,
                         run.run_id,
@@ -146,7 +163,25 @@ class OpenAICounterpart:
                         arguments,
                         call_id,
                         actor="counterpart",
+                        **evidence_args,
                     )
+                    if tool == "record_reservation":
+                        await evidence.emit(
+                            "business",
+                            "reservation_action",
+                            {
+                                "operation_id": call_id,
+                                "arguments": arguments,
+                                "result": result,
+                            },
+                        )
+                        if result.get("ok") and result.get("reference_delivery"):
+                            await evidence.emit(
+                                "business",
+                                "reference_delivery_requested",
+                                {"operation_id": call_id, **result["reference_delivery"]},
+                            )
+                    event_driver.after_tool(tool, result, call_id)
                     await send(
                         {
                             "type": "conversation.item.create",
@@ -162,7 +197,7 @@ class OpenAICounterpart:
                     await response_idle.wait()
                     if not pending_tools:
                         response_idle.clear()
-                        await send({"type": "response.create"})
+                        await send(await event_driver.response_request(evidence, instructions))
 
             async def audio_input():
                 await asyncio.wait_for(ready.wait(), 15)
@@ -203,6 +238,7 @@ class OpenAICounterpart:
                 nonlocal last_item, generated_samples, interruption
                 async for raw in socket:
                     event = json.loads(raw)
+                    await event_driver.observe(event, evidence)
                     kind = event["type"]
                     if kind == "error":
                         await evidence.emit(
@@ -240,11 +276,26 @@ class OpenAICounterpart:
                                 "audio_discarded_after_interruption",
                                 {"item_id": last_item, "samples": len(pcm) // 2},
                             )
+                    elif kind == "response.output_audio.done":
+                        item = event.get("item_id")
+                        if item in generated_items and item not in interrupted:
+                            await evidence.emit(
+                                "caller",
+                                "counterpart_audio_done",
+                                {
+                                    "item_id": item,
+                                    "samples": generated_items[item],
+                                },
+                            )
                     elif kind == "input_audio_buffer.speech_started":
                         await evidence.emit(
                             "caller",
                             "target_speech_detected",
-                            {"audio_start_ms": event.get("audio_start_ms")},
+                            {
+                                "audio_start_ms": event.get("audio_start_ms"),
+                                "provider_item_id": event.get("item_id"),
+                                "audio_clock": "openai_input_buffer",
+                            },
                         )
                         if config.interrupt_after_ms is not None:
                             if interruption is None or interruption.done():
@@ -265,6 +316,15 @@ class OpenAICounterpart:
                                             "audio_end_ms": played.get(item, 0),
                                         }
                                     )
+                                    await evidence.emit(
+                                        "caller",
+                                        "counterpart_playback_interrupted",
+                                        {
+                                            "item_id": item,
+                                            "played_ms": played.get(item, 0),
+                                            "generated_ms": samples * 1000 // 24000,
+                                        },
+                                    )
                                     interrupted.add(item)
                             if last_item and not response_idle.is_set():
                                 interrupted.add(last_item)
@@ -274,7 +334,15 @@ class OpenAICounterpart:
                             await asyncio.gather(interruption, return_exceptions=True)
                             if response_idle.is_set():
                                 await send({"type": "response.create"})
-                        await evidence.emit("caller", "target_speech_stopped")
+                        await evidence.emit(
+                            "caller",
+                            "target_speech_stopped",
+                            {
+                                "audio_end_ms": event.get("audio_end_ms"),
+                                "provider_item_id": event.get("item_id"),
+                                "audio_clock": "openai_input_buffer",
+                            },
+                        )
                     elif kind == "response.function_call_arguments.done":
                         call_id, response_id = event.get("call_id"), event.get("response_id")
                         if not all(
@@ -317,7 +385,12 @@ class OpenAICounterpart:
                         await evidence.emit(
                             "caller",
                             "transcript_observation",
-                            {"text": event.get("transcript"), "source": kind},
+                            {
+                                "text": event.get("transcript"),
+                                "source": kind,
+                                "item_id": event.get("item_id"),
+                                "response_id": event.get("response_id"),
+                            },
                         )
                 if not finished.is_set() and not session.closed.is_set():
                     raise RuntimeError("OpenAI stream ended before conversation completion")
@@ -345,3 +418,4 @@ class OpenAICounterpart:
                     task.cancel()
                 await asyncio.gather(*tasks, return_exceptions=True)
                 await recorder.close()
+                await event_driver.finish(evidence)

@@ -86,10 +86,10 @@ def test_before_call_delivers_only_user_task_to_correlated_agent(store, prepared
         )
         assert unknown.status_code == 409
         response = client.post("/tools/rumik/before-call", json=body, headers=headers)
-        assert response.json() == {
-            "benchmark_ready": True,
-            "user_task": fixture_case().user_task.model_dump(mode="json"),
-        }
+        assert response.json()["benchmark_ready"] is True
+        assert response.json()["user_task"] == fixture_case().user_task.model_dump(mode="json")
+        assert json.loads(response.json()["user_task_json"]) == response.json()["user_task"]
+        assert set(response.json()) == {"benchmark_ready", "user_task", "user_task_json"}
         assert not store.run(second).get("user_task_served")
         BusinessService(store).seal(first)
         assert (
@@ -185,3 +185,112 @@ async def test_correct_state_without_task_delivery_cannot_pass(tmp_path):
         evidence.directory, "v2", deterministic(evidence.directory), validity="valid"
     )
     assert json.loads(path.read_text())["outcome"] == "unresolved"
+
+
+def test_callback_diagnostics_capture_rejections_without_secrets(store, prepared, tmp_path):
+    log = tmp_path / "callback-requests.jsonl"
+    app = create_app(store, "private-secret", callback_log=log)
+    with TestClient(app) as client:
+        assert (
+            client.post(
+                "/tools/rumik/before-call", json={"call_id": "x", "agent_id": "x"}
+            ).status_code
+            == 401
+        )
+        assert (
+            client.post("/tools/rumik/before-call", json={"private": "private-task"}).status_code
+            == 422
+        )
+        _, (run_id, _) = prepared
+        store.bind("rumik", "known", run_id)
+        assert (
+            client.post(
+                "/tools/rumik/before-call",
+                json={"call_id": "known", "agent_id": "test-agent"},
+                headers={"Authorization": "Bearer private-secret"},
+            ).status_code
+            == 200
+        )
+    text = log.read_text()
+    entries = [json.loads(line) for line in text.splitlines()]
+    assert [entry["status"] for entry in entries if entry["event"] == "finished"] == [401, 422, 200]
+    assert len([entry for entry in entries if entry["event"] == "arrived"]) == 3
+    assert "private-secret" not in text and "private-task" not in text
+
+
+def test_task_delivery_accepts_only_frozen_aliases_of_the_expected_agent(store, prepared):
+    _, (first, second) = prepared
+    store.bind("rumik", "known-alias", first)
+    with store.locked_run(first) as run:
+        run["target_agent_aliases"] = ["ua_verified_handle"]
+    service = BusinessService(store)
+    with pytest.raises(ValueError):
+        service.serve_user_task("known-alias", "another-agent")
+    assert not store.run(first).get("user_task_served")
+    service.serve_user_task("known-alias", "ua_verified_handle")
+    assert store.run(first)["user_task_delivery"]["agent_id"] == "ua_verified_handle"
+    assert not store.run(second).get("user_task_served")
+    service.seal(first)
+    with pytest.raises(ValueError):
+        service.serve_user_task("known-alias", "ua_verified_handle")
+
+
+def test_target_report_requires_scoped_identity_and_preserves_original_output(store, prepared):
+    _, (first, second) = prepared
+    store.bind("rumik", "report-call", first)
+    headers = {"Authorization": "Bearer test-secret"}
+    body = {
+        "call_id": "report-call",
+        "agent_id": "test-agent",
+        "report": "Booking could not be completed.",
+    }
+    with TestClient(create_app(store, "test-secret")) as client:
+        assert client.post("/tools/rumik/submit-user-report", json=body).status_code == 401
+        assert (
+            client.post("/tools/rumik/submit-user-report", json=body, headers=headers).status_code
+            == 409
+        )
+        with store.locked_run(first) as run:
+            run["tool_access"]["target"] = ["submit_user_report"]
+        BusinessService(store).serve_user_task("report-call", "test-agent")
+        assert (
+            client.post(
+                "/tools/rumik/submit-user-report",
+                json={**body, "agent_id": "other"},
+                headers=headers,
+            ).status_code
+            == 409
+        )
+        assert (
+            client.post("/tools/rumik/submit-user-report", json=body, headers=headers).status_code
+            == 200
+        )
+        assert (
+            client.post("/tools/rumik/submit-user-report", json=body, headers=headers).status_code
+            == 200
+        )
+        assert (
+            client.post(
+                "/tools/rumik/submit-user-report",
+                json={**body, "report": "Changed outcome"},
+                headers=headers,
+            ).status_code
+            == 409
+        )
+        saved = store.run(first)
+        assert saved["target_user_report"]["text"] == body["report"]
+        assert saved["target_user_report"]["source"] == "authenticated_rumik_tool"
+        assert not store.run(second).get("target_user_report")
+        assert saved["state"] == fixture_case().initial_state
+        BusinessService(store).seal(first)
+        assert (
+            client.post("/tools/rumik/submit-user-report", json=body, headers=headers).status_code
+            == 409
+        )
+
+
+def test_report_completion_needs_explicit_target_permission():
+    data = fixture_case().model_dump()
+    data["completion"] = "target_report_then_hangup"
+    with pytest.raises(ValidationError):
+        ExecutionCase.model_validate(data)

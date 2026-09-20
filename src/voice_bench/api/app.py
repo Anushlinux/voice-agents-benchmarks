@@ -3,8 +3,12 @@
 import asyncio
 import hmac
 import json
+import re
+import time
+from datetime import UTC, datetime
+from pathlib import Path
 from urllib.parse import parse_qsl
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from fastapi import FastAPI, Header, HTTPException, Request, WebSocket
 from fastapi.responses import JSONResponse, Response
@@ -24,12 +28,57 @@ class BeforeCall(Contract):
     phone_number: str = ""
 
 
-def create_app(store=None, tools_secret=None, phone_hub=None) -> FastAPI:
+class UserReport(Contract):
+    call_id: str = Field(min_length=1)
+    agent_id: str = Field(min_length=1)
+    report: str = Field(min_length=1, max_length=12000)
+
+
+def create_app(store=None, tools_secret=None, phone_hub=None, *, callback_log=None) -> FastAPI:
     app = FastAPI(
         title="Voice Agent Benchmark",
         version=__version__,
         description="Benchmark health, authenticated business tools, and carrier callbacks.",
     )
+
+    if callback_log is not None:
+        log_path = Path(callback_log)
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+
+        def record_callback(record):
+            # Never retain authorization headers, request bodies, or task contents.
+            with log_path.open("a", encoding="utf-8") as output:
+                output.write(json.dumps(record) + "\n")
+
+        @app.middleware("http")
+        async def callback_diagnostics(request, call_next):
+            if request.url.path != "/tools/rumik/before-call":
+                return await call_next(request)
+            started = time.monotonic()
+            record = {
+                "request_id": str(uuid4()),
+                "utc": datetime.now(UTC).isoformat(),
+                "event": "arrived",
+                "json_content_type": request.headers.get("content-type", "").split(";")[0]
+                == "application/json",
+            }
+            record_callback(record)
+            status = 500
+            try:
+                response = await call_next(request)
+                status = response.status_code
+                return response
+            finally:
+                record_callback(
+                    {
+                        **record,
+                        "event": "finished",
+                        "status": status,
+                        "stage": getattr(request.state, "callback_stage", "validation"),
+                        "identity": getattr(request.state, "callback_identity", None),
+                        "elapsed_ms": round((time.monotonic() - started) * 1000),
+                    }
+                )
 
     @app.get("/healthz")
     def health() -> dict[str, str]:
@@ -49,16 +98,35 @@ def create_app(store=None, tools_secret=None, phone_hub=None) -> FastAPI:
                 raise HTTPException(401, "Invalid tool authentication")
 
         @app.post("/tools/rumik/before-call")
-        def before_call(body: BeforeCall, authorization: str | None = Header(default=None)):
+        def before_call(
+            body: BeforeCall, request: Request, authorization: str | None = Header(default=None)
+        ):
+            request.state.callback_stage = "authentication"
             authorize(authorization)
+            request.state.callback_identity = {
+                name: value if re.fullmatch(r"[A-Za-z0-9_-]{1,80}", value) else "unresolved_token"
+                for name, value in {"call_id": body.call_id, "agent_id": body.agent_id}.items()
+            }
+            request.state.callback_stage = "correlation"
             try:
                 try:
                     store.resolve("rumik", body.call_id)
                 except KeyError:
                     store.bind_phone(body.phone_number, body.agent_id, body.call_id)
-                return business.serve_user_task(body.call_id, body.agent_id)
+                result = business.serve_user_task(body.call_id, body.agent_id)
+                request.state.callback_stage = "task_served"
+                return result
             except (ValueError, KeyError) as exc:
                 raise HTTPException(409, "Uncorrelated or closed call") from exc
+
+        @app.post("/tools/rumik/submit-user-report")
+        def submit_user_report(body: UserReport, authorization: str | None = Header(default=None)):
+            authorize(authorization)
+            try:
+                result = business.submit_user_report(body.call_id, body.agent_id, body.report)
+            except KeyError as exc:
+                raise HTTPException(409, "Uncorrelated call") from exc
+            return JSONResponse(status_code=200 if result["ok"] else 409, content=result)
 
         @app.post("/tools/rumik/{tool_name}")
         async def execute_tool(

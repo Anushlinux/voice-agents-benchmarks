@@ -6,6 +6,7 @@ from uuid import UUID
 
 from pydantic import Field, model_validator
 
+from voice_bench.evaluation.rubrics import EvaluationRubric
 from voice_bench.models import (
     Channel,
     Contract,
@@ -14,6 +15,27 @@ from voice_bench.models import (
     UserTask,
     Validity,
 )
+from voice_bench.scenarios import CounterpartProfile, ScenarioPolicy
+
+
+class ConversationEvent(Contract):
+    """Counterpart-only challenge; never an instruction or scripted reply for Rumik."""
+
+    event_id: str = Field(min_length=1, max_length=64, pattern=r"^[a-zA-Z0-9_-]+$")
+    trigger_tool: str = Field(min_length=1)
+    occurrence: int = Field(default=1, ge=1)
+    priority: int = Field(default=0, ge=0, le=100)
+    after_tools: tuple[str, ...] = ()
+    kind: Literal["misread", "clarification", "distraction"]
+    field: str = Field(min_length=1)
+    spoken_value: str = Field(min_length=1)
+    instruction: str = Field(min_length=1)
+    required_evidence: tuple[str, ...] = (
+        "played_audio",
+        "received_audio",
+        "event_link",
+        "human_content_review",
+    )
 
 
 class ExecutionCase(Contract):
@@ -25,22 +47,48 @@ class ExecutionCase(Contract):
     user_task: UserTask
     counterpart: CounterpartBrief
     target_tools: tuple[str, ...] = ()
+    completion: Literal["counterpart", "target_report_then_hangup"] = "counterpart"
     counterpart_tools: tuple[str, ...] = ()
     task_scope: Literal["single_call", "multi_call"]
     call_initiation: Literal["harness_connected", "rumik_outbound"]
     initial_state: dict[str, Any]
     criteria: dict[str, Any]
     harness_fixture: bool = False
+    conversation_events: tuple[ConversationEvent, ...] = ()
+    counterpart_profile: CounterpartProfile | None = None
+    scenario_policy: ScenarioPolicy | None = None
+    evaluation_rubric: EvaluationRubric | None = None
 
     @model_validator(mode="after")
     def validate_tool_names(self):
         import re
+
+        if (
+            self.completion == "target_report_then_hangup"
+            and "submit_user_report" not in self.target_tools
+        ):
+            raise ValueError("Report completion requires the explicit target reporting tool")
 
         for names in (self.target_tools, self.counterpart_tools):
             if len(names) != len(set(names)) or any(
                 not re.fullmatch(r"[A-Za-z][A-Za-z0-9_]{0,63}", name) for name in names
             ):
                 raise ValueError("Tool names must be unique identifiers within each role")
+        ids = [e.event_id for e in self.conversation_events]
+        if len(set(ids)) != len(ids):
+            raise ValueError("Conversation event IDs must be unique")
+        for event in self.conversation_events:
+            if not {event.trigger_tool, *event.after_tools}.issubset(self.counterpart_tools):
+                raise ValueError("Event triggers must name granted counterpart tools")
+        if self.evaluation_rubric is not None:
+            required = set(self.criteria.get("required_metrics", []))
+            declared = {
+                m.name
+                for m in self.evaluation_rubric.metrics
+                if m.applies and m.role != "diagnostic"
+            }
+            if not required or required != declared:
+                raise ValueError("Rubric must cover exactly the required metrics")
         return self
 
     def require_supported_execution(self):

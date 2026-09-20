@@ -24,6 +24,51 @@ def parser():
     result = argparse.ArgumentParser(description=__doc__)
     commands = result.add_subparsers(dest="command", required=True)
     commands.add_parser("status")
+    design = commands.add_parser("design", help="Provider-free profiles and restaurant rubrics")
+    design_commands = design.add_subparsers(dest="action", required=True)
+    design_commands.add_parser("profiles")
+    prepare_design = design_commands.add_parser("prepare")
+    prepare_design.add_argument("--cases", type=Path, required=True)
+    prepare_design.add_argument(
+        "--profile", choices=["straightforward", "concise", "clarification_seeking"], required=True
+    )
+    prepare_design.add_argument("--output", type=Path, required=True)
+    target = commands.add_parser(
+        "target", help="Prepare or inspect Rumik setup without provider calls"
+    )
+    target_commands = target.add_subparsers(dest="action", required=True)
+    for name in ("prepare", "check"):
+        sub = target_commands.add_parser(name)
+        sub.add_argument("--config", type=Path, required=True)
+        sub.add_argument(
+            "--output" if name == "prepare" else "--snapshot", type=Path, required=True
+        )
+    jev = commands.add_parser("jev", help="Prepare or run a separate TypeSafe shadow evaluation")
+    jev_commands = jev.add_subparsers(dest="action", required=True)
+    for name in ("prepare", "evaluate"):
+        sub = jev_commands.add_parser(name)
+        sub.add_argument("directory", type=Path)
+        sub.add_argument("--source-version", required=True)
+        sub.add_argument("--rubric", type=Path, required=True)
+        sub.add_argument("--config", type=Path, required=True)
+        if name == "prepare":
+            sub.add_argument("--output", type=Path, required=True)
+        else:
+            sub.add_argument("--version", required=True)
+            sub.add_argument("--live", action="store_true")
+    restaurant = commands.add_parser("restaurant")
+    restaurant_commands = restaurant.add_subparsers(dest="action", required=True)
+    prepare = restaurant_commands.add_parser("prepare")
+    prepare.add_argument("--case", type=Path, required=True)
+    prepare.add_argument("--source", type=Path, required=True)
+    prepare.add_argument("--output", type=Path, required=True)
+    hard = restaurant_commands.add_parser("prepare-hard")
+    hard.add_argument("--baseline", type=Path, required=True)
+    hard.add_argument("--variants", type=Path, required=True)
+    hard.add_argument("--output", type=Path, required=True)
+    preflight = restaurant_commands.add_parser("preflight")
+    preflight.add_argument("--config", type=Path, required=True)
+    preflight.add_argument("--cases", type=Path, required=True)
     plan = commands.add_parser("plan")
     plan.add_argument("--config", type=Path, required=True)
     commands.add_parser("db-init")
@@ -106,7 +151,11 @@ async def evaluate(args):
         )
         from voice_bench.evaluation.openai_judge import judge
 
-        extra, metadata = await judge(args.directory, config.judge)
+        extra, metadata = await judge(
+            args.directory,
+            config.judge,
+            audit_directory=args.directory / "evaluation" / args.version,
+        )
         for metric in extra:
             if metric.name in {m.name for m in metrics}:
                 raise ValueError("Model judge attempted to replace a deterministic verdict")
@@ -156,6 +205,70 @@ async def recover(args):
 
 
 def dispatch(args):
+    if args.command == "design":
+        from voice_bench.batches import load_cases
+        from voice_bench.design import prepare_case
+        from voice_bench.evidence.local import canonical, publish
+        from voice_bench.scenarios import PROFILE_RULES
+
+        if args.action == "profiles":
+            return {"profiles": PROFILE_RULES, "version": "1", "provider_calls": 0}
+        source = load_cases(args.cases)
+        cases = [prepare_case(case, args.profile) for case in source]
+        publish(args.output, canonical([case.model_dump(mode="json") for case in cases]))
+        return {
+            "cases": str(args.output.resolve()),
+            "case_count": len(cases),
+            "profile": args.profile,
+            "provider_calls": 0,
+            "live_attempts": 0,
+        }
+    if args.command == "target":
+        from voice_bench.evidence.local import canonical, publish
+        from voice_bench.target.rumik.setup import check_setup, setup_plan
+
+        config = load_config(args.config)
+        if args.action == "check":
+            return check_setup(json.loads(args.snapshot.read_bytes()), config)
+        publish(args.output, canonical(setup_plan(config)))
+        return {"setup_plan": str(args.output), "provider_calls": 0, "applied": False}
+    if args.command == "jev":
+        from voice_bench.evaluation.jev import JevRubric, prepare
+        from voice_bench.evaluation.jev import evaluate as evaluate_jev
+        from voice_bench.evidence.local import canonical, publish
+
+        config = load_config(args.config)
+        rubric = JevRubric.model_validate_json(args.rubric.read_bytes())
+        if args.action == "prepare":
+            prepared = prepare(args.directory, args.source_version, rubric, config.jev)
+            publish(args.output, canonical(prepared))
+            return {"request": str(args.output), "provider_calls": 0, "mode": "shadow"}
+        if not args.live:
+            raise ValueError("Jev sends saved text to TypeSafe; use --live explicitly")
+        path = asyncio.run(
+            evaluate_jev(
+                args.directory,
+                args.source_version,
+                rubric,
+                config,
+                args.version,
+                database(),
+                live=True,
+            )
+        )
+        return {"evaluation": str(path), "mode": "shadow", "benchmark_verdict_changed": False}
+    if args.command == "restaurant":
+        from voice_bench.batches import load_cases
+        from voice_bench.restaurant_case import pilot_blockers, prepare
+        from voice_bench.restaurant_hard_cases import HARD_IDS, hard_blockers, prepare_hard
+
+        if args.action == "prepare":
+            return prepare(args.case, args.source, args.output)
+        if args.action == "prepare-hard":
+            return prepare_hard(args.baseline, args.variants, args.output)
+        cases = load_cases(args.cases)
+        preflight = hard_blockers if any(c.case_id in HARD_IDS for c in cases) else pilot_blockers
+        return preflight(load_config(args.config), cases)
     if args.command in {"status", "plan"}:
         result = scaffold_status()
         if args.command == "plan":

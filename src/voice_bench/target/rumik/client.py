@@ -1,6 +1,8 @@
 """Explicit HTTP operations on the hosted target. No provisioning side effects."""
 
+import re
 from copy import deepcopy
+from uuid import UUID
 
 import httpx
 
@@ -24,7 +26,7 @@ class RumikClient:
         response.raise_for_status()
         return response.json()
 
-    async def snapshot(self, agent_ref):
+    async def snapshot(self, agent_ref, *, sip_trunk_id=None):
         agent = await self.get(f"/v1/agents/{agent_ref}")
         versions = await self.get(f"/v1/agents/{agent_ref}/versions")
         tools = await self.get("/v1/tools")
@@ -45,7 +47,32 @@ class RumikClient:
             "variables": variables,
             "voices": voices,
         }
+        if sip_trunk_id is not None:
+            result["sip_trunk"] = await self.get(f"/v1/sip-trunks/{UUID(str(sip_trunk_id))}")
         return result
+
+    async def start_outbound(self, agent_ref, to_number, *, plivo_trunk_id, allowed_numbers):
+        """Documented call-start primitive, not a complete outbound benchmark executor.
+
+        Only an existing, explicitly chosen Plivo trunk is allowed. The caller must
+        reserve funding and arrange correlation/termination before invoking this.
+        A timeout can mean a call exists; never retry this operation automatically.
+        """
+        if not re.fullmatch(r"\+[1-9][0-9]{7,14}", to_number) or to_number not in allowed_numbers:
+            raise ValueError("Outbound destination must be an allowlisted benchmark E.164 number")
+        trunk_id = str(UUID(str(plivo_trunk_id)))
+        response = await self.client.post(
+            "/v1/calls", json={"agentId": agent_ref, "toNumber": to_number, "fromTrunkId": trunk_id}
+        )
+        response.raise_for_status()
+        record = response.json()
+        if (
+            response.status_code != 202
+            or not record.get("callId")
+            or record.get("toNumber") != to_number
+        ):
+            raise ValueError("Outbound acknowledgement is ambiguous; reconcile without redialing")
+        return record
 
     async def register(self, agent_ref):
         response = await self.client.post("/v1/register-call", json={"agent_id": agent_ref})
@@ -91,6 +118,8 @@ def snapshot_digest(snapshot):
 
 
 def qualify_snapshot(snapshot, config):
+    from voice_bench.target.rumik.setup import task_setup_issues
+
     agent = snapshot["agent"]
     if not agent.get("deployed"):
         raise ValueError("Target is not deployed")
@@ -102,6 +131,14 @@ def qualify_snapshot(snapshot, config):
         str(active[0].get("versionNumber")),
     }:
         raise ValueError("Deployed version does not match the requested frozen version")
+    for field in ("systemInstruction", "ttsConfig"):
+        if field not in active[0] or active[0][field] != agent.get(field):
+            raise ValueError(
+                "Agent configuration does not match its active version; refresh snapshot"
+            )
+    issues = task_setup_issues(snapshot, config)
+    if issues:
+        raise ValueError("Rumik task setup is incomplete: " + "; ".join(issues))
     if "phone" in config.channels:
         engine = agent.get("ttsConfig", {}).get("model")
         supported = any(
@@ -109,5 +146,15 @@ def qualify_snapshot(snapshot, config):
         )
         if not supported:
             raise ValueError("Target engine does not support paired telephone calls")
-        if agent.get("inboundPhoneNumber") != config.runtime.target_number:
-            raise ValueError("Telephone target does not match the agent's inbound number")
+        trunk = snapshot.get("sip_trunk", {})
+        if (
+            not config.target.plivo_sip_trunk_id
+            or trunk.get("id") != str(config.target.plivo_sip_trunk_id)
+            or trunk.get("phoneNumber") != config.runtime.target_number
+            or trunk.get("assignedAgentId") != agent.get("id")
+            or trunk.get("status") != "active"
+            or not trunk.get("hasAuth")
+            or not config.target.plivo_termination_uri
+            or trunk.get("terminationUri") != config.target.plivo_termination_uri
+        ):
+            raise ValueError("Telephone target must match the configured active Plivo SIP trunk")

@@ -129,6 +129,15 @@ class LocalEvidence:
             await asyncio.to_thread(self._append_bytes, event.model_dump_json().encode() + b"\n")
             self.sequence += 1
 
+    async def event_snapshot(self):
+        """Read complete local events under the writer lock, including before sealing."""
+        async with self.lock:
+            path = self.directory / "events.jsonl"
+            if not path.exists():
+                return []
+            content = await asyncio.to_thread(path.read_text)
+            return [json.loads(line) for line in content.splitlines()]
+
     async def store_artifact(self, run_id, name, content, media_type="application/octet-stream"):
         async with self.lock:
             self._open()

@@ -1,5 +1,25 @@
 # Implementation milestones and proof
 
+## Dataset-independent additions (2026-09-20)
+
+Implemented optional Jev comparisons over saved text evidence, explicit TypeSafe
+budget reservations, exact request/response retention, offline Rumik setup plans,
+task-variable wiring checks, and Plivo SIP trunk snapshot checks. The Rumik
+outbound HTTP client primitive requires an explicit trunk and destination
+allowlist. It is not connected to live execution. Dashboard summaries/transcripts
+cannot count as native reports to the user.
+
+See [Jev](JEV.md) and [Rumik/Plivo setup](RUMIK_PLIVO_SETUP.md) for commands,
+verified API contracts and remaining work. Dependencies and lockfiles are unchanged.
+No live provider request, paid evaluation, deployment, number rental or trunk
+provisioning was performed. Container validation remains at the earlier proof level.
+
+Verification: Ruff lint and formatting passed. The full provider-free suite passed
+170 tests with temporary PostgreSQL and real Chromium enabled; the database was
+stopped afterward. After the final active-version and report-pointer checks,
+68 affected tests passed (one PostgreSQL test skipped in that narrower run; its
+database path had passed in the full run). Provider responses were simulated.
+
 ## Personal-assistant role update
 
 The direction relayed by the user on 2026-09-20 supersedes the original customer-to-business assumption. Current code supplies schema-2 user/counterpart briefs, authenticated user-task delivery, per-role business tools, counterpart audio/tool handling, actor-aware audits and grading, and explicit unsupported-scope rejection. The runtime supports harness-connected single conversations only. No outbound or multi-call integration is claimed.

@@ -14,4 +14,7 @@ class CounterpartSimulator(Protocol):
         brief: CounterpartBrief,
         session: AudioSession,
         evidence: EvidenceSink,
+        *,
+        conversation_events: tuple = (),
+        scenario_policy=None,
     ) -> None: ...

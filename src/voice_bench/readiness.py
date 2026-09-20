@@ -19,5 +19,9 @@ def scaffold_status() -> dict[str, object]:
             "business": "postgresql",
             "evidence": "local_and_s3",
             "evaluation": "rules_model_and_review",
+            "jev": "saved_text_shadow_evaluator_unqualified",
+            "rumik_setup": "offline_plan_and_snapshot_checks",
+            "phone_carrier": "plivo_with_explicit_sip_trunk",
+            "outbound": "client_primitive_only_no_executor",
         },
     }

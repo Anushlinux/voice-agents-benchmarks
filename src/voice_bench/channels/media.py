@@ -5,6 +5,7 @@ import audioop
 import os
 import time
 import wave
+from collections import deque
 
 from voice_bench.errors import HarnessFailure, TransportFailure
 from voice_bench.evidence.local import safe_path
@@ -64,7 +65,7 @@ class AudioRecorder:
 
 
 class MediaSession:
-    def __init__(self, evidence, rate, queue_size=250):
+    def __init__(self, evidence, rate, queue_size=250, *, startup_seconds=0):
         self.evidence, self.rate = evidence, rate
         self.incoming = asyncio.Queue(queue_size)
         self.outgoing = asyncio.Queue(queue_size)
@@ -77,6 +78,11 @@ class MediaSession:
         self.tasks = []
         self.converters = {}
         self.submitted_samples = 0
+        # Task delivery may precede the counterpart's receive loop. Keep that
+        # audio separately, bounded by the configured setup deadline.
+        self.startup_frames = deque()
+        self.startup_limit = rate * startup_seconds
+        self.startup_pending = startup_seconds > 0
 
     async def receive(self, pcm, clock="channel"):
         frame = AudioFrame(
@@ -89,6 +95,12 @@ class MediaSession:
         self.received_samples += len(pcm) // 2
         self.last_received = time.monotonic()
         await self.recorder.write("received", frame)
+        if self.startup_pending:
+            if self.received_samples > self.startup_limit or len(self.startup_frames) >= 10000:
+                self.fail("startup_queue_overflow")
+                raise HarnessFailure("Startup audio buffer exceeded its limit")
+            self.startup_frames.append(frame)
+            return
         try:
             self.incoming.put_nowait(frame)
         except asyncio.QueueFull:
@@ -100,6 +112,9 @@ class MediaSession:
         self.closed.set()
 
     async def received_audio(self):
+        self.startup_pending = False
+        while self.startup_frames:
+            yield self.startup_frames.popleft()
         while not self.closed.is_set() or not self.incoming.empty():
             try:
                 frame = await asyncio.wait_for(self.incoming.get(), 0.2)
@@ -110,6 +125,14 @@ class MediaSession:
             if "queue_overflow" in self.error:
                 raise HarnessFailure(self.error)
             raise TransportFailure(self.error)
+
+    def check_health(self):
+        if self.error:
+            if "queue_overflow" in self.error:
+                raise HarnessFailure(self.error)
+            raise TransportFailure(self.error)
+        if self.closed.is_set():
+            raise TransportFailure("Transport closed during setup")
 
     async def send_audio(self, frame):
         if self.closed.is_set():

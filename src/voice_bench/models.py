@@ -64,6 +64,7 @@ class CallRequest(Contract):
     run: RunContext
     agent_ref: str = Field(min_length=1)
     max_duration_seconds: int = Field(gt=0)
+    setup_timeout_seconds: int = Field(default=45, gt=0)
 
 
 class AudioFrame(Contract):

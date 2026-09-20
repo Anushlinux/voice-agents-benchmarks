@@ -57,6 +57,8 @@ def make_plan(cases, channels, repetitions=1, seed=0, batch_id=None):
 
 
 def report(store, batch_id, root, *, evaluation_version=None, review_version=None):
+    from voice_bench.evaluation.reservations import display_verdict
+
     batch = store.batch(batch_id)
     plans = batch["plans"]
     runs = store.runs(batch_id)
@@ -68,7 +70,10 @@ def report(store, batch_id, root, *, evaluation_version=None, review_version=Non
             path = safe_path(directory, f"evaluation/{evaluation_version}/result.json")
             if path.exists():
                 verify_bundle(directory)
-                result.update(json.loads(path.read_text()))
+                evaluation = json.loads(path.read_text())
+                if evaluation.get("mode") == "shadow":
+                    raise ValueError("Shadow comparisons cannot be used as benchmark grades")
+                result.update(evaluation)
         if review_version:
             path = safe_path(directory, f"review/{review_version}/result.json")
             if path.exists():
@@ -82,6 +87,8 @@ def report(store, batch_id, root, *, evaluation_version=None, review_version=Non
                 "run_id": run["run_id"],
                 "plan_id": run["plan_id"],
                 "case_id": run["context"]["case_id"],
+                "case_version": run.get("case_version"),
+                "counterpart_profile": run.get("counterpart_profile"),
                 "channel": run["context"]["channel"],
                 "repetition": run["context"]["repetition"],
                 "attempt": run["attempt"],
@@ -93,6 +100,13 @@ def report(store, batch_id, root, *, evaluation_version=None, review_version=Non
                 "harness_fixture": run.get("harness_fixture", False),
                 "task_scope": run.get("task_scope", "legacy_unspecified"),
                 "call_initiation": run.get("call_initiation", "legacy_unspecified"),
+                "verdict": result.get(
+                    "verdict", display_verdict(result.get("validity"), result.get("outcome"))
+                ),
+                "dimensions": result.get("dimensions", {}),
+                "conversation_events": result.get("conversation_events", []),
+                "rubric_version": result.get("rubric_version"),
+                "metric_decisions": result.get("metric_decisions", []),
             }
         )
     counts = {
@@ -140,7 +154,13 @@ def export_report(result, destination):
     )
     writer = csv.DictWriter(output, fieldnames=fields)
     writer.writeheader()
-    writer.writerows(result["attempts"])
+    writer.writerows(
+        {
+            k: json.dumps(v, ensure_ascii=False) if isinstance(v, (dict, list)) else v
+            for k, v in row.items()
+        }
+        for row in result["attempts"]
+    )
     publish(destination / "attempts.csv", output.getvalue().encode())
 
 

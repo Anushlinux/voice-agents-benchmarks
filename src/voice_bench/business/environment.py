@@ -3,6 +3,8 @@
 from copy import deepcopy
 from typing import Protocol
 
+from voice_bench.business.dining import DiningWorkflow
+from voice_bench.business.reservations import ReservationWorkflow, consent_anchors
 from voice_bench.evidence.local import canonical, digest
 from voice_bench.storage import audit_entry
 
@@ -15,7 +17,7 @@ class Workflow(Protocol):
 
     def initialize(self, supplied: dict) -> dict: ...
 
-    def execute(self, state: dict, tool: str, arguments: dict) -> dict: ...
+    def execute(self, state: dict, tool: str, arguments: dict, *, context=None) -> dict: ...
 
 
 class FixtureWorkflow:
@@ -55,7 +57,7 @@ class FixtureWorkflow:
             raise ValueError("Invalid harness record initial state")
         return deepcopy(supplied)
 
-    def execute(self, state, tool, arguments):
+    def execute(self, state, tool, arguments, *, context=None):
         if tool not in self.tools:
             return {"ok": False, "error": "unknown_tool"}
         expected = {"record_id"} if tool == "get_record" else {"record_id", "note"}
@@ -99,17 +101,62 @@ class BusinessService:
 
         run_id = self.store.resolve("rumik", call_id)
         with self.store.locked_run(run_id) as run:
-            if not run["accept_tools"] or run.get("expected_agent_id") != agent_id:
+            expected = {run.get("expected_agent_id"), *run.get("target_agent_aliases", [])}
+            if not run["accept_tools"] or agent_id not in expected:
                 raise ValueError("Closed attempt or wrong target agent")
             task = UserTask.model_validate(run.get("user_task"))
             run["user_task_served"] = True
             run["user_task_delivery"] = {
                 "call_id": call_id,
+                "agent_id": agent_id,
                 "sha256": digest(canonical(task.model_dump(mode="json"))),
             }
-            return {"benchmark_ready": True, "user_task": task.model_dump(mode="json")}
+            return {
+                "benchmark_ready": True,
+                "user_task": task.model_dump(mode="json"),
+                "user_task_json": canonical(task.model_dump(mode="json")).decode(),
+            }
 
-    def execute(self, run_id, tool, arguments, request_id, *, actor="harness"):
+    def submit_user_report(self, call_id, agent_id, report):
+        """Accept target-authored output; never infer a booking or supply an answer."""
+        from datetime import UTC, datetime
+
+        run_id = self.store.resolve("rumik", call_id)
+        with self.store.locked_run(run_id) as run:
+            expected = {run.get("expected_agent_id"), *run.get("target_agent_aliases", [])}
+            allowed = (
+                run["accept_tools"]
+                and run.get("user_task_served")
+                and agent_id in expected
+                and "submit_user_report" in run.get("tool_access", {}).get("target", [])
+            )
+            prior = run.get("target_user_report")
+            result = {"ok": False, "error": "forbidden_or_closed"}
+            if allowed and isinstance(report, str) and report.strip() and len(report) <= 12000:
+                if prior and prior["text"] != report:
+                    result = {"ok": False, "error": "final_report_already_saved"}
+                else:
+                    if not prior:
+                        run["target_user_report"] = {
+                            "text": report,
+                            "call_id": call_id,
+                            "agent_id": agent_id,
+                            "source": "authenticated_rumik_tool",
+                            "run_id": str(run_id),
+                            "received_at": datetime.now(UTC).isoformat(),
+                            "task_sha256": run["user_task_delivery"]["sha256"],
+                        }
+                    result = {"ok": True, "report_saved": True}
+            run.setdefault("target_report_requests", []).append(
+                {
+                    "agent_id": agent_id,
+                    "report": report,
+                    "result": result,
+                }
+            )
+            return result
+
+    def execute(self, run_id, tool, arguments, request_id, *, actor="harness", observations=()):
         if actor not in {"harness", "target", "counterpart"}:
             raise ValueError("Unknown business actor")
         if not request_id:
@@ -133,7 +180,27 @@ class BusinessService:
             else:
                 workflow = self.workflows[(run["workflow"], run["workflow_version"])]
                 state = deepcopy(run["state"])
-                result = workflow.execute(state, tool, arguments)
+                # Observations are worker-supplied, never accepted from HTTP/model arguments.
+                anchors = None
+                trusted = bool(observations) and all(
+                    str(e.get("run_id")) == str(run_id) for e in observations
+                )
+                if trusted:
+                    anchors = consent_anchors(observations)
+                result = workflow.execute(
+                    state,
+                    tool,
+                    arguments,
+                    context={
+                        "run_id": str(run_id),
+                        "operation_id": request_id,
+                        "actor": actor,
+                        "consent_anchors": anchors,
+                        "observed_through_sequence": observations[-1]["sequence"]
+                        if trusted
+                        else None,
+                    },
+                )
                 if result["ok"]:
                     run["state"] = state
                 run["operations"][operation_key] = {"fingerprint": fingerprint, "result": result}
@@ -181,4 +248,6 @@ class BusinessService:
             }
 
 
-WORKFLOWS = {(FixtureWorkflow.name, FixtureWorkflow.version): FixtureWorkflow()}
+WORKFLOWS = {
+    (w.name, w.version): w for w in (FixtureWorkflow(), ReservationWorkflow(), DiningWorkflow())
+}

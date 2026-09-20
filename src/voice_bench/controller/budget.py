@@ -50,8 +50,10 @@ def release(store, run_id, confirmed):
     # Keep cumulative minute and cost reservations: actual billing may arrive later.
 
 
-def reserve_grading(store, batch_id, run_id, version, config):
-    cost = config.judge.cost_ceiling_inr
+def reserve_grading(
+    store, batch_id, run_id, version, config, *, cost_ceiling=None, provider="openai"
+):
+    cost = config.judge.cost_ceiling_inr if cost_ceiling is None else cost_ceiling
     if cost <= 0 or config.limits.max_spend_inr <= 0 or not config.runtime.rate_card_version:
         raise ValueError("Model grading needs a positive cost ceiling and versioned rate card")
     key = f"grading/{run_id}/{version}"
@@ -63,4 +65,4 @@ def reserve_grading(store, batch_id, run_id, version, config):
         frozen_limit = Decimal(batch["limits"].get("max_spend_inr", "0"))
         if total + cost > min(config.limits.max_spend_inr, frozen_limit):
             raise ValueError("Grading would exceed the funded spending budget")
-        reservations[key] = {"cost": str(cost), "seconds": 0, "active": False}
+        reservations[key] = {"cost": str(cost), "seconds": 0, "active": False, "provider": provider}

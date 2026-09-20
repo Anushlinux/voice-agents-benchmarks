@@ -42,6 +42,9 @@ class Session:
     async def close(self, reason):
         self.closed = True
 
+    def check_health(self):
+        pass
+
 
 class Channel:
     def __init__(self, mode="ok", store=None):
@@ -183,3 +186,105 @@ async def test_missing_user_task_stops_before_counterpart_conversation(store, tm
     assert result.connected and result.validity == "invalid"
     assert result.attribution == "harness"
     assert channel.session.closed and result.termination_confirmed
+
+
+@pytest.mark.asyncio
+async def test_cleanup_failure_does_not_skip_provider_reconciliation(store, tmp_path):
+    config = configured(tmp_path)
+    plan, case = batch(store, config)
+    channel = Channel(store=store)
+
+    async def broken_close(reason):
+        raise RuntimeError("browser event delivery failed")
+
+    channel.session.close = broken_close
+    result = await Controller(store, config, channel, Caller()).execute(plan, case, "digest")
+    assert result.termination_confirmed
+    assert not store.run(result.run_id)["reservation"]["active"]
+
+
+@pytest.mark.asyncio
+async def test_transport_failure_during_task_wait_is_reported_immediately(store, tmp_path):
+    from voice_bench.errors import HarnessFailure
+
+    config = configured(tmp_path)
+    plan, case = batch(store, config)
+    channel = Channel("missing_task", store=store)
+
+    def broken_health():
+        raise HarnessFailure("receive_queue_overflow")
+
+    channel.session.check_health = broken_health
+    result = await Controller(store, config, channel, Caller()).execute(plan, case, "digest")
+    assert result.error == "HarnessFailure"
+    assert result.termination_confirmed
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("drain_mode", ["ok", "stall", "error"])
+async def test_report_completion_ends_on_output_even_without_native_hangup(
+    store, tmp_path, drain_mode
+):
+    from uuid import uuid4
+
+    from voice_bench.business.environment import BusinessService
+    from voice_bench.channels.media import MediaSession
+    from voice_bench.evidence.local import LocalEvidence
+
+    config = configured(tmp_path)
+    plan, case = batch(store, config)
+    case = case.model_copy(
+        update={"completion": "target_report_then_hangup", "target_tools": ("submit_user_report",)}
+    )
+    channel = Channel(store=store)
+    channel.session = MediaSession(LocalEvidence(tmp_path / "media", uuid4(), uuid4()), 24000)
+    submitted = []
+    producer_stopped = asyncio.Event()
+
+    class StillSpeaking:
+        async def converse(self, *args):
+            try:
+                await asyncio.sleep(30)
+            finally:
+                producer_stopped.set()
+
+    async def drain():
+        assert producer_stopped.is_set()
+        if drain_mode == "stall":
+            await asyncio.sleep(30)
+        elif drain_mode == "error":
+            raise RuntimeError("Playback already disconnected")
+
+    channel.session.drain = drain
+
+    async def later_report():
+        while not store.runs(plan.batch_id) or not store.runs(plan.batch_id)[0].get(
+            "user_task_served"
+        ):
+            await asyncio.sleep(0.01)
+        run = store.runs(plan.batch_id)[0]
+        await asyncio.sleep(0.1)
+        result = BusinessService(store).submit_user_report(
+            str(run["run_id"]), "test", "Accurate failure report."
+        )
+        submitted.append(result)
+
+    pending = asyncio.create_task(later_report())
+    try:
+        result = await Controller(store, config, channel, StillSpeaking()).execute(
+            plan, case, "digest"
+        )
+        assert result.error is None and submitted[0]["ok"]
+        assert (
+            tmp_path / str(plan.batch_id) / str(result.run_id) / "target/user-report.json"
+        ).exists()
+        assert result.termination_confirmed
+        import json
+
+        path = tmp_path / str(plan.batch_id) / str(result.run_id) / "events.jsonl"
+        events = [json.loads(line) for line in path.read_text().splitlines()]
+        assert sum(e["kind"] == "end_call_requested" for e in events) == 1
+        assert any(e["kind"] == "playback_drain_incomplete" for e in events) == (drain_mode != "ok")
+    finally:
+        pending.cancel()
+        await asyncio.gather(pending, return_exceptions=True)

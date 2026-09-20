@@ -7,6 +7,10 @@ artifact_root = "../artifacts"
 [target]
 agent_ref = ""
 deployed_version = ""
+task_variable = "benchmark_user_task"
+# For phone calls, set plivo_sip_trunk_id to the existing trunk UUID in Rumik.
+# Its terminationUri must equal this existing Plivo outbound SIP endpoint.
+plivo_termination_uri = ""
 
 [limits]
 max_call_seconds = 300
@@ -32,6 +36,12 @@ transcription_model = ""
 rubric_version = ""
 max_output_tokens = 2048
 cost_ceiling_inr = "0"
+
+[jev]
+model = ""
+cost_ceiling_inr = "0"
+timeout_seconds = 30
+max_request_bytes = 100000
 
 [runtime]
 public_base_url = ""

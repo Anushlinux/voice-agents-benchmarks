@@ -16,8 +16,8 @@ STATIC = Path(__file__).parent / "static"
 
 
 class BrowserSession(MediaSession):
-    def __init__(self, evidence):
-        super().__init__(evidence, 48000)
+    def __init__(self, evidence, *, startup_seconds=0):
+        super().__init__(evidence, 48000, startup_seconds=startup_seconds)
         self.browser = self.playwright = self.page = None
         self.rendered = {}
         self.rendered_samples = 0
@@ -196,14 +196,19 @@ class BrowserAdapter:
         call = await self.target.start_browser(registration["access_token"])
         if call["callId"] != call_id:
             raise ValueError("Rumik returned a different call ID")
-        self.session = BrowserSession(evidence)
+        self.session = BrowserSession(evidence, startup_seconds=request.setup_timeout_seconds)
         await self.session.start(call)
         return self.session
 
     async def reconcile(self, run_id, evidence):
         if self.session:
-            await self.session.close("reconcile")
-            self.session = None
+            try:
+                async with asyncio.timeout(5):
+                    await self.session.close("reconcile")
+            except Exception as exc:
+                await evidence.emit("channel", "cleanup_failed", {"type": type(exc).__name__})
+            finally:
+                self.session = None
         bindings = await asyncio.to_thread(self.store.bindings, run_id)
         calls = [b["call_id"] for b in bindings if b["provider"] == "rumik"]
         if not calls:

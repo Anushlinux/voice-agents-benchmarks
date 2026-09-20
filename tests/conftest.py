@@ -15,7 +15,13 @@ def no_provider_network(monkeypatch):
         return original(sock, address)
 
     monkeypatch.setattr(socket.socket, "connect", connect)
-    for key in ("OPENAI_API_KEY", "RUMIK_API_KEY", "PLIVO_AUTH_ID", "PLIVO_AUTH_TOKEN"):
+    for key in (
+        "OPENAI_API_KEY",
+        "RUMIK_API_KEY",
+        "PLIVO_AUTH_ID",
+        "PLIVO_AUTH_TOKEN",
+        "TYPESAFE_API_KEY",
+    ):
         monkeypatch.delenv(key, raising=False)
 
 
