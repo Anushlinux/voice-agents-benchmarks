@@ -1,0 +1,43 @@
+name: voice-bench-validation
+
+services:
+  database:
+    image: postgres:16-alpine
+    tmpfs: [/var/lib/postgresql/data]
+    environment:
+      POSTGRES_USER: voice_bench
+      POSTGRES_PASSWORD: fixture-only
+      POSTGRES_DB: voice_bench
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U voice_bench -d voice_bench"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+  storage:
+    image: minio/minio:latest
+    command: [server, /data]
+    tmpfs: [/data]
+    environment:
+      MINIO_ROOT_USER: fixture-access
+      MINIO_ROOT_PASSWORD: fixture-secret-only
+  worker:
+    build:
+      context: ..
+      target: worker
+    init: true
+    shm_size: 512mb
+    entrypoint: [/app/.venv/bin/python, /app/container_smoke.py]
+    volumes:
+      - ../tests/container_smoke.py:/app/container_smoke.py:ro
+    environment:
+      DATABASE_URL: postgresql://voice_bench:fixture-only@database:5432/voice_bench
+      S3_TEST_ENDPOINT: http://storage:9000
+    depends_on:
+      database:
+        condition: service_healthy
+      storage:
+        condition: service_started
+
+networks:
+  default:
+    internal: true

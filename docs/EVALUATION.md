@@ -5,7 +5,7 @@
 The caller reacts to audio it receives. The evaluator checks observable actions
 and outcomes. A fluent transcript or spoken success claim does not prove success.
 
-## Evidence layout to implement
+## Implemented evidence layout
 
 ```text
 artifacts/<batch_id>/<run_id>/
@@ -19,8 +19,7 @@ artifacts/<batch_id>/<run_id>/
   review/                    # human decisions, evidence references and disagreement
 ```
 
-This is a proposed storage layout, not a generated run. Local artifacts are
-ignored by Git. Future cloud artifacts use stable object keys and checksums.
+The local fixture and controller write this layout. Batch-level frozen settings and completion/finalization records sit above attempt directories. Local artifacts are ignored by Git. Explicit S3 uploads use stable object keys, conditional writes and checksums.
 Never preserve only an expiring recording link.
 
 ## Metrics
@@ -58,8 +57,8 @@ Internal target time-to-first-token is unavailable unless adequate telemetry exi
 2. Model assessments use explicit rubrics and evidence references, and may abstain.
 3. Human review checks apparent passes and failures, plus simulator validity.
 
-The `MetricResult` contract requires evidence for resolved verdicts; the later
-grader must also verify that the cited artifacts exist and support the claim.
+The `MetricResult` contract requires evidence for resolved verdicts; the implemented
+grader also checks artifact hashes, event identifiers and audio ranges. Whether a citation supports the interpretation remains part of judge/human validation.
 Audio qualities cannot be inferred from text alone. Keep false passes, false
 failures and unresolved review disagreements visible.
 
@@ -77,3 +76,11 @@ Show success among valid attempts and, if useful, success conditional on valid
 connection. Do not use the conditional figure to hide connection failures.
 Preserve every retry. Repetitions share a case and are not independent coverage;
 respect that grouping in uncertainty estimates and channel comparisons.
+
+## Current timing implementation
+
+The offline timing function uses 20 ms root-mean-square energy windows and an explicit threshold. This is a simple reproducible speech-boundary estimate, not a human-validated speech detector. Browser recording offsets map onto one audio-context sample clock. Ordinary response gaps, overlapping segments and unanswered segments are reported separately with their observation boundary. Carrier playback acknowledgments are retained but are not converted into exact remote-playback timing. Missing clock mappings produce an uncertain result.
+
+Human review remains required for intelligibility, whether an interruption was appropriate, and whether speech recovery sounded natural. No text-only quality score is presented as a listening result.
+
+Caller turnaround is reported separately as observed voice-activity stop to first generated audio. Both observations must share a worker clock. This includes network and provider processing and is not internal target latency.

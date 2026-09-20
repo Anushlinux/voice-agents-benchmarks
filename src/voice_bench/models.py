@@ -69,6 +69,7 @@ class AudioFrame(Contract):
     sample_offset: int = Field(ge=0)
     observed_monotonic_ns: int = Field(ge=0)
     clock_id: str = Field(min_length=1)
+    item_id: str = ""
 
     @field_validator("pcm_s16le")
     @classmethod
@@ -102,6 +103,19 @@ class EvidenceRef(Contract):
 
     artifact_key: str = Field(min_length=1)
     sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    event_sequences: tuple[int, ...] = ()
+    start_seconds: float | None = Field(default=None, ge=0)
+    end_seconds: float | None = Field(default=None, ge=0)
+
+    @model_validator(mode="after")
+    def valid_range(self):
+        if (self.start_seconds is None) != (self.end_seconds is None):
+            raise ValueError("Both audio range boundaries are required")
+        if self.start_seconds is not None and self.end_seconds <= self.start_seconds:
+            raise ValueError("Audio range must have positive duration")
+        if any(n < 0 for n in self.event_sequences):
+            raise ValueError("Event sequences must be nonnegative")
+        return self
 
 
 class MetricResult(Contract):

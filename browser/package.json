@@ -1,0 +1,8 @@
+{
+  "name": "voice-bench-browser-bridge",
+  "private": true,
+  "type": "module",
+  "scripts": {"build": "esbuild bridge.js --bundle --format=esm --outfile=../src/voice_bench/channels/browser/static/bridge.js && cp audio-worklet.js ../src/voice_bench/channels/browser/static/audio-worklet.js"},
+  "dependencies": {"livekit-client": "^2.15.0"},
+  "devDependencies": {"esbuild": "^0.25.0"}
+}

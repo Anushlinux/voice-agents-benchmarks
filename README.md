@@ -1,86 +1,60 @@
 # Rumik voice-agent benchmark
 
-Test a hosted Rumik agent through **browser audio and real telephone calls**.
-Check whether it completed the permitted task using call audio, timing, tool
-actions, and the resulting business state.
+Benchmark a **hosted Rumik agent** through Chromium/LiveKit and real Plivo telephone calls. An OpenAI realtime audio customer listens to the channel and speaks back. Business tools run against isolated synthetic records. Grading checks saved actions and final state, then adds explicit model assessment and human review.
 
-**Status: repository foundation, ready for implementation.** The local API,
-configuration validation, shared contracts, and development tooling work. The
-caller, real calls, business workflows, storage adapters, and graders are not
-implemented. No agents or phone numbers have been provisioned.
-
-## The architecture
+**Status: implementation available; live qualification pending.** The local fixture, PostgreSQL persistence, evidence storage, controller, provider adapters, grading, review, and batch commands are implemented. The provider-free suite includes real local Chromium audio processing and PostgreSQL transactions. This is not evidence that a real Rumik or Plivo call has succeeded. No provider conversations, provisioning, deployments, or paid evaluations have been run for this delivery.
 
 ```mermaid
-flowchart TD
-    A["1. Start a test<br/>Load the customer goal and business rules"]
-    B["2. Simulated customer<br/>Listens and speaks in Hinglish"]
-    C["Browser call<br/>Chromium + LiveKit"]
-    D["Real phone call<br/>Plivo → telephone network"]
-    E["3. Rumik hosted agent<br/>Talks to the customer and takes actions"]
-    F[("4. Mock business system<br/>Records and observable changes")]
-    G["5. Collect evidence<br/>Audio + timing + business actions"]
-    H["6. Evaluate and review<br/>Task success · audio behavior · latency · reliability"]
-    A --> B
-    B <-->|Audio| C
-    B <-->|Audio| D
-    C <-->|Audio| E
-    D <-->|Audio| E
-    E <-->|Tools and results| F
-    B -.->|Record conversation| G
-    F -.->|Record actions and outcomes| G
-    G --> H
+flowchart LR
+    P[Plan and limits] --> C[Controller]
+    C --> O[OpenAI audio customer]
+    O <-->|Audio| T[Chromium or Plivo]
+    T <-->|Audio| R[Hosted Rumik agent]
+    R -->|Authenticated tools| B[Isolated business records]
+    B --> D[(PostgreSQL)]
+    C --> E[Immutable evidence]
+    T --> E
+    B --> E
+    E --> G[Rules, model judge, human review]
 ```
 
-One run uses one channel. Corresponding runs use the same target configuration
-and equivalent starting conditions. Our runtime is intended for an India cloud
-worker; Rumik stays on its own cloud. Vercel is optional for controls and review.
+The customer receives only its brief and channel audio. Hidden business state, expected outcomes, and target transcripts are not customer inputs. Browser and phone attempts remain separate and retain their pairing in reports.
 
-## Start locally
+## Start without providers
 
-Install [uv](https://docs.astral.sh/uv/getting-started/installation/) and Python
-3.12, then run from this repository:
+Use Python 3.12, uv, and Node 22 or newer. Run from the repository root:
 
 ```sh
 uv sync --locked
+npm --prefix browser ci --ignore-scripts
+npm --prefix browser run build
 uv run --locked voice-bench status
 uv run --locked voice-bench plan --config configs/local.toml
-uv run --locked uvicorn voice_bench.api.app:create_app --factory --reload
 ```
 
-The API is at `http://127.0.0.1:8000`; API documentation is at `/docs`.
+These status and planning commands make no provider calls and create no evidence. The checked-in configurations have zero funded budgets. They cannot execute live calls. Dependencies are locked in `uv.lock` and `browser/package-lock.json`; installation accesses package registries.
 
-- `GET /healthz` returns 200 when the API process works.
-- `GET /readyz` deliberately returns 503: live benchmark execution is unfinished.
-- `status` and `plan` make no provider requests, place no calls, and create no
-  run artifacts. A valid plan is not proof that integrations are ready.
-- There is no `run` command or call-start route yet.
+To run the first deliverable, start a local PostgreSQL database:
 
-Dependency installation can access package registries. Once installed, the
-status, planning, checks, and local API require no provider credentials.
-Use `.venv/bin/voice-bench` to invoke the installed CLI without uv synchronization.
+```sh
+docker compose --profile database up -d postgres
+export DATABASE_URL=postgresql://voice_bench:local_only@127.0.0.1:5432/voice_bench
+uv run --locked voice-bench fixture --config configs/local.toml
+```
 
-`configs/local.toml` holds non-secret settings. Artifact paths are relative to
-the configuration file. The zero total-minute and spending budgets are explicit
-no-execution defaults, not agreed benchmark limits. `.env.example` lists reserved
-future settings; it is not currently loaded. Do not add real credentials yet.
+The fixture creates two isolated attempts, changes one permitted field, rejects a forbidden change, replays an operation safely, reopens persisted state, and seals inspectable evidence. Its output is **harness validation**, never a benchmark result or dataset coverage claim. The returned artifact directory contains initial/final state, tool audits, events, and checksums. Database integration tests also verify persistence in a fresh Python process.
 
-## Where to implement each part
+## Commands and boundaries
 
-| Diagram part | Package | Responsibility |
-| --- | --- | --- |
-| Start a test | `src/voice_bench/controller/` | Run lifecycle, limits, correlation, retries and finalization |
-| Simulated customer | `src/voice_bench/caller/` | Customer facts, audio perception, reply policy and speech |
-| Browser / phone calls | `src/voice_bench/channels/` | Audio transport, connection events and hangup |
-| Rumik hosted agent | `src/voice_bench/target/rumik/` | Configuration snapshots, registration and call evidence |
-| Mock business system | `src/voice_bench/business/` | Isolated records and audited business tools |
-| Collect evidence | `src/voice_bench/evidence/` | Append-only events, audio artifacts and checksums |
-| Evaluate and review | `src/voice_bench/evaluation/` | Outcome checks, rubrics, validity and human review |
-| Local API | `src/voice_bench/api/` | Health today; control and business routers later |
+- `status`, `plan`, `batch plan`, imports, and health routes are provider-free.
+- `fixture`, `db-init`, and reports use PostgreSQL where needed; they make no provider calls.
+- `inspect`, ordinary `evaluate`, and review import/export use saved local evidence.
+- `run --live` and `batch run --live` explicitly start funded provider activity.
+- `evaluate --with-model` explicitly enables paid transcription and text judgment.
+- `batch recover --remote` polls providers and may hang up abandoned calls. It never starts a conversation.
+- `upload` explicitly writes a sealed attempt and versioned results to configured S3-compatible storage.
 
-`models.py` and each `interfaces.py` describe component boundaries. Protocols
-are contracts for future implementations, not working adapters. Caller inputs
-are intentionally separate from evaluator criteria and business state.
+See [Running and qualifying the benchmark](docs/RUNNING.md) for full commands, execution-case contracts, callback configuration, and recovery.
 
 ## Development checks
 
@@ -90,28 +64,31 @@ uv run --locked ruff format --check .
 uv run --locked pytest
 ```
 
-GitHub Actions runs these checks without provider credentials. Tests cover local
-contract validation and scaffold behavior; they do not establish live call quality.
-
-## Optional containers
+Database and Chromium checks are opt-in locally. For the complete provider-free suite:
 
 ```sh
-docker compose up --build api
-docker compose --profile database up -d postgres
+uv run --locked playwright install chromium
+export TEST_DATABASE_URL=postgresql://voice_bench:local_only@127.0.0.1:5432/voice_bench
+RUN_BROWSER_TESTS=1 uv run --locked pytest
 ```
 
-The API binds to localhost on port 8000. PostgreSQL is an optional development
-service on localhost:5432 and is **not yet connected to the API**. No cloud
-resources, Vercel deployment, browser installation, or telephone integrations
-are started by these commands. See [local infrastructure](infra/README.md).
+Each database test creates and removes its own schema. Use a dedicated development database. Without these settings, pytest explicitly skips the database/browser checks. CI supplies PostgreSQL, installs Chromium, and enables both. Python tests reject connections to non-loopback addresses and remove provider credentials.
 
-## Read next
+## Repository map
 
-- [Architecture and component boundaries](docs/ARCHITECTURE.md)
-- [Implementation roadmap and acceptance checks](docs/IMPLEMENTATION.md)
-- [Evidence and metric definitions](docs/EVALUATION.md)
-- [Confirmed scope and open decisions](docs/SCOPE.md)
+| Package | Responsibility |
+| --- | --- |
+| `controller/` | Attempt lifecycle, reservations, cleanup and leases |
+| `caller/` | OpenAI native-audio customer and playback truncation |
+| `channels/browser/`, `browser/` | Chromium audio worklets and LiveKit bridge |
+| `channels/phone/` | Plivo calls, authenticated streams, codec conversion and checkpoints |
+| `target/rumik/` | Snapshots, registration, single-use token redemption and call evidence |
+| `business/`, `storage.py` | Versioned workflows, transactional state and tool audits |
+| `evidence/` | Local manifests, checksum verification and immutable object uploads |
+| `evaluation/` | Deterministic checks, captured-audio transcription, judge and human review |
+| `batches.py`, `runtime.py` | Paired plans, frozen settings, dispatch, recovery and accounting |
+| `api/` | Health, authenticated business tools and carrier callbacks |
 
-Start with milestone 1: isolated business state and immutable evidence. Then
-prove one real browser conversation with an observable action, followed by the
-equivalent telephone call. Dataset design remains a separate workstream.
+There is no management dashboard or HTTP call-start endpoint. `/healthz` reports process health; `/readyz` remains 503 while live qualification is unproven. Starting the standalone API does not connect providers or a database. The explicit live command composes the authenticated callback server and worker.
+
+Read [implementation milestones](docs/IMPLEMENTATION.md), [architecture](docs/ARCHITECTURE.md), [evaluation](docs/EVALUATION.md), and [container instructions](infra/README.md). Dataset design and real workflows remain a separate workstream.

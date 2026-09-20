@@ -14,6 +14,7 @@ build/
 artifacts/
 reports/
 datasets/
+configs/*.local.toml
 *.wav
 *.mp3
 *.flac
@@ -22,3 +23,5 @@ datasets/
 .DS_Store
 .coverage
 htmlcov/
+node_modules/
+src/voice_bench/channels/browser/static/

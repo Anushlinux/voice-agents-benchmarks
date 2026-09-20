@@ -14,15 +14,13 @@ to provision services or execute evaluations.
 - Preserve configuration identity and repeat runs under comparable conditions.
 - Include human validation of passing and failing grades.
 
-## Architecture accepted for this scaffold
+## Accepted architecture
 
 Start test → simulated customer → browser or phone → hosted Rumik → mock business
 system → evidence → evaluation and review. Develop locally; use an India cloud
 worker for reported conversations. Vercel controls/review are optional.
 
-Python is the shared runtime. Pipecat, Chromium/LiveKit and Plivo are proposed
-integration choices, not working integrations. Rumik stays the target; a separate
-caller is infrastructure, not another ranked agent.
+Python is the shared runtime. The implemented customer uses OpenAI Realtime audio; Chromium/LiveKit and Plivo implement the two channels. Evaluation combines deterministic checks, an explicitly enabled OpenAI text judge and human listening. These adapters still need live qualification. Rumik stays the target; the customer is infrastructure, not another ranked agent.
 
 ## Still open
 

@@ -1,6 +1,8 @@
 services:
   api:
-    build: .
+    build:
+      context: .
+      target: api
     ports:
       - "127.0.0.1:8000:8000"
     healthcheck:
@@ -24,6 +26,27 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+  worker:
+    build:
+      context: .
+      target: worker
+    profiles: ["worker"]
+    init: true
+    shm_size: "512mb"
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./configs:/app/configs:ro
+      - ./datasets:/app/datasets:ro
+      - ./artifacts:/app/artifacts
+    environment:
+      DATABASE_URL: postgresql://voice_bench:local_only@postgres:5432/voice_bench
+      RUMIK_API_KEY: ${RUMIK_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      BENCH_TOOLS_SECRET: ${BENCH_TOOLS_SECRET:-}
+      PLIVO_AUTH_ID: ${PLIVO_AUTH_ID:-}
+      PLIVO_AUTH_TOKEN: ${PLIVO_AUTH_TOKEN:-}
+    command: ["status"]
 
 volumes:
   benchmark-db:

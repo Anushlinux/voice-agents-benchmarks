@@ -1,7 +1,7 @@
 # Architecture
 
 The short data-flow diagram is in [README.md](../README.md). This document
-records how to implement its boundaries without turning the benchmark into a
+records the implemented boundaries without turning the benchmark into a
 large evaluation platform.
 
 ## Deployment
@@ -10,8 +10,8 @@ large evaluation platform.
 - Run reported conversations on a fixed India cloud VM using the same container
   and locked dependencies. Qualify CPU load, audio pacing and media connectivity.
 - Rumik hosts the target. We do not operate its recognition/reasoning/voice stack.
-- PostgreSQL will hold run metadata and isolated synthetic business state.
-- Local artifact storage comes first; object storage follows before cloud batches.
+- PostgreSQL holds run metadata, leases, provider bindings and isolated synthetic business state. Business changes and tool audit entries commit in one transaction.
+- Local evidence is sealed with checksums; explicit uploads use immutable S3-compatible object keys.
 - Vercel may host controls and a reviewer, but no frontend is needed for the first
   usable benchmark. Long-lived audio and browser work belong to the worker.
 
@@ -30,9 +30,7 @@ No cloud infrastructure is provisioned by this repository.
 | Evaluator | Private criteria, finalized evidence, state snapshots | Permission to repair the completed conversation |
 | Human reviewer | Evidence, grades, uncertainty and configuration | An unexplained aggregate score as the only proof |
 
-`CallerBrief` deliberately has no evaluator fields. The final scenario file
-format is not chosen here: a future loader separates caller, environment and
-evaluation inputs before handing them to these components.
+`CallerBrief` deliberately has no evaluator fields. The dataset authoring format remains separate. `ExecutionCase` is the internal input contract; the controller passes only its `caller` field to the customer simulator.
 
 ## Browser flow
 
@@ -56,8 +54,7 @@ Any direct WebSocket or native LiveKit diagnostic path gets a distinct label.
    bidirectional stream. Actual number-to-number calling remains in the path.
 5. Capture carrier events, Rumik status, audio and business actions.
 
-Confirm number provisioning, media routing and the meaning of context fields
-before implementing correlation. Start serially; require unique number mappings
+Qualify number provisioning, media routing and trusted context-field values before live execution. Start serially; require unique number mappings
 before concurrency. Ambiguous association is a setup failure, not a guessed match.
 Outbound Rumik-to-simulator calls are a later alternative, not a silent fallback.
 
@@ -67,17 +64,18 @@ Prepared → connecting → in conversation → finalizing → grading → revie
 Failures are recorded at the stage where they occur. Phase, test validity,
 failure attribution and task outcome are separate concepts.
 
-The future controller must enforce budgets during execution, preserve every
-attempt, and reconcile an uncertain dial before retrying. A disconnected call
+The controller reserves funded ceilings before dispatch, applies setup/conversation/finalization timeouts, preserves every attempt, and requires reconciliation before retrying an uncertain start. A disconnected call
 cannot resume as the same attempt. Finalization waits for call termination,
 artifact storage and settled business state. Missing evidence stays visible.
 
-## Implementation choices still open
+## Implemented provider choices
 
-Pipecat is the candidate caller/media framework; Chromium/LiveKit is the browser
-path; Plivo is the first phone candidate. Speech and reasoning providers remain
-subject to qualification, with Sarvam speech and a pinned text model as initial
-candidates. Those SDKs are deliberately not dependencies until adapters are built.
+The customer uses OpenAI Realtime directly over a server-side WebSocket. Its input is received PCM audio and the customer brief. Model, voice, turn detection and instructions are explicit configuration. On an interruption, the transport clears queued playback and reports confirmed progress; the customer truncates the model conversation to that played portion. Controlled interruption uses a separate configured timing behavior.
 
-Rumik tools are HTTP business endpoints, not an MCP requirement. Cekura is a
-design reference rather than a runtime dependency.
+Chromium/LiveKit is the browser path. The bridge is bundled locally, publishes a generated microphone track, and captures subscribed target audio through audio worklets. Independent bounded queues preserve simultaneous send/receive. Generated, submitted, rendered and received recordings have distinct meanings.
+
+Plivo is the telephone path. The adapter uses signed HTTP/WebSocket callbacks, an attempt-specific stream token, mu-law at 8 kHz, streaming conversion to PCM and explicit playback checkpoints. Ordinary silent media frames count as a healthy stream; missing media or unacknowledged playback is recorded as a transport problem.
+
+Rumik tools are HTTP business endpoints, not an MCP requirement. There is no Pipecat or Sarvam caller dependency. Cekura is a design reference and is not called by this repository.
+
+See [running instructions](RUNNING.md) for workflow registration, costs, recovery and qualification limitations.

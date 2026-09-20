@@ -11,3 +11,5 @@ artifacts
 reports
 datasets
 tests
+node_modules
+browser/node_modules

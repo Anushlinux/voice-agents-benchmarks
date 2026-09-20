@@ -1,0 +1,218 @@
+"""Composition root for explicit live commands. Ordinary imports remain provider-free."""
+
+import asyncio
+import os
+from pathlib import Path
+from uuid import uuid4
+
+from voice_bench.batches import make_plan
+from voice_bench.evidence.local import canonical, digest, publish
+
+
+def validate_live(config, cases):
+    from voice_bench.business.environment import WORKFLOWS
+
+    if (
+        config.limits.max_total_call_minutes <= 0
+        or config.limits.max_spend_inr <= 0
+        or config.runtime.cost_ceiling_inr_per_attempt <= 0
+    ):
+        raise ValueError(
+            "Positive funded limits and a conservative per-attempt cost ceiling are required"
+        )
+    if not config.runtime.rate_card_version:
+        raise ValueError("A versioned rate card is required")
+    costs = config.runtime.cost_components_inr_per_attempt
+    required_costs = {"caller", "target"} | ({"carrier"} if "phone" in config.channels else set())
+    if not required_costs.issubset(costs) or any(
+        not cost.is_finite() or cost <= 0 for cost in costs.values()
+    ):
+        raise ValueError(
+            "Positive caller, target, and applicable carrier cost ceilings are required"
+        )
+    if sum(costs.values()) > config.runtime.cost_ceiling_inr_per_attempt:
+        raise ValueError("Per-attempt ceiling must cover every configured component")
+    if not config.target.agent_ref or not config.target.deployed_version:
+        raise ValueError("The intended target and deployed version are required")
+    if not all(
+        (
+            config.caller.model,
+            config.caller.voice,
+            config.caller.instructions,
+            config.caller.turn_detection,
+        )
+    ):
+        raise ValueError(
+            "Explicit OpenAI caller model, voice, instructions, and turn detection required"
+        )
+    if config.caller.turn_detection.get("type") not in {"server_vad", "semantic_vad"}:
+        raise ValueError("Unsupported caller turn-detection mode")
+    if not config.runtime.public_base_url.startswith("https://"):
+        raise ValueError("A public HTTPS endpoint for authenticated business tools is required")
+    for case in cases:
+        if (case.workflow, case.workflow_version) not in WORKFLOWS:
+            raise ValueError("Workflow implementation is not registered")
+        WORKFLOWS[(case.workflow, case.workflow_version)].initialize(case.initial_state)
+    required = ["DATABASE_URL", "RUMIK_API_KEY", "OPENAI_API_KEY", "BENCH_TOOLS_SECRET"]
+    if "phone" in config.channels:
+        required += ["PLIVO_AUTH_ID", "PLIVO_AUTH_TOKEN"]
+        if not config.runtime.caller_number or not config.runtime.target_number:
+            raise ValueError("Intended benchmark phone endpoints are required")
+    if any(not os.environ.get(key) for key in required):
+        missing = [key for key in required if not os.environ.get(key)]
+        raise ValueError("Missing runtime settings: " + ", ".join(missing))
+
+
+async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resume_batch=None):
+    validate_live(config, cases)
+    import uvicorn
+
+    from voice_bench.api.app import create_app
+    from voice_bench.caller.openai_realtime import OpenAICaller
+    from voice_bench.channels.browser.adapter import BrowserAdapter
+    from voice_bench.channels.phone.adapter import PhoneAdapter, PhoneHub, PlivoClient
+    from voice_bench.contracts import PlannedRun
+    from voice_bench.controller.runner import Controller
+    from voice_bench.storage import PostgresStore
+    from voice_bench.target.rumik.client import RumikClient, qualify_snapshot, snapshot_digest
+
+    store = PostgresStore(os.environ["DATABASE_URL"])
+    await asyncio.to_thread(store.migrate)
+    target = RumikClient(os.environ["RUMIK_API_KEY"])
+    carrier = (
+        PlivoClient(os.environ["PLIVO_AUTH_ID"], os.environ["PLIVO_AUTH_TOKEN"])
+        if "phone" in config.channels
+        else None
+    )
+    hub = PhoneHub(store, config, carrier) if carrier else None
+    server = uvicorn.Server(
+        uvicorn.Config(
+            create_app(store, os.environ["BENCH_TOOLS_SECRET"], hub),
+            host="0.0.0.0",
+            port=port,
+            log_level="warning",
+            access_log=False,
+        )
+    )
+    serving = asyncio.create_task(server.serve())
+    batch_id = resume_batch or uuid4()
+    results = []
+    created = False
+    stop_reason = None
+    try:
+        async with asyncio.timeout(10):
+            while not server.started:
+                if serving.done():
+                    serving.result()
+                    raise RuntimeError("Callback server failed to start")
+                await asyncio.sleep(0.05)
+        snapshot = await target.snapshot(config.target.agent_ref)
+        qualify_snapshot(snapshot, config)
+        if hub:
+            hub.agent_id = snapshot["agent"]["id"]
+        identity = snapshot_digest(snapshot)
+        plans = make_plan(cases, config.channels, repetitions, seed, batch_id)
+        dependencies = {}
+        for name in ("uv.lock", "browser/package-lock.json"):
+            path = Path(name)
+            if path.exists():
+                dependencies[name] = digest(path.read_bytes())
+        frozen = {
+            "config": config.model_dump(mode="json"),
+            "target": snapshot,
+            "dependencies": dependencies,
+            "seed": seed,
+            "cases": [c.model_dump(mode="json") for c in cases],
+            "source_digest": digest(
+                b"".join(
+                    p.relative_to(Path(__file__).parent).as_posix().encode() + p.read_bytes()
+                    for p in sorted(Path(__file__).parent.rglob("*.py"))
+                )
+            ),
+            "tool_credential_digest": digest(os.environ["BENCH_TOOLS_SECRET"].encode()),
+        }
+        config_digest = digest(canonical(frozen))
+        if resume_batch:
+            previous = await asyncio.to_thread(store.batch, batch_id)
+            if previous["config_digest"] != config_digest:
+                raise ValueError(
+                    "Resume requires the original configuration, cases, code, and dependencies"
+                )
+            prior_runs = await asyncio.to_thread(store.runs, batch_id)
+            if any(
+                not r["termination_confirmed"] or not r.get("evidence_sealed") for r in prior_runs
+            ):
+                raise ValueError("Reconcile all unfinished attempts before resuming dispatch")
+            plans = [PlannedRun.model_validate(p) for p in previous["plans"]]
+        else:
+            await asyncio.to_thread(
+                store.create_batch,
+                batch_id,
+                {
+                    "plans": [p.model_dump(mode="json") for p in plans],
+                    "limits": config.limits.model_dump(mode="json"),
+                    "frozen": frozen,
+                    "config_digest": config_digest,
+                    "status": "running",
+                },
+            )
+            publish(config.artifact_root / str(batch_id) / "config.json", canonical(frozen))
+        created = True
+        case_lookup = {c.case_id: c for c in cases}
+        # Serial dispatch is the default; the reservation layer enforces account-wide limits.
+        for plan in plans:
+            attempts = [
+                r
+                for r in await asyncio.to_thread(store.runs, batch_id)
+                if r["plan_id"] == str(plan.plan_id)
+            ]
+            if attempts:
+                latest = max(attempts, key=lambda item: item["attempt"])
+                failed_execution = latest.get("result", {}).get("error") or latest.get("recovery")
+                if not failed_execution or len(attempts) >= config.limits.max_attempts_per_case:
+                    continue
+            current = await target.snapshot(config.target.agent_ref)
+            if snapshot_digest(current) != identity:
+                stop_reason = "target_configuration_drift"
+                break
+            channel = (
+                BrowserAdapter(target, store)
+                if plan.channel == "browser"
+                else PhoneAdapter(target, hub)
+            )
+            caller = OpenAICaller(config.caller, os.environ["OPENAI_API_KEY"])
+            controller = Controller(store, config, channel, caller, target)
+            result = await controller.execute(plan, case_lookup[plan.case_id], config_digest)
+            results.append(result.model_dump(mode="json"))
+            if not result.termination_confirmed:
+                stop_reason = "unresolved_call_termination"
+                break
+            if result.error == "ValueError" and not result.connected:
+                stop_reason = "execution_precondition_or_budget"
+                break
+    except BaseException as exc:
+        stop_reason = type(exc).__name__
+        raise
+    finally:
+        server.should_exit = True
+        try:
+            await asyncio.wait_for(serving, 10)
+        finally:
+            await target.close()
+            if carrier:
+                await carrier.close()
+        if created:
+            completion = {
+                "worker_stopped": True,
+                "attempts_finished": len(results),
+                "stop_reason": stop_reason,
+                "results": results,
+            }
+            with store.locked_batch(batch_id) as (_, batch):
+                batch["status"] = "needs_attention" if stop_reason else "execution_finished"
+                batch["completion"] = completion
+            publish(
+                config.artifact_root / str(batch_id) / f"completion-{uuid4()}.json",
+                canonical(completion),
+            )
+    return {"batch_id": str(batch_id), "attempts": results, "stop_reason": stop_reason}
