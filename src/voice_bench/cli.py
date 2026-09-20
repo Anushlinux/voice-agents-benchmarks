@@ -111,7 +111,9 @@ async def evaluate(args):
             if metric.name in {m.name for m in metrics}:
                 raise ValueError("Model judge attempted to replace a deterministic verdict")
         metrics.extend(extra)
-        quality = next((m for m in extra if m.name == "caller_validity"), None)
+        quality = next(
+            (m for m in extra if m.name in {"counterpart_validity", "caller_validity"}), None
+        )
         if quality:
             validity = {"met": "valid", "not_met": "invalid"}.get(quality.status, "unresolved")
     execution = json.loads((args.directory / "result.json").read_text())

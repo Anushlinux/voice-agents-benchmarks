@@ -4,9 +4,16 @@ from decimal import Decimal
 from typing import Any, Literal
 from uuid import UUID
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
-from voice_bench.models import CallerBrief, Channel, Contract, FailureAttribution, Validity
+from voice_bench.models import (
+    Channel,
+    Contract,
+    CounterpartBrief,
+    FailureAttribution,
+    UserTask,
+    Validity,
+)
 
 
 class ExecutionCase(Contract):
@@ -14,10 +21,35 @@ class ExecutionCase(Contract):
     version: str = Field(min_length=1)
     workflow: str = Field(min_length=1)
     workflow_version: str = Field(min_length=1)
-    caller: CallerBrief
+    schema_version: Literal[2]
+    user_task: UserTask
+    counterpart: CounterpartBrief
+    target_tools: tuple[str, ...] = ()
+    counterpart_tools: tuple[str, ...] = ()
+    task_scope: Literal["single_call", "multi_call"]
+    call_initiation: Literal["harness_connected", "rumik_outbound"]
     initial_state: dict[str, Any]
     criteria: dict[str, Any]
     harness_fixture: bool = False
+
+    @model_validator(mode="after")
+    def validate_tool_names(self):
+        import re
+
+        for names in (self.target_tools, self.counterpart_tools):
+            if len(names) != len(set(names)) or any(
+                not re.fullmatch(r"[A-Za-z][A-Za-z0-9_]{0,63}", name) for name in names
+            ):
+                raise ValueError("Tool names must be unique identifiers within each role")
+        return self
+
+    def require_supported_execution(self):
+        if self.task_scope != "single_call":
+            raise ValueError(
+                "Multi-call tasks need a task coordinator; execution is not implemented"
+            )
+        if self.call_initiation != "harness_connected":
+            raise ValueError("Rumik outbound dialing is not implemented; no inbound fallback")
 
 
 class PlannedRun(Contract):
@@ -28,6 +60,10 @@ class PlannedRun(Contract):
     channel: Channel
     repetition: int = Field(ge=1)
     order: int = Field(ge=0)
+    task_scope: Literal["single_call", "multi_call", "legacy_unspecified"] = "legacy_unspecified"
+    call_initiation: Literal["harness_connected", "rumik_outbound", "legacy_unspecified"] = (
+        "legacy_unspecified"
+    )
 
 
 class AttemptResult(Contract):
@@ -40,12 +76,12 @@ class AttemptResult(Contract):
     error: str | None = None
 
 
-class CallerConfig(Contract):
+class CounterpartConfig(Contract):
     model: str = ""
     voice: str = ""
     instructions: str = ""
     turn_detection: dict[str, Any] = Field(default_factory=dict)
-    # An explicit caller behavior, independent of the target's interruption behavior.
+    # An explicit counterpart behavior, independent of the target's interruption behavior.
     interrupt_after_ms: int | None = Field(default=None, gt=0)
     max_output_tokens: int = Field(default=512, gt=0)
 

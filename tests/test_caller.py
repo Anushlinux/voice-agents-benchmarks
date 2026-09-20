@@ -5,12 +5,12 @@ from uuid import uuid4
 
 import pytest
 
-from voice_bench.caller.openai_realtime import OpenAICaller
+from voice_bench.caller.openai_realtime import OpenAICounterpart
 from voice_bench.channels.media import MediaSession
-from voice_bench.contracts import CallerConfig
+from voice_bench.contracts import CounterpartConfig
 from voice_bench.errors import CallerFailure, TransportFailure
 from voice_bench.evidence.local import LocalEvidence
-from voice_bench.models import CallerBrief
+from voice_bench.models import CounterpartBrief
 
 
 class Socket:
@@ -46,8 +46,8 @@ class Session(MediaSession):
 
 
 def caller(socket):
-    return OpenAICaller(
-        CallerConfig(
+    return OpenAICounterpart(
+        CounterpartConfig(
             model="test-model",
             voice="test-voice",
             instructions="Assigned behavior.",
@@ -59,17 +59,21 @@ def caller(socket):
 
 
 @pytest.mark.asyncio
-async def test_realtime_customer_receives_audio_and_truncates_unplayed_speech(tmp_path):
+async def test_realtime_counterpart_receives_audio_and_truncates_unplayed_speech(tmp_path):
     evidence = LocalEvidence(tmp_path, uuid4(), uuid4())
     session, socket = Session(evidence, 24000), Socket()
-    brief = CallerBrief(goal="Change my note", known_facts={"name": "Synthetic Customer"})
+    brief = CounterpartBrief(
+        role="Record custodian",
+        goal="Handle permitted note changes",
+        known_facts={"name": "Synthetic Custodian"},
+    )
     task = asyncio.create_task(caller(socket).converse(None, brief, session, evidence))
     try:
         async with asyncio.timeout(5):
             update = await socket.sent.get()
             assert update["session"]["audio"]["output"]["voice"] == "test-voice"
             instructions = update["session"]["instructions"]
-            assert "Synthetic Customer" in instructions
+            assert "Synthetic Custodian" in instructions
             assert "initial_state" not in instructions and "criteria" not in instructions
             await socket.incoming.put({"type": "session.updated", "session": {"id": "fake"}})
             await session.receive(b"\x01\x00" * 480)
@@ -96,7 +100,15 @@ async def test_realtime_customer_receives_audio_and_truncates_unplayed_speech(tm
             await session.receive(b"\x03\x00" * 480)
             assert (await socket.sent.get())["type"] == "input_audio_buffer.append"
             await socket.incoming.put(
-                {"type": "response.function_call_arguments.done", "name": "finish_customer"}
+                {
+                    "type": "response.function_call_arguments.done",
+                    "name": "finish_counterpart",
+                    "call_id": "finish",
+                    "response_id": "closing",
+                }
+            )
+            await socket.incoming.put(
+                {"type": "response.done", "response": {"id": "closing", "status": "completed"}}
             )
             await task
     finally:
@@ -111,7 +123,12 @@ async def test_realtime_failures_do_not_become_success(tmp_path, mode, exception
     evidence = LocalEvidence(tmp_path, uuid4(), uuid4())
     session, socket = Session(evidence, 24000), Socket()
     task = asyncio.create_task(
-        caller(socket).converse(None, CallerBrief(goal="Test", known_facts={}), session, evidence)
+        caller(socket).converse(
+            None,
+            CounterpartBrief(role="Record custodian", goal="Test", known_facts={}),
+            session,
+            evidence,
+        )
     )
     await socket.sent.get()
     if mode == "error":
@@ -121,3 +138,120 @@ async def test_realtime_failures_do_not_become_success(tmp_path, mode, exception
     with pytest.raises(exception):
         await asyncio.wait_for(task, 2)
     await session.close("test")
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("status", ["completed", "cancelled", "incomplete"])
+async def test_counterpart_tools_require_completed_response_and_do_not_block_audio(
+    tmp_path, status
+):
+    import threading
+    from types import SimpleNamespace
+
+    from voice_bench.business.environment import FixtureWorkflow
+    from voice_bench.fixture import fixture_case
+
+    entered, release = threading.Event(), threading.Event()
+
+    class Business:
+        def __init__(self):
+            self.actions = []
+            self.requests = []
+
+        def counterpart_tools(self, run_id):
+            assert run_id == "worker-bound-run"
+            return [
+                {
+                    "type": "function",
+                    "name": "business_set_note",
+                    **FixtureWorkflow.tool_definitions["set_note"],
+                }
+            ]
+
+        def record_counterpart_request(self, *args):
+            self.requests.append(args)
+
+        def execute(self, run_id, tool, arguments, operation_id, *, actor):
+            entered.set()
+            if not release.wait(3):
+                raise RuntimeError("Test did not release the tool")
+            self.actions.append((run_id, tool, arguments, operation_id, actor))
+            return {"ok": True, "record": {"note": "updated"}}
+
+    evidence = LocalEvidence(tmp_path, uuid4(), uuid4())
+    session, socket, business = Session(evidence, 24000), Socket(), Business()
+    simulator = caller(socket)
+    simulator.business = business
+    task = asyncio.create_task(
+        simulator.converse(
+            SimpleNamespace(run_id="worker-bound-run"),
+            fixture_case().counterpart,
+            session,
+            evidence,
+        )
+    )
+    try:
+        async with asyncio.timeout(6):
+            update = await socket.sent.get()
+            assert [t["name"] for t in update["session"]["tools"]] == [
+                "business_set_note",
+                "finish_counterpart",
+            ]
+            assert "user_task" not in update["session"]["instructions"]
+            assert fixture_case().user_task.request not in update["session"]["instructions"]
+            await socket.incoming.put({"type": "session.updated", "session": {"id": "fake"}})
+            await socket.incoming.put({"type": "response.created"})
+            await socket.incoming.put(
+                {
+                    "type": "response.function_call_arguments.done",
+                    "name": "business_set_note",
+                    "arguments": json.dumps({"record_id": "owned", "note": "updated"}),
+                    "response_id": "business-response",
+                    "call_id": "tool-call",
+                }
+            )
+            # A tool proposal alone must not mutate anything.
+            await session.receive(b"\x01\x00" * 480)
+            assert (await socket.sent.get())["type"] == "input_audio_buffer.append"
+            assert not entered.is_set() and business.actions == []
+            await socket.incoming.put(
+                {"type": "response.done", "response": {"id": "business-response", "status": status}}
+            )
+            if status == "completed":
+                assert await asyncio.to_thread(entered.wait, 2)
+                # Real reception continues while the business transaction is waiting.
+                await session.receive(b"\x02\x00" * 480)
+                assert (await socket.sent.get())["type"] == "input_audio_buffer.append"
+                release.set()
+                output = await socket.sent.get()
+                assert output["item"]["type"] == "function_call_output"
+                assert json.loads(output["item"]["output"])["ok"]
+                assert (await socket.sent.get())["type"] == "response.create"
+                assert business.actions == [
+                    (
+                        "worker-bound-run",
+                        "set_note",
+                        {"record_id": "owned", "note": "updated"},
+                        "tool-call",
+                        "counterpart",
+                    )
+                ]
+            await socket.incoming.put(
+                {
+                    "type": "response.function_call_arguments.done",
+                    "name": "finish_counterpart",
+                    "call_id": "finish",
+                    "response_id": "closing",
+                }
+            )
+            await socket.incoming.put(
+                {"type": "response.done", "response": {"id": "closing", "status": "completed"}}
+            )
+            await task
+            if status != "completed":
+                assert not business.actions and not business.requests
+    finally:
+        release.set()
+        task.cancel()
+        await asyncio.gather(task, return_exceptions=True)
+        await session.close("test")

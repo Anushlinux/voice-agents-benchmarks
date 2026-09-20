@@ -12,6 +12,9 @@ from voice_bench.evidence.local import canonical, digest, publish
 def validate_live(config, cases):
     from voice_bench.business.environment import WORKFLOWS
 
+    for case in cases:
+        case.require_supported_execution()
+
     if (
         config.limits.max_total_call_minutes <= 0
         or config.limits.max_spend_inr <= 0
@@ -23,12 +26,14 @@ def validate_live(config, cases):
     if not config.runtime.rate_card_version:
         raise ValueError("A versioned rate card is required")
     costs = config.runtime.cost_components_inr_per_attempt
-    required_costs = {"caller", "target"} | ({"carrier"} if "phone" in config.channels else set())
+    required_costs = {"counterpart", "target"} | (
+        {"carrier"} if "phone" in config.channels else set()
+    )
     if not required_costs.issubset(costs) or any(
         not cost.is_finite() or cost <= 0 for cost in costs.values()
     ):
         raise ValueError(
-            "Positive caller, target, and applicable carrier cost ceilings are required"
+            "Positive counterpart, target, and applicable carrier cost ceilings are required"
         )
     if sum(costs.values()) > config.runtime.cost_ceiling_inr_per_attempt:
         raise ValueError("Per-attempt ceiling must cover every configured component")
@@ -36,23 +41,28 @@ def validate_live(config, cases):
         raise ValueError("The intended target and deployed version are required")
     if not all(
         (
-            config.caller.model,
-            config.caller.voice,
-            config.caller.instructions,
-            config.caller.turn_detection,
+            config.counterpart.model,
+            config.counterpart.voice,
+            config.counterpart.instructions,
+            config.counterpart.turn_detection,
         )
     ):
         raise ValueError(
-            "Explicit OpenAI caller model, voice, instructions, and turn detection required"
+            "Explicit OpenAI counterpart model, voice, instructions, and turn detection required"
         )
-    if config.caller.turn_detection.get("type") not in {"server_vad", "semantic_vad"}:
-        raise ValueError("Unsupported caller turn-detection mode")
+    if config.counterpart.turn_detection.get("type") not in {"server_vad", "semantic_vad"}:
+        raise ValueError("Unsupported counterpart turn-detection mode")
     if not config.runtime.public_base_url.startswith("https://"):
         raise ValueError("A public HTTPS endpoint for authenticated business tools is required")
     for case in cases:
         if (case.workflow, case.workflow_version) not in WORKFLOWS:
             raise ValueError("Workflow implementation is not registered")
-        WORKFLOWS[(case.workflow, case.workflow_version)].initialize(case.initial_state)
+        workflow = WORKFLOWS[(case.workflow, case.workflow_version)]
+        workflow.initialize(case.initial_state)
+        if not set(case.target_tools + case.counterpart_tools).issubset(workflow.tools):
+            raise ValueError("A participant tool is not declared by the workflow")
+        if not set(case.counterpart_tools).issubset(workflow.tool_definitions):
+            raise ValueError("Counterpart tools require descriptions and parameter schemas")
     required = ["DATABASE_URL", "RUMIK_API_KEY", "OPENAI_API_KEY", "BENCH_TOOLS_SECRET"]
     if "phone" in config.channels:
         required += ["PLIVO_AUTH_ID", "PLIVO_AUTH_TOKEN"]
@@ -68,7 +78,8 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
     import uvicorn
 
     from voice_bench.api.app import create_app
-    from voice_bench.caller.openai_realtime import OpenAICaller
+    from voice_bench.business.environment import BusinessService
+    from voice_bench.caller.openai_realtime import OpenAICounterpart
     from voice_bench.channels.browser.adapter import BrowserAdapter
     from voice_bench.channels.phone.adapter import PhoneAdapter, PhoneHub, PlivoClient
     from voice_bench.contracts import PlannedRun
@@ -180,8 +191,12 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
                 if plan.channel == "browser"
                 else PhoneAdapter(target, hub)
             )
-            caller = OpenAICaller(config.caller, os.environ["OPENAI_API_KEY"])
-            controller = Controller(store, config, channel, caller, target)
+            counterpart = OpenAICounterpart(
+                config.counterpart, os.environ["OPENAI_API_KEY"], business=BusinessService(store)
+            )
+            controller = Controller(
+                store, config, channel, counterpart, target, target_agent_id=snapshot["agent"]["id"]
+            )
             result = await controller.execute(plan, case_lookup[plan.case_id], config_digest)
             results.append(result.model_dump(mode="json"))
             if not result.termination_confirmed:

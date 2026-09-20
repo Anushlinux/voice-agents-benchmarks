@@ -49,6 +49,8 @@ def make_plan(cases, channels, repetitions=1, seed=0, batch_id=None):
                     channel=channel,
                     repetition=repetition,
                     order=len(result),
+                    task_scope=case.task_scope,
+                    call_initiation=case.call_initiation,
                 )
             )
     return result
@@ -89,6 +91,8 @@ def report(store, batch_id, root, *, evaluation_version=None, review_version=Non
                 "outcome": result.get("outcome", "unresolved"),
                 "termination_confirmed": run["termination_confirmed"],
                 "harness_fixture": run.get("harness_fixture", False),
+                "task_scope": run.get("task_scope", "legacy_unspecified"),
+                "call_initiation": run.get("call_initiation", "legacy_unspecified"),
             }
         )
     counts = {

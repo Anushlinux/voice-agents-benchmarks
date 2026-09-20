@@ -44,7 +44,8 @@ class Session:
 
 
 class Channel:
-    def __init__(self, mode="ok"):
+    def __init__(self, mode="ok", store=None):
+        self.store = store
         self.mode, self.calls = mode, 0
         self.session = Session()
 
@@ -52,6 +53,12 @@ class Channel:
         self.calls += 1
         if self.mode == "setup_error":
             raise RuntimeError("connection failed")
+        if self.store and self.mode != "missing_task":
+            from voice_bench.business.environment import BusinessService
+
+            call_id = str(request.run.run_id)
+            self.store.bind("rumik", call_id, request.run.run_id)
+            BusinessService(self.store).serve_user_task(call_id, "test")
         return self.session
 
     async def reconcile(self, run_id, evidence):
@@ -84,7 +91,7 @@ def batch(store, config):
 async def test_controller_always_closes_seals_and_releases(store, tmp_path, mode):
     config = configured(tmp_path)
     plan, case = batch(store, config)
-    channel = Channel()
+    channel = Channel(store=store)
     result = await Controller(store, config, channel, Caller(mode)).execute(plan, case, "digest")
     assert channel.session.closed
     run = store.run(result.run_id)
@@ -98,7 +105,7 @@ async def test_controller_always_closes_seals_and_releases(store, tmp_path, mode
 async def test_unknown_start_retains_capacity_and_evidence(store, tmp_path):
     config = configured(tmp_path)
     plan, case = batch(store, config)
-    result = await Controller(store, config, Channel("setup_error"), Caller()).execute(
+    result = await Controller(store, config, Channel("setup_error", store=store), Caller()).execute(
         plan, case, "x"
     )
     assert not result.termination_confirmed
@@ -112,7 +119,7 @@ async def test_zero_budget_never_dispatches(store, tmp_path):
         update={"limits": config.limits.model_copy(update={"max_spend_inr": Decimal(0)})}
     )
     plan, case = batch(store, config)
-    channel = Channel()
+    channel = Channel(store=store)
     result = await Controller(store, config, channel, Caller()).execute(plan, case, "x")
     assert channel.calls == 0
     assert result.termination_confirmed
@@ -123,7 +130,7 @@ async def test_zero_budget_never_dispatches(store, tmp_path):
 async def test_cancellation_finalizes_attempt(store, tmp_path):
     config = configured(tmp_path)
     plan, case = batch(store, config)
-    channel = Channel()
+    channel = Channel(store=store)
     task = asyncio.create_task(
         Controller(store, config, channel, Caller("timeout")).execute(plan, case, "x")
     )
@@ -137,3 +144,42 @@ async def test_cancellation_finalizes_attempt(store, tmp_path):
         await task
     assert channel.session.closed
     assert store.runs(plan.batch_id)[0]["evidence_sealed"]
+
+
+@pytest.mark.asyncio
+async def test_controller_delivers_task_and_passes_only_counterpart_brief(store, tmp_path):
+    import json
+
+    config = configured(tmp_path)
+    plan, case = batch(store, config)
+
+    class InspectCounterpart:
+        async def converse(self, run, brief, session, evidence):
+            assert brief == case.counterpart
+            assert not hasattr(brief, "user_task") and not hasattr(brief, "criteria")
+            assert store.run(run.run_id)["user_task_served"]
+
+    result = await Controller(store, config, Channel(store=store), InspectCounterpart()).execute(
+        plan, case, "digest"
+    )
+    assert result.error is None
+    path = tmp_path / str(plan.batch_id) / str(result.run_id) / "target/task-delivery.json"
+    assert json.loads(path.read_text())["call_id"] == str(result.run_id)
+
+
+@pytest.mark.asyncio
+async def test_missing_user_task_stops_before_counterpart_conversation(store, tmp_path):
+    config = configured(tmp_path)
+    plan, case = batch(store, config)
+    called = []
+
+    class Counterpart:
+        async def converse(self, *args):
+            called.append(True)
+
+    channel = Channel("missing_task", store=store)
+    result = await Controller(store, config, channel, Counterpart()).execute(plan, case, "digest")
+    assert result.error and not called
+    assert result.connected and result.validity == "invalid"
+    assert result.attribution == "harness"
+    assert channel.session.closed and result.termination_confirmed

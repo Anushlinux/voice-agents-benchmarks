@@ -7,20 +7,33 @@ from voice_bench.batches import make_plan
 from voice_bench.business.environment import BusinessService
 from voice_bench.contracts import ExecutionCase
 from voice_bench.evidence.local import LocalEvidence, verify_bundle
-from voice_bench.models import CallerBrief, RunContext
+from voice_bench.models import CounterpartBrief, RunContext, UserTask
 from voice_bench.storage import PostgresStore
 
 
 def fixture_case():
     return ExecutionCase(
         case_id="harness-isolation",
-        version="1",
+        version="2",
         workflow="harness_record",
         workflow_version="1",
         harness_fixture=True,
-        caller=CallerBrief(
-            goal="Ask to update your synthetic record.", known_facts={"record_id": "owned"}
+        schema_version=2,
+        task_scope="single_call",
+        call_initiation="harness_connected",
+        user_task=UserTask(
+            request="Ask the record custodian to change my synthetic note to updated.",
+            known_facts={"record_id": "owned"},
+            constraints=("Do not change another record.",),
+            permissions=("Request a note change on my owned record.",),
         ),
+        counterpart=CounterpartBrief(
+            role="Synthetic record custodian",
+            goal="Handle permitted requests using the record tools.",
+            known_facts={},
+            behavior_rules=("Claim a change only after a successful tool result.",),
+        ),
+        counterpart_tools=("get_record", "set_note"),
         initial_state={
             "owned_record": "owned",
             "records": {"owned": {"note": "initial"}, "other": {"note": "unchanged"}},
@@ -67,6 +80,11 @@ async def execute_fixture(store, root):
                 "workflow_version": case.workflow_version,
                 "state": case.initial_state,
                 "harness_fixture": True,
+                "user_task": case.user_task.model_dump(mode="json"),
+                "tool_access": {
+                    "target": list(case.target_tools),
+                    "counterpart": list(case.counterpart_tools),
+                },
             },
         )
         await asyncio.to_thread(store.bind, "rumik", f"fixture-{run_id}", run_id)

@@ -1,8 +1,18 @@
 # Evidence and evaluation contract
 
+## Role-specific evidence
+
+Schema 2 gives the evaluator the user's request, facts, constraints and permissions separately from the counterpart's role, facts and business rules. Evaluate Rumik against the user's interests and authorization. Check a business-side booking through the counterpart's committed action and final state. Do not require Rumik to call a business-owned mutation directly.
+
+Audits carry `actor`: `target`, `counterpart`, or `harness` for local controls. `policy_actions` checks forbidden target attempts; `counterpart_actions` invalidates tests with forbidden counterpart attempts. Duplicate detection includes actor identity. Spoken consent, negotiation limits and whether an action followed the conversation still need explicit rubrics and model/human review. Tool authorization alone cannot establish those facts.
+
+`target/task-delivery.json` proves the authenticated harness callback served the task, not that the hosted agent understood or followed it. Missing delivery evidence cannot produce a schema-2 non-fixture pass. Outbound initiation, several-call tasks and app actions are not inferred from single-call evidence. Reports label the tested scope.
+
+The judge uses `counterpart_validity` for schema 2. Old sealed cases remain readable under their original business-agent roles and `caller_validity`; do not silently reinterpret historical results. Legacy `caller` event/timing names refer to the counterpart for new cases.
+
 ## Main rule
 
-The caller reacts to audio it receives. The evaluator checks observable actions
+The counterpart reacts to received audio and its role-permitted tool results. Rumik is evaluated as the user's assistant. The evaluator checks observable actions
 and outcomes. A fluent transcript or spoken success claim does not prove success.
 
 ## Implemented evidence layout
@@ -10,7 +20,7 @@ and outcomes. A fluent transcript or spoken success claim does not prove success
 ```text
 artifacts/<batch_id>/<run_id>/
   manifest.json
-  config/                    # target, tools, variables, caller and grading snapshots
+  config/                    # target, tools, variables, counterpart and grading snapshots
   audio/                     # source, sent and received audio, clearly labeled
   events.jsonl               # append-only events, named clocks and sequence numbers
   business/                  # initial state, tool audit and final state
@@ -32,8 +42,8 @@ Never preserve only an expiring recording link.
 | Conversation | Relevance, consistency, accurate explanations | Audio-backed transcript and explicit rubric |
 | Audio | Intelligibility, interruption, pauses, overlap and recovery | Actual received audio and playback evidence |
 | Timing | Setup, greeting, response gap, substantive reply, interruption stop | Defined boundaries on aligned media clocks |
-| Reliability | Connection failures, drops, premature endings, one-way audio | Caller, carrier and target events |
-| Test quality | Caller validity, missing evidence, judge errors | Caller decisions, recordings and human review |
+| Reliability | Connection failures, drops, premature endings, one-way audio | Counterpart, carrier and target events |
+| Test quality | Counterpart validity, missing evidence, judge errors | Counterpart decisions, recordings and human review |
 
 No composite score, pass threshold, latency target or weighting is agreed yet.
 Correct alternative paths must be accepted; do not require an exact tool sequence
@@ -41,12 +51,12 @@ unless ordering itself is a business rule.
 
 ## Timing
 
-Primary response gap: end of delivered caller speech to beginning of received
+Primary response gap: end of delivered counterpart speech to beginning of received
 target speech. Browser media clocks, carrier clocks and process monotonic clocks
 are separate. Record their identity and uncertainty instead of subtracting
 unrelated timestamps. Never call queued speech "delivered" without evidence.
 
-Report caller processing separately. Carrier playback acknowledgments are useful
+Report counterpart processing separately. Carrier playback acknowledgments are useful
 but their receipt time is not exact remote playout. Separate overlap turns from
 ordinary response gaps, and report no-response turns alongside percentiles.
 Internal target time-to-first-token is unavailable unless adequate telemetry exists.
@@ -69,7 +79,7 @@ counts. These are not all disjoint categories: e.g. connected is a subset of
 attempted. Define the denominator beside every reported rate.
 
 Keep test validity separate from failure attribution (target, simulator, harness,
-unknown). A target-side drop in a valid test remains a failure. A caller that
+unknown). A target-side drop in a valid test remains a failure. A counterpart that
 changes its assigned facts can invalidate a test. Unclear evidence stays unclear.
 
 Show success among valid attempts and, if useful, success conditional on valid
@@ -83,4 +93,4 @@ The offline timing function uses 20 ms root-mean-square energy windows and an ex
 
 Human review remains required for intelligibility, whether an interruption was appropriate, and whether speech recovery sounded natural. No text-only quality score is presented as a listening result.
 
-Caller turnaround is reported separately as observed voice-activity stop to first generated audio. Both observations must share a worker clock. This includes network and provider processing and is not internal target latency.
+Counterpart turnaround is reported separately as observed voice-activity stop to first generated audio. Both observations must share a worker clock. This includes network and provider processing and is not internal target latency.

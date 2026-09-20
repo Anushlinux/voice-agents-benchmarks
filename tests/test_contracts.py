@@ -4,13 +4,18 @@ from uuid import uuid4
 import pytest
 from pydantic import ValidationError
 
-from voice_bench.models import AudioFrame, CallerBrief, EvidenceEvent, MetricResult
+from voice_bench.models import AudioFrame, CounterpartBrief, EvidenceEvent, MetricResult
 
 
 def test_caller_brief_rejects_evaluator_only_inputs():
     with pytest.raises(ValidationError, match="Extra inputs"):
-        CallerBrief.model_validate(
-            {"goal": "Ask for help", "known_facts": {}, "expected_outcome": "private answer"}
+        CounterpartBrief.model_validate(
+            {
+                "role": "Record custodian",
+                "goal": "Handle requests",
+                "known_facts": {},
+                "expected_outcome": "private answer",
+            }
         )
 
 

@@ -13,11 +13,13 @@ from voice_bench.models import CallRequest, FailureAttribution, RunContext, Vali
 
 
 class Controller:
-    def __init__(self, store, config, channel, caller, target=None):
+    def __init__(self, store, config, channel, counterpart, target=None, *, target_agent_id=None):
         self.store, self.config = store, config
-        self.channel, self.caller, self.target = channel, caller, target
+        self.target_agent_id = target_agent_id or config.target.agent_ref
+        self.channel, self.counterpart, self.target = channel, counterpart, target
 
     async def execute(self, plan, case, config_digest, *, run_id=None):
+        case.require_supported_execution()
         run_id = run_id or uuid4()
         initial = WORKFLOWS[(case.workflow, case.workflow_version)].initialize(case.initial_state)
         context = RunContext(
@@ -36,6 +38,14 @@ class Controller:
             "state": initial,
             "initial_state": case.initial_state,
             "harness_fixture": case.harness_fixture,
+            "user_task": case.user_task.model_dump(mode="json"),
+            "tool_access": {
+                "target": list(case.target_tools),
+                "counterpart": list(case.counterpart_tools),
+            },
+            "task_scope": case.task_scope,
+            "call_initiation": case.call_initiation,
+            "expected_agent_id": self.target_agent_id,
         }
         await asyncio.to_thread(self.store.create_run, plan.batch_id, run_id, run_data)
         evidence = LocalEvidence(self.config.artifact_root, plan.batch_id, run_id)
@@ -45,6 +55,7 @@ class Controller:
         result = AttemptResult(run_id=run_id)
         session = None
         dispatch = False
+        task_delivered = False
         heartbeat = None
         started = time.monotonic()
         cancelled = False
@@ -77,13 +88,23 @@ class Controller:
                     ),
                     evidence,
                 )
-            result = result.model_copy(update={"connected": True})
+                result = result.model_copy(update={"connected": True})
+                await asyncio.to_thread(self.store.update_run, run_id, connected=True)
+                while True:
+                    delivery = await asyncio.to_thread(self.store.run, run_id)
+                    if delivery.get("user_task_served"):
+                        task_delivered = True
+                        await evidence.json(
+                            "target/task-delivery.json", delivery["user_task_delivery"]
+                        )
+                        break
+                    await asyncio.sleep(0.05)
             await asyncio.to_thread(
                 self.store.update_run, run_id, phase="in_conversation", connected=True
             )
             await evidence.emit("controller", "connected")
             conversation = asyncio.create_task(
-                self.caller.converse(context, case.caller, session, evidence)
+                self.counterpart.converse(context, case.counterpart, session, evidence)
             )
             try:
                 done, _ = await asyncio.wait(
@@ -119,6 +140,14 @@ class Controller:
                 )
                 if isinstance(exc, HarnessFailure):
                     result = result.model_copy(update={"attribution": FailureAttribution.HARNESS})
+            if session is not None and not task_delivered:
+                result = result.model_copy(
+                    update={
+                        "attribution": FailureAttribution.HARNESS,
+                        "validity": Validity.INVALID,
+                    }
+                )
+                await evidence.emit("controller", "user_task_not_delivered")
             await evidence.emit("controller", "failure", {"type": type(exc).__name__})
         finally:
             await asyncio.to_thread(self.store.update_run, run_id, phase="finalizing")

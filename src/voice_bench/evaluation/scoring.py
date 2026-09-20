@@ -109,12 +109,37 @@ def deterministic(directory):
                 name="task_state", status="uncertain", explanation="No state criteria supplied."
             )
         )
+    rejected_errors = {"forbidden_record", "forbidden_tool", "operation_conflict"}
     forbidden = [
         entry
         for entry in audit
-        if entry["result"].get("error") in {"forbidden_record", "operation_conflict"}
-        or entry["tool"] in criteria.get("forbidden_tools", [])
+        if entry.get("actor", "target") != "counterpart"
+        and (
+            entry["result"].get("error") in rejected_errors
+            or entry["tool"] in criteria.get("forbidden_tools", [])
+        )
     ]
+    if case.get("schema_version") == 2:
+        counterpart_errors = [
+            entry
+            for entry in audit
+            if entry.get("actor") == "counterpart"
+            and entry["result"].get("error") in rejected_errors
+        ]
+        verdict(
+            "counterpart_actions",
+            not counterpart_errors,
+            f"Found {len(counterpart_errors)} forbidden counterpart action attempts.",
+            ["business/audit.json"],
+        )
+        if not case.get("harness_fixture"):
+            verdict(
+                "task_delivery",
+                "target/task-delivery.json" in refs,
+                "The authenticated before-call response served the user's task to Rumik. "
+                "This does not prove that the hosted agent used it correctly.",
+                ["target/task-delivery.json"],
+            )
     verdict(
         "policy_actions",
         not forbidden,
@@ -122,7 +147,7 @@ def deterministic(directory):
         ["business/audit.json"],
     )
     successes = [a for a in audit if a["result"].get("ok") and not a.get("replay")]
-    ids = [a["operation_id"] for a in successes]
+    ids = [(a.get("actor", "target"), a["operation_id"]) for a in successes]
     verdict(
         "duplicate_effects",
         len(ids) == len(set(ids)),
@@ -166,6 +191,10 @@ def summarize(metrics, validity="unresolved", required=()):
     by_name = {m.name: m for m in metrics}
     selected = [by_name[n] for n in required if n in by_name]
     resolved = bool(required) and len(selected) == len(required)
+    if any(m.name == "counterpart_actions" and m.status == "not_met" for m in metrics):
+        return "unresolved"
+    if any(m.name == "task_delivery" and m.status != "met" for m in metrics):
+        return "unresolved"
     if validity != "valid" or not resolved:
         return "unresolved"
     mandatory = {"task_state", "policy_actions", "duplicate_effects", "call_reliability"}
@@ -188,6 +217,8 @@ def save_evaluation(directory, version, metrics, *, validity="unresolved", judge
     names = [m.name for m in metrics]
     if len(names) != len(set(names)):
         raise ValueError("Metric names must be unique")
+    if any(m.name == "counterpart_actions" and m.status == "not_met" for m in metrics):
+        validity = "invalid"
     result = {
         "version": version,
         "validity": validity,

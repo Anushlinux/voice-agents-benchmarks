@@ -1,24 +1,28 @@
-# Rumik voice-agent benchmark
+# Rumik personal-assistant benchmark
 
-Benchmark a **hosted Rumik agent** through Chromium/LiveKit and real Plivo telephone calls. An OpenAI realtime audio customer listens to the channel and speaks back. Business tools run against isolated synthetic records. Grading checks saved actions and final state, then adds explicit model assessment and human review.
+Benchmark a **hosted Rumik assistant acting on a user's behalf**. Rumik receives the user's assignment and speaks with a simulated restaurant employee, delivery agent, driver, or support representative. OpenAI Realtime plays that other person. Only Rumik is the target being evaluated; this is not a Rumik-versus-OpenAI comparison.
 
-**Status: implementation available; live qualification pending.** The local fixture, PostgreSQL persistence, evidence storage, controller, provider adapters, grading, review, and batch commands are implemented. The provider-free suite includes real local Chromium audio processing and PostgreSQL transactions. This is not evidence that a real Rumik or Plivo call has succeeded. No provider conversations, provisioning, deployments, or paid evaluations have been run for this delivery.
+This follows the Rumik team direction relayed by the user on 2026-09-20. It supersedes the earlier assumption that Rumik represents a business answering an OpenAI customer's request. Indian settings, Hinglish, booking, cancellation, negotiation and delivery coordination guide the intended dataset; domain workflows and coverage remain a separate workstream.
+
+**Status: role-separated single-call implementation; live qualification pending.** The harness delivers a private user task through its authenticated before-call callback, gives the counterpart separately scoped business tools, records audio/actions, and grades final state. No live provider success is claimed. The only supplied workflow is an infrastructure fixture.
 
 ```mermaid
 flowchart LR
-    P[Plan and limits] --> C[Controller]
-    C --> O[OpenAI audio customer]
-    O <-->|Audio| T[Chromium or Plivo]
-    T <-->|Audio| R[Hosted Rumik agent]
-    R -->|Authenticated tools| B[Isolated business records]
-    B --> D[(PostgreSQL)]
-    C --> E[Immutable evidence]
-    T --> E
+    U[User request and permissions] --> R[Hosted Rumik assistant]
+    R <-->|Browser or phone audio| S[OpenAI simulated other person]
+    S -->|Role-permitted tools| B[Isolated business records]
+    R -->|Only user-authorized tools| B
+    R --> E[Recordings and action evidence]
+    S --> E
     B --> E
-    E --> G[Rules, model judge, human review]
+    E --> G[Rules, optional model judge, human review]
 ```
 
-The customer receives only its brief and channel audio. Hidden business state, expected outcomes, and target transcripts are not customer inputs. Browser and phone attempts remain separate and retain their pairing in reports.
+Rumik receives only the user's assignment and information it is entitled to access. The counterpart receives its own role, facts, received audio, and permitted tool results. Neither receives grading answers. For a restaurant call, the restaurant side owns reservation mutations; Rumik cannot directly edit the restaurant's records unless a scenario explicitly represents a legitimate user-facing tool.
+
+The current browser and phone adapters connect a **single conversation**. The phone adapter dials into Rumik, so it measures conversation behavior only. Rumik choosing and dialing a destination, tasks spanning several calls and user approvals, and operating District/Uber apps are not implemented. Cases requesting outbound initiation or multiple calls are rejected before dispatch; they are never silently reduced to one inbound call. A longer duration limit permits a longer conversation, not a multi-call task.
+
+Read [the role and scope contract](docs/SCOPE.md) and [case migration instructions](docs/RUNNING.md#supply-workflows-and-cases) before supplying new data.
 
 ## Start without providers
 
@@ -79,10 +83,10 @@ Each database test creates and removes its own schema. Use a dedicated developme
 | Package | Responsibility |
 | --- | --- |
 | `controller/` | Attempt lifecycle, reservations, cleanup and leases |
-| `caller/` | OpenAI native-audio customer and playback truncation |
+| `caller/` | OpenAI counterpart audio, permitted business tools and playback truncation |
 | `channels/browser/`, `browser/` | Chromium audio worklets and LiveKit bridge |
 | `channels/phone/` | Plivo calls, authenticated streams, codec conversion and checkpoints |
-| `target/rumik/` | Snapshots, registration, single-use token redemption and call evidence |
+| `target/rumik/` | Hosted personal-assistant snapshots, call setup and evidence |
 | `business/`, `storage.py` | Versioned workflows, transactional state and tool audits |
 | `evidence/` | Local manifests, checksum verification and immutable object uploads |
 | `evaluation/` | Deterministic checks, captured-audio transcription, judge and human review |

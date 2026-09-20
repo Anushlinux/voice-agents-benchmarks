@@ -1,48 +1,36 @@
-# Scope and decisions
+# Scope and role decisions
 
-This summarizes the supplied RUMIK_VOICE_BENCHMARK_SCOPE.md handoff and the
-architecture discussion of 2026-09-20. It is project context, not an instruction
-to provision services or execute evaluations.
+## Current direction
 
-## Confirmed
+The user relayed the Rumik team's direction on 2026-09-20: evaluate Rumik acting on someone's behalf in Indian settings. Examples include booking, cancellation, negotiation, delivery coordination and conversations with drivers or support representatives. Long conversations and tasks spanning multiple interactions belong to the intended product scope.
 
-- Evaluate Rumik's hosted voice-agent product on difficult Hinglish conversations.
-- Support browser/API audio and actual phone-number calls, reported separately.
-- Use an interactive controlled customer and synthetic business tools where needed.
-- Verify task outcomes, policy/action correctness, conversation behavior, audio,
-  latency and call reliability using inspectable evidence.
-- Preserve configuration identity and repeat runs under comparable conditions.
-- Include human validation of passing and failing grades.
+This supersedes the earlier inbound business-agent framing. These are project requirements relayed by the user, not independently verified provider feature claims.
 
-## Accepted architecture
+## Roles
 
-Start test → simulated customer → browser or phone → hosted Rumik → mock business
-system → evidence → evaluation and review. Develop locally; use an India cloud
-worker for reported conversations. Vercel controls/review are optional.
+| Component | Responsibility |
+| --- | --- |
+| Hosted Rumik target | Follow the user's assignment, constraints and permissions; converse and act on their behalf. |
+| OpenAI counterpart | Play the other person, follow their assigned facts/business rules, and use only that role's tools. |
+| Business environment | Validate actions and hold isolated synthetic records. A counterpart's words cannot invent a successful state change. |
+| Evaluator | Check user outcomes, action permissions, conversation behavior and simulator validity using saved evidence. |
 
-Python is the shared runtime. The implemented customer uses OpenAI Realtime audio; Chromium/LiveKit and Plivo implement the two channels. Evaluation combines deterministic checks, an explicitly enabled OpenAI text judge and human listening. These adapters still need live qualification. Rumik stays the target; the customer is infrastructure, not another ranked agent.
+OpenAI is test infrastructure, not a second ranked agent. A separate optional OpenAI judge evaluates saved evidence; that is distinct from the live counterpart. Both sides do not need to use Rumik.
 
-## Still open
+## Implemented scope and gaps
 
-Dataset domains, scenario contents, counts and repetitions are being considered
-in a separate workstream. This repository does not choose them. Caller/judge
-models, target account access, numbers, route, funded budgets, review volume and
-grading thresholds also need qualification or agreement.
+Schema 2 separates `user_task`, `counterpart`, role-specific tool grants, private business state, and grading criteria. The user's task is returned only through a correlated, authenticated Rumik before-call request. The controller waits for that response to be served before starting the counterpart. Hosted consumption of the task still needs live qualification.
 
-## Outside the first benchmark
+`single_call` plus `harness_connected` is the only executable combination. The browser bridge connects one conversation; the Plivo adapter dials the Rumik-connected number. This can exercise a personal-assistant conversation but does not prove Rumik can initiate an outbound call.
 
-Competitor ranking, a public leaderboard, a polished management dashboard,
-production customer integrations, model training, and automatic agent tuning.
+`rumik_outbound` and `multi_call` can be represented and planned, but execution rejects them before provider activity. They require additional integration: target-originated dialing, task-level state across calls, destination selection, user approval exchanges, and task-level finalization. App actions in District or Uber also require an explicit app/tool environment; no app control is implemented here.
 
-## Reference reading
+Long single-call scenarios can use a larger funded duration limit. Domain-specific holds, transfers, negotiation rules, permissions and scoring need authored workflows and scenarios. No coverage is inferred from the synthetic note-changing fixture.
 
-- [Rumik hosted agents](https://docs.rumik.ai/voice-agents)
-- [Rumik business tools](https://docs.rumik.ai/variables-and-tools)
-- [Plivo audio streaming](https://docs.plivo.com/docs/voice-agents/audio-streaming/overview)
-- [Cekura tool-call evaluation](https://docs.cekura.ai/documentation/guides/testing-agents/tool-call-testing)
-- [Tau-Voice](https://arxiv.org/html/2603.13686v1)
-- [Full-Duplex-Bench](https://arxiv.org/abs/2503.04721)
+## Dataset design boundaries
 
-Borrow verifiable outcomes and full-duplex interaction from related benchmarks.
-Do not inherit transcript-fed caller perception or simulated timing where those
-would bypass the actual browser/telephone audio path required here.
+Each case needs the user's goal and permissions, the counterpart's role and visible facts, business rules and initial state, and observable acceptable outcomes. Do not give the counterpart the user's private budget or fallback preference unless Rumik reveals it or the scenario legitimately makes it known. Do not give Rumik the counterpart's hidden rules or expected grading answer.
+
+Restaurant reservations belong to restaurant tools. A user's own calendar or legitimate booking API can belong to Rumik when explicitly modeled. Neither side has unrestricted access to the database. Grading must reject invented simulator concessions and separate simulator errors from target failures.
+
+Dataset counts, real domain workflows, repetitions, model/voice choices, grading thresholds and paid run budgets remain to be supplied. Competitor ranking, a public leaderboard, production integrations, model training and automatic agent tuning are outside this change.

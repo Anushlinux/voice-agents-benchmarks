@@ -53,13 +53,10 @@ def create_app(store=None, tools_secret=None, phone_hub=None) -> FastAPI:
             authorize(authorization)
             try:
                 try:
-                    run_id = store.resolve("rumik", body.call_id)
+                    store.resolve("rumik", body.call_id)
                 except KeyError:
-                    run_id = store.bind_phone(body.phone_number, body.agent_id, body.call_id)
-                run = store.run(run_id)
-                if not run["accept_tools"]:
-                    raise ValueError("Attempt closed")
-                return {"benchmark_ready": True}
+                    store.bind_phone(body.phone_number, body.agent_id, body.call_id)
+                return business.serve_user_task(body.call_id, body.agent_id)
             except (ValueError, KeyError) as exc:
                 raise HTTPException(409, "Uncorrelated or closed call") from exc
 

@@ -11,6 +11,7 @@ class Workflow(Protocol):
     name: str
     version: str
     tools: frozenset[str]
+    tool_definitions: dict[str, dict]
 
     def initialize(self, supplied: dict) -> dict: ...
 
@@ -23,6 +24,27 @@ class FixtureWorkflow:
     name = "harness_record"
     version = "1"
     tools = frozenset({"get_record", "set_note"})
+
+    tool_definitions = {
+        "get_record": {
+            "description": "Read the permitted synthetic record.",
+            "parameters": {
+                "type": "object",
+                "properties": {"record_id": {"type": "string"}},
+                "required": ["record_id"],
+                "additionalProperties": False,
+            },
+        },
+        "set_note": {
+            "description": "Change a note on the permitted synthetic record.",
+            "parameters": {
+                "type": "object",
+                "properties": {"record_id": {"type": "string"}, "note": {"type": "string"}},
+                "required": ["record_id", "note"],
+                "additionalProperties": False,
+            },
+        },
+    }
 
     def initialize(self, supplied):
         if (
@@ -55,36 +77,97 @@ class BusinessService:
         self.store = store
         self.workflows = workflows if workflows is not None else WORKFLOWS
 
-    def execute(self, run_id, tool, arguments, request_id):
+    def counterpart_tools(self, run_id):
+        """Return only tool definitions granted to this attempt's simulated person."""
+        run = self.store.run(run_id)
+        if not run.get("user_task_served") or not run["accept_tools"]:
+            raise ValueError(
+                "The Rumik task must be delivered before counterpart tools are enabled"
+            )
+        workflow = self.workflows[(run["workflow"], run["workflow_version"])]
+        return [
+            {
+                "type": "function",
+                "name": "business_" + name,
+                **deepcopy(workflow.tool_definitions[name]),
+            }
+            for name in run.get("tool_access", {}).get("counterpart", [])
+        ]
+
+    def serve_user_task(self, call_id, agent_id):
+        from voice_bench.models import UserTask
+
+        run_id = self.store.resolve("rumik", call_id)
+        with self.store.locked_run(run_id) as run:
+            if not run["accept_tools"] or run.get("expected_agent_id") != agent_id:
+                raise ValueError("Closed attempt or wrong target agent")
+            task = UserTask.model_validate(run.get("user_task"))
+            run["user_task_served"] = True
+            run["user_task_delivery"] = {
+                "call_id": call_id,
+                "sha256": digest(canonical(task.model_dump(mode="json"))),
+            }
+            return {"benchmark_ready": True, "user_task": task.model_dump(mode="json")}
+
+    def execute(self, run_id, tool, arguments, request_id, *, actor="harness"):
+        if actor not in {"harness", "target", "counterpart"}:
+            raise ValueError("Unknown business actor")
         if not request_id:
             raise ValueError("An operation ID is required")
         with self.store.locked_run(run_id) as run:
-            fingerprint = digest(canonical({"tool": tool, "arguments": arguments}))
-            old = run["operations"].get(request_id)
+            fingerprint = digest(canonical({"actor": actor, "tool": tool, "arguments": arguments}))
+            operation_key = request_id if actor == "harness" else f"{actor}:{request_id}"
+            old = run["operations"].get(operation_key)
             replay = False
             if old:
                 replay = old["fingerprint"] == fingerprint
                 result = old["result"] if replay else {"ok": False, "error": "operation_conflict"}
             elif not run["accept_tools"]:
                 result = {"ok": False, "error": "attempt_closed"}
+            elif actor != "harness" and (
+                not run.get("user_task_served")
+                or tool not in run.get("tool_access", {}).get(actor, [])
+            ):
+                result = {"ok": False, "error": "forbidden_tool"}
+                run["operations"][operation_key] = {"fingerprint": fingerprint, "result": result}
             else:
                 workflow = self.workflows[(run["workflow"], run["workflow_version"])]
                 state = deepcopy(run["state"])
                 result = workflow.execute(state, tool, arguments)
                 if result["ok"]:
                     run["state"] = state
-                run["operations"][request_id] = {"fingerprint": fingerprint, "result": result}
-            run["audit"].append(audit_entry(tool, arguments, request_id, result, replay))
+                run["operations"][operation_key] = {"fingerprint": fingerprint, "result": result}
+            run["audit"].append(
+                {**audit_entry(tool, arguments, request_id, result, replay), "actor": actor}
+            )
             return deepcopy(result)
 
     def execute_call(self, call_id, tool, arguments, operation_id):
-        return self.execute(self.store.resolve("rumik", call_id), tool, arguments, operation_id)
+        return self.execute(
+            self.store.resolve("rumik", call_id), tool, arguments, operation_id, actor="target"
+        )
+
+    def record_counterpart_request(self, run_id, tool, raw_body, operation_id):
+        # run_id comes from the worker's bound session, never model arguments.
+        with self.store.locked_run(run_id) as run:
+            requests = run.setdefault("incoming_requests", [])
+            requests.append(
+                {
+                    "sequence": len(requests),
+                    "actor": "counterpart",
+                    "tool": tool,
+                    "body": raw_body,
+                    "operation_id": operation_id,
+                }
+            )
 
     def record_request(self, call_id, tool, raw_body):
         run_id = self.store.resolve("rumik", call_id)
         with self.store.locked_run(run_id) as run:
             requests = run.setdefault("incoming_requests", [])
-            requests.append({"sequence": len(requests), "tool": tool, "body": raw_body})
+            requests.append(
+                {"sequence": len(requests), "actor": "target", "tool": tool, "body": raw_body}
+            )
         return run_id
 
     def seal(self, run_id):

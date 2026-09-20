@@ -6,7 +6,7 @@ from pathlib import Path
 
 from pydantic import Field, field_validator
 
-from voice_bench.contracts import CallerConfig, JudgeConfig, RuntimeConfig
+from voice_bench.contracts import CounterpartConfig, JudgeConfig, RuntimeConfig
 from voice_bench.models import Channel, Contract
 
 
@@ -29,7 +29,7 @@ class BenchmarkConfig(Contract):
     artifact_root: Path
     target: TargetConfig
     limits: RunLimits
-    caller: CallerConfig = Field(default_factory=CallerConfig)
+    counterpart: CounterpartConfig = Field(default_factory=CounterpartConfig)
     judge: JudgeConfig = Field(default_factory=JudgeConfig)
     runtime: RuntimeConfig = Field(default_factory=RuntimeConfig)
 

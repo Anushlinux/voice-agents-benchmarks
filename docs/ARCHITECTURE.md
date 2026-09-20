@@ -1,81 +1,56 @@
 # Architecture
 
-The short data-flow diagram is in [README.md](../README.md). This document
-records the implemented boundaries without turning the benchmark into a
-large evaluation platform.
+## Core flow
 
-## Deployment
+A user task goes to hosted Rumik. Rumik talks over audio with a simulated person. That person's business actions use isolated records. The evaluator checks the resulting conversation and state against the user's task.
 
-- Develop and inspect evidence locally.
-- Run reported conversations on a fixed India cloud VM using the same container
-  and locked dependencies. Qualify CPU load, audio pacing and media connectivity.
-- Rumik hosts the target. We do not operate its recognition/reasoning/voice stack.
-- PostgreSQL holds run metadata, leases, provider bindings and isolated synthetic business state. Business changes and tool audit entries commit in one transaction.
-- Local evidence is sealed with checksums; explicit uploads use immutable S3-compatible object keys.
-- Vercel may host controls and a reviewer, but no frontend is needed for the first
-  usable benchmark. Long-lived audio and browser work belong to the worker.
+The target is Rumik's hosted assistant, not a custom assistant using Rumik text-to-speech. The harness does not deploy or reconfigure the hosted agent. OpenAI Realtime supplies the other person and is not ranked as a competitor.
 
-Vercel Functions and Vercel Sandbox are different deployment options. Current
-Vercel documentation supports WebSockets, but function duration still bounds a
-connection. Verify current Sandbox regions before using it for India media.
-No cloud infrastructure is provisioned by this repository.
-
-## Data boundaries
+## Information boundaries
 
 | Recipient | May receive | Must not receive |
 | --- | --- | --- |
-| Caller simulator | Customer brief, own speech state, received channel audio | Hidden expected outcomes, business database access, target transcript as perception |
-| Hosted target | Business instructions, allowed tools, caller audio, permitted tool results | Caller hidden plan or evaluator answers |
-| Business tools | Authenticated context, correlated run ID, operation arguments | Authority to mutate another run or production records |
-| Evaluator | Private criteria, finalized evidence, state snapshots | Permission to repair the completed conversation |
-| Human reviewer | Evidence, grades, uncertainty and configuration | An unexplained aggregate score as the only proof |
+| Rumik | User request, known facts, constraints, permissions, counterpart audio, its permitted tool results | Counterpart's private strategy, unrestricted business state, grading criteria |
+| Counterpart | Assigned role, own facts and behavior, received Rumik audio, its permitted tool results | Private user task, hidden expected outcomes, Rumik transcript as hearing, unrestricted database |
+| Business service | Worker-bound run or authenticated provider identity, actor, operation and arguments | Authority to modify another attempt or production records |
+| Evaluator/reviewer | Both briefs, criteria, finalized recordings, action audit and state | Permission to repair a completed conversation |
 
-`CallerBrief` deliberately has no evaluator fields. The dataset authoring format remains separate. `ExecutionCase` is the internal input contract; the controller passes only its `caller` field to the customer simulator.
+`ExecutionCase` schema 2 contains `UserTask` and `CounterpartBrief` separately. The controller passes only `case.counterpart` to the simulator. The authenticated before-call endpoint returns only `user_task` to Rumik. Tool grants are fixed per case and denied by default. Actor identity is supplied by the worker or endpoint, never model arguments.
 
-## Browser flow
+Workflow implementations provide tool descriptions, parameter schemas and business rules. The counterpart gets only its granted definitions and results; it does not receive the whole initial state. For a reservation, the business side owns reservation changes. Rumik can use only explicitly modeled user-authorized tools.
 
-1. Controller creates a run and fresh business state.
-2. Rumik registration returns a call ID before the target begins.
-3. Controller persists the call-to-run mapping, then starts the web call.
-4. Chromium joins the provided LiveKit room. Generated speech becomes the virtual
-   microphone; subscribed audio is the customer's hearing.
-5. Target HTTP tools access the run's business environment.
-6. Separate send/receive loops capture audio and events through hangup.
+## Single-call execution
 
-API keys stay on the backend. Only short-lived room credentials reach the page.
-Any direct WebSocket or native LiveKit diagnostic path gets a distinct label.
+1. Create independent state and persist the user's task, canonical target identity and role-specific tool grants.
+2. Reserve funded limits and correlate the provider call ID with the attempt.
+3. Connect Chromium/LiveKit or the existing Plivo route.
+4. The hosted agent invokes the authenticated before-call endpoint. It verifies the provider/run/agent mapping and returns the user's task. The controller waits for that response to be served within the setup deadline.
+5. Start the OpenAI counterpart with its own brief and role-permitted tool definitions. Speech perception uses received audio only.
+6. Handle counterpart tools through the worker-bound attempt; handle Rumik tools through authenticated provider correlation. Reject unauthorized actions and keep their evidence.
+7. Confirm call termination, settle business state, seal recordings and audits, then evaluate.
 
-## Phone flow
+`target/task-delivery.json` records the call identity and task checksum. It proves the harness served the task, not that Rumik incorporated it into its instructions. The hosted agent must be configured to consume this before-call response; this remains a required live qualification check.
 
-1. Controller reserves a unique pending mapping for the caller number and target.
-2. Plivo dials the Rumik-connected number and streams the answered call to us.
-3. Rumik's before-call tool binds its call ID to that reserved run.
-4. Received carrier audio drives the caller; generated speech returns over the
-   bidirectional stream. Actual number-to-number calling remains in the path.
-5. Capture carrier events, Rumik status, audio and business actions.
+## Audio and tools
 
-Qualify number provisioning, media routing and trusted context-field values before live execution. Start serially; require unique number mappings
-before concurrency. Ambiguous association is a setup failure, not a guessed match.
-Outbound Rumik-to-simulator calls are a later alternative, not a silent fallback.
+Chromium joins the registered LiveKit room. Generated counterpart audio becomes the virtual microphone and subscribed Rumik audio becomes the counterpart's hearing. Independent queues preserve simultaneous send/receive and capture. On interruption, queued playback is cleared and the model conversation is truncated to confirmed playback.
 
-## Run lifecycle and recovery
+The OpenAI counterpart uses a server-side Realtime WebSocket. Business calls use a separate worker so audio reception continues while a tool runs. Arguments are executed only after their containing model response completes successfully; cancelled or incomplete responses cannot mutate records. Operation identities are scoped to the actor and attempt, so repeats replay safely and the two actors cannot collide.
 
-Prepared → connecting → in conversation → finalizing → grading → reviewed.
-Failures are recorded at the stage where they occur. Phase, test validity,
-failure attribution and task outcome are separate concepts.
+The Plivo adapter currently dials into the Rumik-connected number. Authenticated callbacks, unique route reservations, 8 kHz mu-law audio, conversion and playback checkpoints remain in place. This is labeled `harness_connected`; it does not implement Rumik-originated dialing. Outbound and multi-call execution fail before dispatch, without a fallback.
 
-The controller reserves funded ceilings before dispatch, applies setup/conversation/finalization timeouts, preserves every attempt, and requires reconciliation before retrying an uncertain start. A disconnected call
-cannot resume as the same attempt. Finalization waits for call termination,
-artifact storage and settled business state. Missing evidence stays visible.
+## Evidence and grading
 
-## Implemented provider choices
+Business mutations and audits commit together in PostgreSQL. Audits identify target, counterpart or local harness operations. A forbidden target action contributes to target policy failure. A forbidden counterpart action invalidates the simulation instead of failing Rumik. Conversational validity also requires model/human review: business permission alone does not prove that a concession or booking was justified by the conversation.
 
-The customer uses OpenAI Realtime directly over a server-side WebSocket. Its input is received PCM audio and the customer brief. Model, voice, turn detection and instructions are explicit configuration. On an interruption, the transport clears queued playback and reports confirmed progress; the customer truncates the model conversation to that played portion. Controlled interruption uses a separate configured timing behavior.
+Raw evidence stays immutable. Rescoring writes a new version. Legacy evidence remains readable with its original roles; new execution rejects old customer-style case inputs instead of silently reversing them. For compatibility, the internal `caller/` package, event source `caller`, `config/caller-effective.json` and timing keys retain their names; for schema 2 they describe the counterpart, not the user or Rumik.
 
-Chromium/LiveKit is the browser path. The bridge is bundled locally, publishes a generated microphone track, and captures subscribed target audio through audio worklets. Independent bounded queues preserve simultaneous send/receive. Generated, submitted, rendered and received recordings have distinct meanings.
+Browser, carrier, provider and local clocks are labeled separately. Rendered browser audio and carrier checkpoint receipt have different observation boundaries. Reports retain planned, attempted, valid, invalid, unresolved, passed and failed counts and label task scope and call initiation. A valid target-side drop remains a failure.
 
-Plivo is the telephone path. The adapter uses signed HTTP/WebSocket callbacks, an attempt-specific stream token, mu-law at 8 kHz, streaming conversion to PCM and explicit playback checkpoints. Ordinary silent media frames count as a healthy stream; missing media or unacknowledged playback is recorded as a transport problem.
+## Deployment and remaining work
 
-Rumik tools are HTTP business endpoints, not an MCP requirement. There is no Pipecat or Sarvam caller dependency. Cekura is a design reference and is not called by this repository.
+Develop and inspect locally. Reported calls should run on a qualified fixed India worker with locked dependencies. Rumik hosts the target. PostgreSQL stores attempt state; checksummed local evidence can be explicitly uploaded to immutable S3-compatible storage. No cloud infrastructure is provisioned here. Imports, status, planning and health routes remain provider-free.
 
-See [running instructions](RUNNING.md) for workflow registration, costs, recovery and qualification limitations.
+Long conversations fit the current single-call lifecycle within explicit time/spend limits. Completing a user task across calls, approvals, transfers between independently modeled participants, and app actions needs a task coordinator and additional adapters. They are not provided by retry or batch support. Recovery finalizes abandoned attempts; it never resumes a conversation or chooses the next business to call.
+
+Live Rumik task consumption, counterpart audio/tools and the telephone path still require qualification. `/healthz` reports process health; `/readyz` remains 503. See [running instructions](RUNNING.md) and [implementation status](IMPLEMENTATION.md).

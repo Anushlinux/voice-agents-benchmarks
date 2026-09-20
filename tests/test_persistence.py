@@ -83,7 +83,10 @@ def test_authenticated_tools_reject_forged_run_ids(store, prepared):
         ).status_code
         == 409
     )
-    assert client.post("/tools/rumik/set_note", json=body, headers=headers).json()["ok"]
+    # Rumik cannot mutate records owned by the counterpart.
+    response = client.post("/tools/rumik/set_note", json=body, headers=headers).json()
+    assert response == {"ok": False, "error": "forbidden_tool"}
+    assert store.run(first)["state"]["records"]["owned"]["note"] == "initial"
     assert len(store.run(first)["incoming_requests"]) == 2
     assert store.run(second)["state"]["records"]["owned"]["note"] == "initial"
 

@@ -2,16 +2,16 @@ from typing import Protocol
 
 from voice_bench.channels.interfaces import AudioSession
 from voice_bench.evidence.interfaces import EvidenceSink
-from voice_bench.models import CallerBrief, RunContext
+from voice_bench.models import CounterpartBrief, RunContext
 
 
-class CallerSimulator(Protocol):
-    """Receives customer facts and channel audio, never target transcripts or oracle state."""
+class CounterpartSimulator(Protocol):
+    """Receives its role, channel audio and permitted tool results, never private user goals."""
 
     async def converse(
         self,
         run: RunContext,
-        brief: CallerBrief,
+        brief: CounterpartBrief,
         session: AudioSession,
         evidence: EvidenceSink,
     ) -> None: ...

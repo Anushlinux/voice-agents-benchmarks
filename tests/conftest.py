@@ -64,6 +64,12 @@ def prepared(store):
                 "workflow": case.workflow,
                 "workflow_version": case.workflow_version,
                 "state": case.initial_state,
+                "user_task": case.user_task.model_dump(mode="json"),
+                "expected_agent_id": "test-agent",
+                "tool_access": {
+                    "target": list(case.target_tools),
+                    "counterpart": list(case.counterpart_tools),
+                },
                 "context": {
                     "case_id": case.case_id,
                     "channel": "browser",

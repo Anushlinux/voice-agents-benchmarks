@@ -39,12 +39,17 @@ async def test_model_judge_transcribes_captured_audio_and_rejects_invented_citat
     async def parse(**args):
         calls.append("judge")
         assert args["model"] == "test-judge"
-        assert json.loads(args["input"])["state"] == {"note": "initial"}
+        prompt = json.loads(args["input"])
+        assert prompt["state"] == {"note": "initial"}
+        assert prompt["user_task"]["request"] == fixture_case().user_task.request
+        assert prompt["counterpart_brief"]["role"] == "Synthetic record custodian"
+        assert prompt["benchmark_roles"]["received_audio"] == "Rumik"
+        assert "counterpart_validity" in args["instructions"]
         return SimpleNamespace(
             output_parsed=JudgeOutput(
                 metrics=(
                     MetricResult(
-                        name="caller_validity",
+                        name="counterpart_validity",
                         status="met",
                         explanation="Adhered to brief.",
                         evidence=(ref,),

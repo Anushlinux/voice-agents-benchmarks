@@ -1,7 +1,7 @@
 """Shared boundary contracts, independent of any provider SDK.
 
 These are execution contracts, not a finalized dataset format. Private business
-state and evaluation criteria must never be added to CallerBrief or CallRequest.
+state and evaluation criteria must never be added to participant briefs or CallRequest.
 """
 
 from datetime import datetime
@@ -40,9 +40,19 @@ class RunContext(Contract):
     config_digest: str = Field(min_length=1)
 
 
-class CallerBrief(Contract):
-    """Only customer-visible facts and permitted behavior."""
+class UserTask(Contract):
+    """The user's assignment and authorization, delivered only to Rumik."""
 
+    request: str = Field(min_length=1)
+    known_facts: dict[str, Any]
+    constraints: tuple[str, ...]
+    permissions: tuple[str, ...]
+
+
+class CounterpartBrief(Contract):
+    """The other person's role and facts; never the user's private instructions."""
+
+    role: str = Field(min_length=1)
     goal: str = Field(min_length=1)
     known_facts: dict[str, Any]
     behavior_rules: tuple[str, ...] = ()
