@@ -13,6 +13,8 @@ build/
 .secrets/
 artifacts/
 reports/
+# Local report includes saved evaluation outputs and conversation evidence.
+/report.md
 datasets/
 configs/*.local.toml
 *.wav
