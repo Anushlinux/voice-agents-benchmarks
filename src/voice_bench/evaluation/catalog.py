@@ -138,6 +138,23 @@ def restaurant_rubric(case):
     definitions = []
     for name in dict.fromkeys([*required, "negotiation_behavior", "dietary_understanding"]):
         method, role, files, rule = RESTAURANT_METRICS[name]
+        if case.criteria.get("user_report_source") == "target_callback":
+            if name == "user_report_presence":
+                method = "code"
+                files = (
+                    "target/user-report.json",
+                    "target/task-delivery.json",
+                    "target/report-requests.json",
+                )
+                rule = (
+                    "The authenticated target report matches this attempt, call and delivered task."
+                )
+            elif name == "user_report_accuracy":
+                files = ("target/user-report.json", "business/final.json")
+                rule = (
+                    "The actual target-authored private report accurately describes "
+                    "the outcome and material terms."
+                )
         applies = name in required
         definitions.append(
             MetricDefinition(
@@ -155,4 +172,9 @@ def restaurant_rubric(case):
                 pass_rule=rule,
             )
         )
-    return EvaluationRubric(version="restaurant-status-v1", metrics=tuple(definitions))
+    version = (
+        "restaurant-status-callback-v1"
+        if case.criteria.get("user_report_source") == "target_callback"
+        else "restaurant-status-v1"
+    )
+    return EvaluationRubric(version=version, metrics=tuple(definitions))

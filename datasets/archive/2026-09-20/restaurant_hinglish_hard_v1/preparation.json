@@ -1,0 +1,12 @@
+{
+  "hard_cases": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/datasets/restaurant_hinglish_hard_v1/hard-cases.json",
+  "hard_case_count": 3,
+  "baseline_case_count": 1,
+  "total_case_count": 4,
+  "live_attempts": 0,
+  "baseline_files_verified": 14,
+  "baseline_unchanged": true,
+  "source_git_blob": "21836935dbc399bf5ff5710d53d5326cc2d74ade",
+  "authorship": "Original baseline reconstructed from supplied request/handoff; three new authored extensions, not Taskmaster dialogue.",
+  "planned_conversation_events": 6
+}

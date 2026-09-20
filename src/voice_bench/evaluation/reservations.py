@@ -141,6 +141,9 @@ def reservation_metrics(directory, case, refs, final, audit):
     if case["criteria"].get("user_report_source") == "target_callback":
         report_path = directory / "target/user-report.json"
         report = json.loads(report_path.read_text()) if "target/user-report.json" in refs else {}
+        from voice_bench.evaluation.report_assertions import reference_metric
+
+        metrics.append(reference_metric(report, final, refs))
         delivery_path = directory / "target/task-delivery.json"
         delivery = json.loads(delivery_path.read_text()) if delivery_path.exists() else {}
         add(
@@ -230,6 +233,10 @@ def validate_reservation_review(directory, review, prior):
                 rules[name].status != "met"
                 for name in ("call_reliability", "evidence_completeness")
                 if name in rules
+            )
+            or (
+                "user_report_references" in rules
+                and rules["user_report_references"].status == "not_met"
             )
         ):
             raise ValueError("A restaurant pass requires all deterministic evidence checks to pass")

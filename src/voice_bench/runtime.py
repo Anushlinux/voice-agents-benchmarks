@@ -14,6 +14,10 @@ def validate_live(config, cases):
 
     for case in cases:
         case.require_supported_execution()
+        if config.purpose == "benchmark" and (case.harness_fixture or not case.evaluation_rubric):
+            raise ValueError(
+                "Benchmark batches require non-fixture cases with explicit frozen rubrics"
+            )
 
     if (
         config.limits.max_total_call_minutes <= 0

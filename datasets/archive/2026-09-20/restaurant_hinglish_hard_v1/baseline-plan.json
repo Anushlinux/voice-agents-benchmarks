@@ -1,0 +1,15 @@
+{
+  "planned": [
+    {
+      "plan_id": "ff2d2822-d59a-5bbe-9e80-015c60df7cf7",
+      "batch_id": "bf681dec-e66f-4305-bb32-f98cf13295e4",
+      "case_id": "tm1_restaurant_mumbai_hinglish_001",
+      "case_version": "1",
+      "channel": "browser",
+      "repetition": 1,
+      "order": 0,
+      "task_scope": "single_call",
+      "call_initiation": "harness_connected"
+    }
+  ]
+}

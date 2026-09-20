@@ -173,11 +173,21 @@ def deterministic(directory):
     result_path = directory / "result.json"
     result = json.loads(result_path.read_text()) if result_path.exists() else {}
     if result.get("error"):
+        owner = result.get("attribution", "unknown")
         verdict(
-            "call_reliability",
+            "execution_reliability",
             False,
-            "Execution recorded a call or harness failure.",
+            f"Execution failed; recorded owner: {owner}. This is not a target reliability grade.",
             ["result.json"],
+        )
+        metrics.append(
+            MetricResult(
+                name="call_reliability",
+                status="not_met" if owner == "target" else "uncertain",
+                explanation="Target call failure is established only by target attribution; "
+                f"recorded owner is {owner}.",
+                evidence=(refs["result.json"],) if "result.json" in refs else (),
+            )
         )
     if manifest["missing"] or manifest.get("integrity_issues"):
         metrics.append(
@@ -210,6 +220,12 @@ def summarize(metrics, validity="unresolved", required=()):
         return "failed"
     if any(m.name == "evidence_completeness" and m.status == "uncertain" for m in metrics):
         return "unresolved"
+    if (
+        by_name.get("execution_reliability")
+        and by_name["execution_reliability"].status == "not_met"
+    ):
+        if not by_name.get("call_reliability") or by_name["call_reliability"].status != "not_met":
+            return "unresolved"
     if any(m.status == "not_met" for m in selected):
         return "failed"
     if all(m.status in {"met", "not_applicable"} for m in selected):
@@ -219,12 +235,23 @@ def summarize(metrics, validity="unresolved", required=()):
 
 def save_evaluation(directory, version, metrics, *, validity="unresolved", judge=None):
     case = json.loads((directory / "config/case.json").read_text())
+    execution_path = directory / "result.json"
+    if execution_path.exists():
+        execution = json.loads(execution_path.read_text())
+        if execution.get("validity") == "invalid":
+            validity = "invalid"
     for metric in metrics:
         for ref in metric.evidence:
             validate_reference(directory, ref)
     names = [m.name for m in metrics]
     if len(names) != len(set(names)):
         raise ValueError("Metric names must be unique")
+    if any(m.name == "user_report_accuracy" and m.status == "met" for m in metrics):
+        if any(
+            m.name == "user_report_references" and m.status == "not_met"
+            for m in deterministic(directory)
+        ):
+            raise ValueError("Report accuracy contradicts explicit reference assertions")
     if any(m.name == "counterpart_actions" and m.status == "not_met" for m in metrics):
         validity = "invalid"
     result = {
@@ -235,6 +262,8 @@ def save_evaluation(directory, version, metrics, *, validity="unresolved", judge
         "judge": judge,
         "harness_fixture": case.get("harness_fixture", False),
     }
+    from voice_bench.evaluation.progress import evaluation_progress
+
     if case.get("evaluation_rubric"):
         from voice_bench.evaluation.rubrics import EvaluationRubric, apply_rubric
 
@@ -253,6 +282,9 @@ def save_evaluation(directory, version, metrics, *, validity="unresolved", judge
                 evidence=original.evidence if original else (),
             )
         result["metrics"] = [m.model_dump(mode="json") for m in by_name.values()]
+    result["evaluation_progress"] = evaluation_progress(case, result["metrics"])
+    if result["evaluation_progress"]["pending_review_metrics"]:
+        result["outcome"] = "unresolved"
     if case.get("workflow") == "mock_restaurant_reservation":
         from voice_bench.evaluation.reservations import dimension_summary, display_verdict
 
@@ -375,5 +407,16 @@ def import_review(directory, version, data):
             raise ValueError("Review verdict contradicts the frozen metric rubric")
         value.update(decision)
     value["evaluation_sha256"] = digest(evaluation.read_bytes())
+    from voice_bench.evaluation.progress import evaluation_progress
+
+    reviewed_metrics = {m["name"]: m for m in prior["metrics"]}
+    reviewed_metrics.update({m["name"]: m for m in value["checks"]})
+    value["evaluation_progress"] = evaluation_progress(
+        case,
+        list(reviewed_metrics.values()),
+        reviewed=True,
+        reviewed_checks={m.name for m in review.checks}
+        | ({"user_report_presence"} if value.get("user_report") else set()),
+    )
     value["disagrees"] = prior["outcome"] != review.outcome or prior["validity"] != review.validity
     return write_derived(directory, "review", version, value)

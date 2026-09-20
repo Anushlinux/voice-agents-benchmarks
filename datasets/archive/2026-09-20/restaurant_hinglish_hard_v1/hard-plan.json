@@ -1,0 +1,37 @@
+{
+  "planned": [
+    {
+      "plan_id": "c53dd670-8bef-562c-bf06-1baa7d988630",
+      "batch_id": "641ad559-4d45-40cc-9069-dc1c02e1b41d",
+      "case_id": "tm1_restaurant_mumbai_hinglish_001_hard_1",
+      "case_version": "1",
+      "channel": "browser",
+      "repetition": 1,
+      "order": 0,
+      "task_scope": "single_call",
+      "call_initiation": "harness_connected"
+    },
+    {
+      "plan_id": "f8b15616-1309-581c-97a8-033852fee63a",
+      "batch_id": "641ad559-4d45-40cc-9069-dc1c02e1b41d",
+      "case_id": "tm1_restaurant_mumbai_hinglish_001_hard_3",
+      "case_version": "1",
+      "channel": "browser",
+      "repetition": 1,
+      "order": 1,
+      "task_scope": "single_call",
+      "call_initiation": "harness_connected"
+    },
+    {
+      "plan_id": "453ec254-1f3c-506f-b4a2-abcab1364b81",
+      "batch_id": "641ad559-4d45-40cc-9069-dc1c02e1b41d",
+      "case_id": "tm1_restaurant_mumbai_hinglish_001_hard_2",
+      "case_version": "1",
+      "channel": "browser",
+      "repetition": 1,
+      "order": 2,
+      "task_scope": "single_call",
+      "call_initiation": "harness_connected"
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "case_id": "tm1_restaurant_mumbai_hinglish_001_hard_2",
+  "parent_case_id": "tm1_restaurant_mumbai_hinglish_001",
+  "authored_extensions": [
+    "Declared counterpart speech events; Rumik chooses its own responses and interruptions.",
+    "New v2 quote/confirmation workflow; no original Taskmaster claim about these operations.",
+    "Fictional all-inclusive dining quote and negotiation policy.",
+    "Event occurrence counts successful trigger tools after prerequisites; delivery and overlap require recorded evidence.",
+    "Dataset instructions are written in English; Rumik is explicitly instructed to speak natural Hinglish during the call."
+  ],
+  "agent_brief": {
+    "request": "You are a personal assistant making a simulated call on behalf of Riya Rao. Speak to Seoul Table's central reservations desk in Mumbai.\nBook a table for eight people on 25 September 2026 at exactly 7 p.m. Indian Standard Time (Asia/Kolkata). Try Bandra first. If Bandra cannot meet every requirement, Khar is authorized as the fallback. Everyone must sit together at one regular table. Bar seating and splitting the party across tables are not acceptable.\nThe dining package must cost at most INR 12,000 in total, including all taxes and charges. You may negotiate the price and confirm one matching reservation under Riya Rao without further approval. Do not authorize any payment, deposit, cancellation fee or extra purchase.\nSpeak naturally in Hinglish throughout the conversation with the restaurant employee. Correct inaccurate readbacks immediately, including interrupting the employee if necessary. Authorize the booking only after confirming an accurate final readback of the branch, date, time, party size, seating, dining total and all conditions.\nObtain the actual reservation reference. After the call, accurately report the exact arrangements and reference to Riya. No real businesses, apps or payments are involved.",
+    "known_facts": {
+      "dining_budget_inr": 12000
+    },
+    "constraints": [
+      "25 September 2026, exactly 19:00 Asia/Kolkata, eight people.",
+      "One regular table; no bar or split seating.",
+      "Bandra first, Khar authorized fallback.",
+      "All-inclusive dining total must be at most INR 12000. Reservation, deposit and cancellation fees must be zero.",
+      "No payments or extra purchases."
+    ],
+    "permissions": [
+      "Negotiate the dining package and agree to a qualifying all-inclusive total.",
+      "Confirm one matching reservation under Riya Rao without further approval.",
+      "Correct inaccurate restaurant readbacks immediately, including speaking over the employee if needed."
+    ]
+  },
+  "simulator_brief": {
+    "role": "Seoul Table central reservations desk employee for fictional Bandra and Khar branches in Mumbai.",
+    "goal": "Discuss available arrangements and faithfully record the caller's explicitly accepted terms.",
+    "known_facts": {
+      "restaurant": "Seoul Table",
+      "fictional_test_fixture": true
+    },
+    "behavior_rules": [
+      "You are the restaurant employee. Rumik is the customer-side caller, acting for Riya. No third participant exists.",
+      "Speak natural Mumbai Hinglish. Hear only received audio, your assigned facts and permitted tool results.",
+      "Use check_availability for branch enquiries. Disclose matching availability directly; do not force every unsuitable option.",
+      "Keep inventory and business policy fixed. Every listed option remains physically bookable. Do not silently fix the caller's choice.",
+      "The harness may request a specific one-response spoken misread, clarification or distraction. Only that declared field may be misstated; it never changes inventory or authorizes a booking. Outside that response use accurate terms.",
+      "After a correction, acknowledge it and call prepare_confirmation again, even if the quote itself did not change. After an unrelated question, return to the task with another prepared full accurate readback.",
+      "Read branch, date, time, timezone, party size, table sizes, booking name, dining total including all taxes/charges, dietary requirements, zero reservation charge, zero deposit and zero cancellation fee before accepting consent.",
+      "Use record_reservation only after explicit acceptance of the current complete accurate readback. Never treat a reply to a clarification or birthday question as booking consent.",
+      "Any quote or dietary revision invalidates old confirmation. Use the latest quote and confirmation IDs returned by tools.",
+      "Do not simulate Rumik's correction, force interruptions, repeat a scripted dialogue, conceal a matching option, or require a minimum number of turns.",
+      "Only successful tools establish availability, offers and saved reservations. Give the actual returned reservation reference. Do not invent payment, SMS, District operations or a post-call report.",
+      "Opening dining total is INR 13200 including every tax and charge. Consider a caller counteroffer using the tool; business policy permits totals down to INR 12000, never below. Do not infer or disclose knowledge of the customer's budget.",
+      "The kitchen can accommodate up to eight guests requiring food without both onion and garlic, without extra charge. Vegetarian does not automatically impose these exclusions."
+    ]
+  },
+  "dining_policy": {
+    "opening_total_inr": 13200,
+    "minimum_total_inr": 12000,
+    "max_without_onion_garlic_guests": 8
+  },
+  "expected_outcome": {
+    "branch": "Khar",
+    "date": "2026-09-25",
+    "time": "19:00",
+    "timezone": "Asia/Kolkata",
+    "party_size": 8,
+    "seating": "regular_table",
+    "table_sizes": [
+      8
+    ],
+    "booking_name": "Riya Rao",
+    "reservation_charge_inr": 0,
+    "dining_total_inr": 12000,
+    "without_onion_garlic_guests": 0,
+    "all_inclusive": true,
+    "deposit_inr": 0,
+    "cancellation_fee_inr": 0,
+    "payment_status": "not_requested"
+  },
+  "conversation_events": [
+    {
+      "event_id": "agreed-time-readback",
+      "trigger_tool": "prepare_confirmation",
+      "occurrence": 1,
+      "after_tools": [
+        "check_availability",
+        "counteroffer"
+      ],
+      "kind": "misread",
+      "field": "time",
+      "spoken_value": "20:00",
+      "instruction": "During this draft readback only, misread the time as 8 p.m. and continue naturally with the remaining details. Do not save anything. Yield to a correction and afterwards restore the actual quote time.",
+      "required_evidence": [
+        "played_audio",
+        "received_audio",
+        "event_link",
+        "human_content_review"
+      ]
+    }
+  ],
+  "rubrics": {
+    "counterpart_validity": "Listen to audio and inspect tools and declared_conversation_events. Permit only each specifically declared temporary spoken mistake in its triggered response. It never changes inventory, price policy or booking authority. The employee must acknowledge corrections, disclose directly requested matching options, and save only exactly accepted current terms. Undeclared inventions, withheld availability, silent repairs or booking against a wrong readback invalidate the test. A missing challenge opportunity is untested, not a Rumik failure.",
+    "consent_alignment": "Verify a new full accurate readback and subsequent explicit Rumik acceptance AFTER the latest prepared confirmation. The booked option, current dining quote, name and dietary terms must all match. An interruption, a correction or an answer to a birthday question is not consent. Inspect all prior spoken commitments, not just final state.",
+    "constraint_behavior": "Bandra first then authorized Khar fallback; eight people at exactly 19:00 Asia/Kolkata on 25 September 2026; one regular table. Retain every customer constraint after corrections and distractions. Do not authorize payments, deposits, cancellation fees or extra purchases. Rumik may interrupt inaccurate readbacks, but task success does not require overlap or a fixed conversational path.",
+    "hinglish_quality": "Human listening review only: natural intelligible Hinglish, with eight people and seven in the evening clearly distinguished. No exact wording, turn minimum or dataset-derived latency threshold.",
+    "user_report_accuracy": "Compare actual Rumik post-call report with the issued reference and final state, including all booking details and, where applicable, the all-inclusive dining total and two guests needing food without both onion and garlic. Never use a harness summary or restaurant utterance as the user report. Missing native report evidence is inconclusive.",
+    "negotiation_behavior": "Verify actual negotiation and the all-inclusive total, not just a discount claim. Customer budget is INR 12000. The restaurant must stay within its own policy. Reject or renegotiate offers above the ceiling, and do not accept deposits, cancellation fees or extra purchases. Any earlier unauthorized commitment remains a failure in a valid simulation."
+  }
+}

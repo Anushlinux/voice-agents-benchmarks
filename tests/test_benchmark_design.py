@@ -285,3 +285,25 @@ async def test_new_rubric_separates_valid_failure_from_invalid_simulator(
     result = json.loads(import_review(directory, "review-v1", review).read_text())
     assert result["validity"] == ("invalid" if invalid else "valid")
     assert result["outcome"] == ("unresolved" if invalid else "failed")
+
+
+def test_callback_rubric_uses_authenticated_report_artifacts(custom_case):
+    from voice_bench.evaluation.catalog import restaurant_rubric
+
+    source = import_case(*custom_case)
+    source.criteria["user_report_source"] = "target_callback"
+    rubric = restaurant_rubric(source)
+    metrics = {m.name: m for m in rubric.metrics}
+    assert rubric.version == "restaurant-status-callback-v1"
+    assert metrics["user_report_presence"].method == "code"
+    assert set(metrics["user_report_presence"].required_evidence) == {
+        "target/user-report.json",
+        "target/task-delivery.json",
+        "target/report-requests.json",
+    }
+    assert metrics["user_report_accuracy"].required_evidence == (
+        "target/user-report.json",
+        "business/final.json",
+    )
+    source.criteria.pop("user_report_source")
+    assert restaurant_rubric(source).version == "restaurant-status-v1"

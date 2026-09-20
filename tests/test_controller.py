@@ -101,6 +101,7 @@ async def test_controller_always_closes_seals_and_releases(store, tmp_path, mode
     assert run["evidence_sealed"] and not run["accept_tools"]
     assert not run["reservation"]["active"]
     assert result.termination_confirmed
+    assert result.failure_stage == (None if mode == "ok" else "conversation")
     assert (tmp_path / str(plan.batch_id) / str(result.run_id) / "manifest.json").exists()
 
 
@@ -112,6 +113,7 @@ async def test_unknown_start_retains_capacity_and_evidence(store, tmp_path):
         plan, case, "x"
     )
     assert not result.termination_confirmed
+    assert result.failure_stage == "connection"
     assert store.run(result.run_id)["reservation"]["active"]
 
 

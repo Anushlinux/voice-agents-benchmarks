@@ -79,6 +79,7 @@ class Controller:
         heartbeat = None
         started = time.monotonic()
         cancelled = False
+        failure_stage = "preparation"
         try:
             await evidence.json("config/execution.json", self.config.model_dump(mode="json"))
             await evidence.json("config/case.json", case.model_dump(mode="json"))
@@ -101,6 +102,7 @@ class Controller:
             dispatch = True
             await asyncio.to_thread(self.store.update_run, run_id, dispatch_intent=True)
             async with asyncio.timeout(self.config.runtime.setup_timeout_seconds):
+                failure_stage = "connection"
                 session = await self.channel.connect(
                     CallRequest(
                         run=context,
@@ -111,6 +113,7 @@ class Controller:
                     evidence,
                 )
                 result = result.model_copy(update={"connected": True})
+                failure_stage = "task_delivery"
                 await asyncio.to_thread(self.store.update_run, run_id, connected=True)
                 while True:
                     session.check_health()
@@ -197,6 +200,7 @@ class Controller:
                     await asyncio.gather(*tasks, return_exceptions=True)
 
             conversation = asyncio.create_task(complete_conversation())
+            failure_stage = "conversation"
             try:
                 done, _ = await asyncio.wait(
                     {conversation, heartbeat},
@@ -215,13 +219,16 @@ class Controller:
             result = result.model_copy(
                 update={
                     "error": "cancelled",
+                    "failure_stage": failure_stage,
                     "attribution": FailureAttribution.HARNESS,
                     "validity": Validity.INVALID,
                 }
             )
         except Exception as exc:
             # Exception bodies may contain tokens/URLs; preserve type, not arbitrary provider text.
-            result = result.model_copy(update={"error": type(exc).__name__})
+            result = result.model_copy(
+                update={"error": type(exc).__name__, "failure_stage": failure_stage}
+            )
             if isinstance(exc, (CallerFailure, HarnessFailure)):
                 result = result.model_copy(
                     update={
@@ -276,6 +283,14 @@ class Controller:
             bindings = await asyncio.to_thread(self.store.bindings, run_id)
             await evidence.json("provider/bindings.json", bindings)
             result = result.model_copy(update={"termination_confirmed": confirmed})
+            if not confirmed and not result.error:
+                result = result.model_copy(
+                    update={
+                        "error": "TerminationUnconfirmed",
+                        "failure_stage": "shutdown",
+                        "attribution": FailureAttribution.UNKNOWN,
+                    }
+                )
             await evidence.json("result.json", result.model_dump(mode="json"))
             await evidence.emit(
                 "controller",

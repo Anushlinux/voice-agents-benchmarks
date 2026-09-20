@@ -1,0 +1,34 @@
+{
+  "kind": "offline_preparation_and_harness_validation",
+  "case_count": 1,
+  "source_blob_matches_handoff": true,
+  "original_utterances": 20,
+  "source_extract_matches_original": true,
+  "inventory_options": 5,
+  "matching_options": 1,
+  "execution_schema": 2,
+  "planned_browser_attempts": 1,
+  "provider_calls": 0,
+  "live_attempts": 0,
+  "checks": {
+    "ruff_check": "passed",
+    "ruff_format_check": "passed",
+    "pytest": {
+      "passed": 113,
+      "failed": 0,
+      "skipped": 0,
+      "warnings": 3,
+      "postgresql": true,
+      "chromium": true,
+      "duration_seconds": 12.91
+    },
+    "git_diff_check": "passed"
+  },
+  "proof_limits": [
+    "Synthetic tests are harness validation, not live Rumik evidence.",
+    "No human Hinglish listening review or semantic consent review has run.",
+    "No container build or live provider qualification was performed.",
+    "No pilot conversation, booking evidence or Rumik user report is claimed."
+  ],
+  "temporary_postgresql": "stopped after tests"
+}

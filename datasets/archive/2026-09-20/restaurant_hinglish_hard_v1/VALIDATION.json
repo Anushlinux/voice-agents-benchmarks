@@ -1,0 +1,71 @@
+{
+  "stage": "offline_preparation_only",
+  "case_count": 4,
+  "baseline_cases": 1,
+  "hard_cases": 3,
+  "ruff_check": "passed",
+  "ruff_format_check": "passed",
+  "git_diff_check": "passed",
+  "pytest": {
+    "passed": 142,
+    "failed": 0,
+    "skipped": 0,
+    "warnings": 3,
+    "postgresql": true,
+    "chromium": true,
+    "provider_network": "blocked by tests"
+  },
+  "warnings": [
+    "Starlette httpx deprecation",
+    "AnyIO BlockingPortal deprecation",
+    "Python audioop deprecation"
+  ],
+  "initial_validation_note": "An initial full run had 141 passes and one recovery failure against SQL_ASCII PostgreSQL. Repeating against a UTF8 temporary database passed all 142; no recovery code was changed.",
+  "baseline_manifest_files_verified": 14,
+  "baseline_unchanged": true,
+  "source_sha256": "83fa11504f6e6a8b32fc4f140db82ed624d0e1fdfd0b48f4f40b60c118ac266d",
+  "source_git_blob": "21836935dbc399bf5ff5710d53d5326cc2d74ade",
+  "counts": {
+    "planned": 4,
+    "attempted": 0,
+    "valid": 0,
+    "invalid": 0,
+    "unresolved": 0,
+    "passed": 0,
+    "failed": 0,
+    "not_run": 4
+  },
+  "provider_calls": 0,
+  "container_validation": "not run",
+  "temporary_postgres": "stopped",
+  "gaps": [
+    "Target agent/version and counterpart model/voice not configured",
+    "Authenticated callback, hosted task consumption, database and two-way audio need live qualification",
+    "Funded spend/minute limits absent",
+    "Native Rumik post-call report delivery not integrated",
+    "No live proof of event delivery, speech overlap, correction, Hinglish or booking completion"
+  ],
+  "previous_wording_revision": {
+    "change": "Hard 1 request translated to natural Romanized Hinglish",
+    "validation": "Reconverted all three variants; Hard 2/3 unchanged; Hard 1 inventory, events and expected outcome unchanged; original baseline manifest verified",
+    "provider_calls": 0,
+    "harness_test_results": "142-test suite is from preceding implementation validation; no harness code changed for this wording revision"
+  },
+  "wording_revision": {
+    "change": "All three hard-case requests and challenge instructions use English, with explicit Hinglish speaking instructions.",
+    "validation": "Reconverted three hard cases and nine profile variants; preserved business state, constraints, permissions, rubrics and event scheduling; verified baseline manifests.",
+    "provider_calls": 0,
+    "harness_test_results": "The 142-test suite above is historical implementation validation, not a new run.",
+    "checks": {
+      "ruff_check": "passed",
+      "ruff_format_check": "passed",
+      "git_diff_check": "passed",
+      "pytest_passed": 84,
+      "pytest_skipped": 2,
+      "pytest_warnings": 1,
+      "scope": "restaurant hard cases, benchmark design, reservations",
+      "dataset_consistency": "passed",
+      "provider_calls": 0
+    }
+  }
+}

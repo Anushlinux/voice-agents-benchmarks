@@ -108,6 +108,12 @@ def apply_rubric(rubric, metrics, validity, *, reviewed=False):
         outcome = "failed"
     if any(m.name == "evidence_completeness" and m.status == "uncertain" for m in metrics):
         outcome = "unresolved"
+    if (
+        by_name.get("execution_reliability")
+        and by_name["execution_reliability"].status == "not_met"
+    ):
+        if not by_name.get("call_reliability") or by_name["call_reliability"].status != "not_met":
+            outcome = "unresolved"
     return {
         "rubric_version": rubric.version,
         "validity": validity,

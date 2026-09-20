@@ -165,6 +165,17 @@ class OpenAICounterpart:
                         actor="counterpart",
                         **evidence_args,
                     )
+                    await evidence.emit(
+                        "business",
+                        "business_tool_result",
+                        {
+                            "actor": "counterpart",
+                            "tool": tool,
+                            "operation_id": call_id,
+                            "arguments": arguments,
+                            "result": result,
+                        },
+                    )
                     if tool == "record_reservation":
                         await evidence.emit(
                             "business",

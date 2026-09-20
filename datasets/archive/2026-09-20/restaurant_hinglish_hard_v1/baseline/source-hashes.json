@@ -1,0 +1,10 @@
+{
+  "sample.json": {
+    "sha256": "83fa11504f6e6a8b32fc4f140db82ed624d0e1fdfd0b48f4f40b60c118ac266d",
+    "git_blob_sha": "21836935dbc399bf5ff5710d53d5326cc2d74ade"
+  },
+  "README.md": {
+    "sha256": "05e1bc05724716ca7905f567a2ec30d99c8d2f5f58e926c2ca7d9da116002446",
+    "git_blob_sha": "a42b7663700b62a96b44598bf1d1c9c063719496"
+  }
+}

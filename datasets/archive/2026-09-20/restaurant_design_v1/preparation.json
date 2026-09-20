@@ -1,0 +1,63 @@
+{
+  "attempted": 0,
+  "batches": [
+    {
+      "case_count": 1,
+      "cases": "datasets/restaurant_design_v1/straightforward-baseline.json",
+      "config": "configs/restaurant-pilot.local.toml",
+      "group": "baseline",
+      "plan": "datasets/restaurant_design_v1/straightforward-baseline.plan.json",
+      "profile": "straightforward",
+      "source_sha256": "5e8b1138b4fc3203e09be4d037213341a57fc9df80f384565f9717e1ff3cf526"
+    },
+    {
+      "case_count": 3,
+      "cases": "datasets/restaurant_design_v1/straightforward-hard.json",
+      "config": "configs/restaurant-hard.local.toml",
+      "group": "hard",
+      "plan": "datasets/restaurant_design_v1/straightforward-hard.plan.json",
+      "profile": "straightforward",
+      "source_sha256": "68691e0dc0928d4ef7763b4358b6d0664b755f4ec0099078dfa5a0718fa9073d"
+    },
+    {
+      "case_count": 1,
+      "cases": "datasets/restaurant_design_v1/concise-baseline.json",
+      "config": "configs/restaurant-pilot.local.toml",
+      "group": "baseline",
+      "plan": "datasets/restaurant_design_v1/concise-baseline.plan.json",
+      "profile": "concise",
+      "source_sha256": "5e8b1138b4fc3203e09be4d037213341a57fc9df80f384565f9717e1ff3cf526"
+    },
+    {
+      "case_count": 3,
+      "cases": "datasets/restaurant_design_v1/concise-hard.json",
+      "config": "configs/restaurant-hard.local.toml",
+      "group": "hard",
+      "plan": "datasets/restaurant_design_v1/concise-hard.plan.json",
+      "profile": "concise",
+      "source_sha256": "68691e0dc0928d4ef7763b4358b6d0664b755f4ec0099078dfa5a0718fa9073d"
+    },
+    {
+      "case_count": 1,
+      "cases": "datasets/restaurant_design_v1/clarification_seeking-baseline.json",
+      "config": "configs/restaurant-pilot.local.toml",
+      "group": "baseline",
+      "plan": "datasets/restaurant_design_v1/clarification_seeking-baseline.plan.json",
+      "profile": "clarification_seeking",
+      "source_sha256": "5e8b1138b4fc3203e09be4d037213341a57fc9df80f384565f9717e1ff3cf526"
+    },
+    {
+      "case_count": 3,
+      "cases": "datasets/restaurant_design_v1/clarification_seeking-hard.json",
+      "config": "configs/restaurant-hard.local.toml",
+      "group": "hard",
+      "plan": "datasets/restaurant_design_v1/clarification_seeking-hard.plan.json",
+      "profile": "clarification_seeking",
+      "source_sha256": "68691e0dc0928d4ef7763b4358b6d0664b755f4ec0099078dfa5a0718fa9073d"
+    }
+  ],
+  "planned_attempts": 12,
+  "prepared_variants": 12,
+  "provider_calls": 0,
+  "underlying_tasks": 4
+}

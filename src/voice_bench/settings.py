@@ -3,6 +3,7 @@
 import tomllib
 from decimal import Decimal
 from pathlib import Path
+from typing import Literal
 from uuid import UUID
 
 from pydantic import Field, field_validator
@@ -32,6 +33,7 @@ class RunLimits(Contract):
 
 class BenchmarkConfig(Contract):
     name: str = Field(min_length=1)
+    purpose: Literal["development", "qualification", "benchmark"] = "development"
     channels: tuple[Channel, ...] = Field(min_length=1)
     artifact_root: Path
     target: TargetConfig

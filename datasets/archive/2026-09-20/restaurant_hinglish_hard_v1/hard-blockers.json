@@ -1,0 +1,36 @@
+{
+  "status": "blocked",
+  "live_attempts": 0,
+  "counts": {
+    "planned": 3,
+    "attempted": 0,
+    "valid": 0,
+    "invalid": 0,
+    "unresolved": 0,
+    "passed": 0,
+    "failed": 0,
+    "not_run": 3
+  },
+  "blockers": [
+    "Missing Rumik agent",
+    "Missing deployed version",
+    "Missing counterpart model",
+    "Missing counterpart voice",
+    "Missing rate card",
+    "Missing public HTTPS callback endpoint",
+    "No funded spend/minute limits",
+    "Missing or insufficient per-component and total attempt cost ceilings",
+    "Not exported: DATABASE_URL",
+    "Not exported: RUMIK_API_KEY",
+    "Not exported: OPENAI_API_KEY",
+    "Not exported: BENCH_TOOLS_SECRET",
+    "Live qualification pending: callback connectivity, hosted user-task consumption, database and two-way browser audio",
+    "Native post-call Rumik report delivery is not integrated; missing report stays inconclusive"
+  ],
+  "provider_calls": 0,
+  "case_ids": [
+    "tm1_restaurant_mumbai_hinglish_001_hard_1",
+    "tm1_restaurant_mumbai_hinglish_001_hard_2",
+    "tm1_restaurant_mumbai_hinglish_001_hard_3"
+  ]
+}

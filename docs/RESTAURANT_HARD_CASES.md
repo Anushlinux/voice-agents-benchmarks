@@ -141,25 +141,33 @@ infrastructure compromise is invalid. Missing or unresolved proof is inconclusiv
 
 ## Local preparation and execution gates
 
-The ignored directory `datasets/restaurant_hinglish_hard_v1/` contains the copied
-baseline, three authored specifications, generated execution cases and provenance.
-`all-cases.json` is a four-case catalog. Run baseline and hard cases as separate
-batches so the unchanged baseline keeps its five-minute cap and the hard cases
-have a ten-minute cap. Use one attempt per selected case and concurrency one.
+The local working set is indexed in `datasets/README.md`. The three authored
+specifications are in `datasets/authored/restaurant-challenges.json`; their
+execution inputs are in `datasets/generated/restaurant-challenges.json`. The
+baseline has its own authored and generated files. Original packages, the combined
+catalog, profile expansions, plans and validation records are preserved under
+`datasets/archive/2026-09-20/`. Dataset files must stay out of Git.
+
+These remain three variants of one restaurant task, not broad personal-assistant
+coverage. See `datasets/REVIEW.md` for the review and
+`datasets/proposed/indian-assistant-v2.md` for non-executable new designs. Run the
+baseline and challenges separately so they retain their five- and ten-minute
+limits, respectively. Use one attempt per selected case and concurrency one.
 
 ```sh
+dataset_check_dir=$(mktemp -d)
 uv run --locked voice-bench restaurant prepare-hard \
-  --baseline datasets/tm1_restaurant_mumbai_hinglish_001/execution-cases.json \
-  --variants datasets/restaurant_hinglish_hard_v1/variants.json \
-  --output /tmp/restaurant-hard-cases.json
+  --baseline datasets/generated/restaurant-baseline.json \
+  --variants datasets/authored/restaurant-challenges.json \
+  --output "$dataset_check_dir/challenges.json"
 
 uv run --locked voice-bench restaurant preflight \
   --config configs/restaurant-hard.local.toml \
-  --cases datasets/restaurant_hinglish_hard_v1/hard-cases.json
+  --cases datasets/generated/restaurant-challenges.json
 
 uv run --locked voice-bench batch plan \
   --config configs/restaurant-hard.local.toml \
-  --cases datasets/restaurant_hinglish_hard_v1/hard-cases.json --repetitions 1
+  --cases datasets/generated/restaurant-challenges.json --repetitions 1
 ```
 
 Preparation, preflight and planning make no provider calls. Outputs cannot be

@@ -4,6 +4,8 @@ import audioop
 import json
 import wave
 
+from voice_bench.evaluation.timeline import audio_clock_spans
+
 
 def speech_segments(path, threshold, minimum_ms=80):
     with wave.open(str(path), "rb") as handle:
@@ -48,14 +50,16 @@ def browser_timing(directory, *, threshold=500, response_window_seconds=10):
             return {"status": "uncertain", "reason": "No aligned browser playback/capture evidence"}
         rate, segments = speech_segments(path, threshold)
 
-        def on_clock(sample, blocks=blocks, rate=rate):
-            for b in blocks:
-                offset = b["recording_offset"]
-                if offset <= sample <= offset + b["samples"]:
-                    return (b["sample"] + sample - offset) / rate
-            raise ValueError("Recording segment has no clock mapping")
-
-        tracks[name] = [(on_clock(a), on_clock(b)) for a, b in segments]
+        tracks[name] = []
+        for start, end in segments:
+            mapping = audio_clock_spans(start, end, [{"payload": b} for b in blocks], rate)
+            if mapping["status"] != "mapped" or len(mapping["spans"]) != 1:
+                return {
+                    "status": "uncertain",
+                    "reason": "Speech interval lacks a continuous browser clock mapping",
+                }
+            span = mapping["spans"][0]
+            tracks[name].append((span["start_seconds"], span["end_seconds"]))
     gaps, overlaps, unanswered = [], 0, 0
     for i, (start, end) in enumerate(tracks["played"]):
         if any(a < end and b > start for a, b in tracks["received"]):

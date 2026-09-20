@@ -16,21 +16,24 @@ uv run --locked voice-bench design profiles
 Prepare a profile and explicit rubric for an existing restaurant case file:
 
 ```sh
+dataset_design_dir=$(mktemp -d)
 uv run --locked voice-bench design prepare \
-  --cases datasets/tm1_restaurant_mumbai_hinglish_001/execution-cases.json \
+  --cases datasets/generated/restaurant-baseline.json \
   --profile concise \
-  --output datasets/restaurant-concise.design1.json
+  --output "$dataset_design_dir/restaurant-concise.json"
 
 uv run --locked voice-bench batch plan \
   --config configs/restaurant-pilot.local.toml \
-  --cases datasets/restaurant-concise.design1.json
+  --cases "$dataset_design_dir/restaurant-concise.json"
 ```
 
 The same preparation accepts the existing hard-case input file. Plan those cases
 with `configs/restaurant-hard.local.toml`. Preparation and planning never connect
 to providers, initialize a database, or spend a live-call budget. The input must
 already exist; these commands do not acquire or invent a dataset. Outputs cannot
-overwrite an existing file. Prepared dataset files remain ignored by Git.
+overwrite an existing file. Dataset files must stay out of Git. Historical
+profile expansions and plans are preserved in `datasets/archive/2026-09-20/`;
+use `datasets/README.md` to find the current working inputs.
 
 Preparation preserves the original case ID, user task, counterpart facts, tools,
 business state, challenge events and existing required metrics. It creates a new
@@ -38,6 +41,11 @@ case version such as `1.design1.concise` and records the source case version and
 hash. Prepare each profile from the original source, not from another profile.
 Run different profiles as separate batches with matching target settings. The
 same task under three profiles is one underlying task, not three task families.
+
+Freeze the code revision and source hash alongside these labels. The current
+schema supplies a default completion field that older saved inputs omit, which
+changes freshly computed profile source hashes. The archived profile files retain
+their original hashes; see `datasets/REVIEW.md` for the verified difference.
 
 Existing cases without the new optional fields retain their previous execution
 and grading behavior. Saved evidence is never rewritten by preparation or grading.

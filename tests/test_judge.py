@@ -40,7 +40,7 @@ async def test_model_judge_transcribes_captured_audio_and_rejects_invented_citat
     )
     calls = []
     metric_name = "counterpart_validity"
-    citation_name = "audio/received.wav"
+    citation_name = "speech-window-0001"
 
     async def transcribe(**args):
         calls.append("transcribe")
@@ -83,6 +83,7 @@ async def test_model_judge_transcribes_captured_audio_and_rejects_invented_citat
             ),
             id="fake-response",
             usage=None,
+            model_dump_json=lambda **_: '{"id":"fake-response"}',
         )
 
     client = SimpleNamespace(
@@ -97,7 +98,9 @@ async def test_model_judge_transcribes_captured_audio_and_rejects_invented_citat
             t["transcription_status"] == "skipped_near_silence" for t in metadata["transcripts"]
         )
     assert metrics[0].status == "met"
-    assert metrics[0].evidence == (ref,)
+    assert metrics[0].evidence == (
+        ref.model_copy(update={"start_seconds": 0.0, "end_seconds": 1.0}),
+    )
     assert metadata["transcripts"][0]["source"] == "audio/received.wav"
     metric_name = "invented_metric"
     with pytest.raises(ValueError, match="exactly the requested"):
@@ -106,3 +109,78 @@ async def test_model_judge_transcribes_captured_audio_and_rejects_invented_citat
     citation_name = "invented.wav"
     with pytest.raises(ValueError, match="unknown evidence"):
         await judge(evidence.directory, config, client=client)
+    audit = evidence.directory / "evaluation/rejected-business-citation"
+    citation_name = "business/final.json"
+    with pytest.raises(ValueError, match="speech window"):
+        await judge(evidence.directory, config, client=client, audit_directory=audit)
+    diagnostic = json.loads((audit / "error.json").read_text())
+    assert diagnostic["code"] == "missing_speech_evidence"
+    assert diagnostic["metric"] == "counterpart_validity"
+    assert (audit / "judge-response.json").exists()
+
+
+@pytest.mark.asyncio
+async def test_report_false_positive_is_rejected_with_retained_diagnostic(tmp_path):
+    evidence = LocalEvidence(tmp_path, uuid4(), uuid4())
+    case = fixture_case().model_dump(mode="json")
+    case["criteria"]["rubrics"] = {"user_report_accuracy": "Report the actual issued reference."}
+    await evidence.json("config/case.json", case)
+    await evidence.json("business/final.json", {"bookings": [{"reference": "ZX-893K22"}]})
+    await evidence.json("business/audit.json", [])
+    await evidence.json("target/user-report.json", {"text": "Reference numbers: ZX893 and K22."})
+    buffer = io.BytesIO()
+    with wave.open(buffer, "wb") as audio:
+        audio.setparams((1, 2, 8000, 0, "NONE", "none"))
+        audio.writeframes(struct.pack("<h", 4096) * 8000 * 3)
+    await evidence.store_artifact(evidence.run_id, "audio/received.wav", buffer.getvalue())
+    await evidence.finalize(evidence.run_id)
+    durations = []
+
+    async def transcribe(**args):
+        with wave.open(io.BytesIO(args["file"][1]), "rb") as chunk:
+            durations.append(chunk.getnframes() / chunk.getframerate())
+        return SimpleNamespace(text="Booking discussed.")
+
+    async def parse(**args):
+        prompt = json.loads(args["input"])
+        assert len(prompt["evaluation_timeline"]["speech_windows"]) == 2
+        assert prompt["derived_reference_comparison"]["comparison"] == "not_met"
+        model = args["text_format"]
+        metric = model.model_fields["metrics"].annotation.__args__[0]
+        return SimpleNamespace(
+            output_parsed=model.model_construct(
+                metrics=(
+                    metric.model_construct(
+                        name="counterpart_validity",
+                        status="uncertain",
+                        explanation="Needs listening",
+                        evidence=(),
+                    ),
+                    metric.model_construct(
+                        name="user_report_accuracy",
+                        status="met",
+                        explanation="Incorrect model approval",
+                        evidence=("target/user-report.json", "business/final.json"),
+                    ),
+                )
+            ),
+            model_dump_json=lambda **_: '{"incorrect_approval":true}',
+        )
+
+    client = SimpleNamespace(
+        audio=SimpleNamespace(transcriptions=SimpleNamespace(create=transcribe)),
+        responses=SimpleNamespace(parse=parse),
+    )
+    audit = evidence.directory / "evaluation/false-positive"
+    config = JudgeConfig(
+        model="fake",
+        transcription_model="fake",
+        rubric_version="test",
+        transcription_chunk_seconds=2,
+    )
+    with pytest.raises(ValueError, match="contradicts"):
+        await judge(evidence.directory, config, client=client, audit_directory=audit)
+    assert durations == [2.0, 1.0]
+    assert json.loads((audit / "error.json").read_text())["code"] == "reference_contradiction"
+    assert json.loads((audit / "judge-response.json").read_text())["incorrect_approval"]
+    assert not (audit / "result.json").exists()

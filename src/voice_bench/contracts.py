@@ -122,6 +122,9 @@ class AttemptResult(Contract):
     outcome: Literal["passed", "failed", "unresolved"] = "unresolved"
     termination_confirmed: bool = False
     error: str | None = None
+    failure_stage: (
+        Literal["preparation", "connection", "task_delivery", "conversation", "shutdown"] | None
+    ) = None
 
 
 class CounterpartConfig(Contract):
@@ -139,6 +142,7 @@ class JudgeConfig(Contract):
     transcription_model: str = ""
     rubric_version: str = ""
     max_output_tokens: int = Field(default=2048, gt=0)
+    transcription_chunk_seconds: int = Field(default=15, ge=1, le=180)
     cost_ceiling_inr: Decimal = Field(default=Decimal(0), ge=0, allow_inf_nan=False)
 
 

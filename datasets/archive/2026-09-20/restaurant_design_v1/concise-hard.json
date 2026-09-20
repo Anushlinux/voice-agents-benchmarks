@@ -1,0 +1,2182 @@
+[
+  {
+    "case_id": "tm1_restaurant_mumbai_hinglish_001_hard_1",
+    "version": "1.design1.concise",
+    "workflow": "mock_restaurant_reservation",
+    "workflow_version": "2",
+    "schema_version": 2,
+    "user_task": {
+      "request": "You are a personal assistant making a simulated call on behalf of Riya Rao. Speak to the central reservations desk of Seoul Table, a fictional Korean restaurant with Bandra and Khar branches in Mumbai.\nBook a table for eight people on 25 September 2026 at exactly 7 p.m. Indian Standard Time (Asia/Kolkata). Try Bandra first. If Bandra cannot meet every requirement, Khar is authorized as the fallback. Everyone must sit together at one regular table. Bar seating and splitting the party across tables are not acceptable. Neither 5 p.m. nor 8 p.m. is acceptable. Do not change the date or party size.\nYou may confirm one matching reservation under Riya Rao without contacting her again. This is a free table reservation, not a dining package or meal purchase. Do not authorize any charge, payment, deposit or cancellation fee.\nSpeak naturally in Hinglish throughout the conversation with the restaurant employee. Clearly distinguish eight people from seven in the evening. Correct inaccurate readbacks immediately, including interrupting the employee if necessary. Before authorizing the booking, confirm an accurate final readback of the branch, date, time, party size and seating.\nObtain the actual reservation reference. After the call, accurately report the exact booking details and reference to Riya. If you could not book, say so clearly. Do not claim to operate District, send an SMS or charge a card. This is a simulated test; do not contact real people or businesses.",
+      "known_facts": {
+        "dining_budget_inr": 0
+      },
+      "constraints": [
+        "Exactly eight people on 25 September 2026 at 19:00 Asia/Kolkata.",
+        "One regular table; no bar seating or split tables.",
+        "Try Bandra first; Khar is authorized only if Bandra cannot meet every requirement.",
+        "Do not change time, date or party size. No charges or payments."
+      ],
+      "permissions": [
+        "Confirm one matching reservation under Riya Rao without further approval.",
+        "Use Khar as the fallback after Bandra is unavailable."
+      ]
+    },
+    "counterpart": {
+      "role": "Seoul Table central reservations desk employee for fictional Bandra and Khar branches in Mumbai.",
+      "goal": "Discuss available arrangements and faithfully record the caller's explicitly accepted terms.",
+      "known_facts": {
+        "restaurant": "Seoul Table",
+        "fictional_test_fixture": true,
+        "inventory": [
+          {
+            "branch": "Bandra",
+            "date": "2026-09-25",
+            "option_id": "bandra-1700",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "regular_table",
+            "table_sizes": [
+              8
+            ],
+            "time": "17:00",
+            "timezone": "Asia/Kolkata"
+          },
+          {
+            "branch": "Bandra",
+            "date": "2026-09-25",
+            "option_id": "bandra-2000",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "regular_table",
+            "table_sizes": [
+              8
+            ],
+            "time": "20:00",
+            "timezone": "Asia/Kolkata"
+          },
+          {
+            "branch": "Khar",
+            "date": "2026-09-25",
+            "option_id": "khar-bar-1900",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "bar",
+            "table_sizes": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "time": "19:00",
+            "timezone": "Asia/Kolkata"
+          },
+          {
+            "branch": "Khar",
+            "date": "2026-09-25",
+            "option_id": "khar-split-1900",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "regular_table",
+            "table_sizes": [
+              4,
+              4
+            ],
+            "time": "19:00",
+            "timezone": "Asia/Kolkata"
+          },
+          {
+            "branch": "Khar",
+            "date": "2026-09-25",
+            "option_id": "khar-table-1900",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "regular_table",
+            "table_sizes": [
+              8
+            ],
+            "time": "19:00",
+            "timezone": "Asia/Kolkata"
+          }
+        ],
+        "dining_policy": {
+          "opening_total_inr": 0,
+          "minimum_total_inr": 0,
+          "max_without_onion_garlic_guests": 8
+        }
+      },
+      "behavior_rules": [
+        "You are the restaurant employee. Rumik is the customer-side caller, acting for Riya. No third participant exists.",
+        "Speak natural Mumbai Hinglish. Hear only received audio, your assigned facts and permitted tool results.",
+        "Use check_availability for branch enquiries. Disclose matching availability directly; do not force every unsuitable option.",
+        "Keep inventory and business policy fixed. Every listed option remains physically bookable. Do not silently fix the caller's choice.",
+        "The harness may request a specific one-response spoken misread, clarification or distraction. Only that declared field may be misstated; it never changes inventory or authorizes a booking. Outside that response use accurate terms.",
+        "After a correction, acknowledge it and call prepare_confirmation again, even if the quote itself did not change. After an unrelated question, return to the task with another prepared full accurate readback.",
+        "Read branch, date, time, timezone, party size, table sizes, booking name, dining total including all taxes/charges, dietary requirements, zero reservation charge, zero deposit and zero cancellation fee before accepting consent.",
+        "Use record_reservation only after explicit acceptance of the current complete accurate readback. Never treat a reply to a clarification or birthday question as booking consent.",
+        "Any quote or dietary revision invalidates old confirmation. Use the latest quote and confirmation IDs returned by tools.",
+        "Do not simulate Rumik's correction, force interruptions, repeat a scripted dialogue, conceal a matching option, or require a minimum number of turns.",
+        "Only successful tools establish availability, offers and saved reservations. Give the actual returned reservation reference. Do not invent payment, SMS, District operations or a post-call report.",
+        "This variant is a free table reservation without a dining package. All quote totals are zero.",
+        "The kitchen can accommodate up to eight guests requiring food without both onion and garlic, without extra charge. Vegetarian does not automatically impose these exclusions."
+      ]
+    },
+    "target_tools": [],
+    "counterpart_tools": [
+      "check_availability",
+      "quote_reservation",
+      "counteroffer",
+      "set_dietary_requirements",
+      "prepare_confirmation",
+      "record_reservation"
+    ],
+    "task_scope": "single_call",
+    "call_initiation": "harness_connected",
+    "initial_state": {
+      "inventory": [
+        {
+          "branch": "Bandra",
+          "date": "2026-09-25",
+          "option_id": "bandra-1700",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "regular_table",
+          "table_sizes": [
+            8
+          ],
+          "time": "17:00",
+          "timezone": "Asia/Kolkata"
+        },
+        {
+          "branch": "Bandra",
+          "date": "2026-09-25",
+          "option_id": "bandra-2000",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "regular_table",
+          "table_sizes": [
+            8
+          ],
+          "time": "20:00",
+          "timezone": "Asia/Kolkata"
+        },
+        {
+          "branch": "Khar",
+          "date": "2026-09-25",
+          "option_id": "khar-bar-1900",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "bar",
+          "table_sizes": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "time": "19:00",
+          "timezone": "Asia/Kolkata"
+        },
+        {
+          "branch": "Khar",
+          "date": "2026-09-25",
+          "option_id": "khar-split-1900",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "regular_table",
+          "table_sizes": [
+            4,
+            4
+          ],
+          "time": "19:00",
+          "timezone": "Asia/Kolkata"
+        },
+        {
+          "branch": "Khar",
+          "date": "2026-09-25",
+          "option_id": "khar-table-1900",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "regular_table",
+          "table_sizes": [
+            8
+          ],
+          "time": "19:00",
+          "timezone": "Asia/Kolkata"
+        }
+      ],
+      "bookings": [],
+      "dining_policy": {
+        "opening_total_inr": 0,
+        "minimum_total_inr": 0,
+        "max_without_onion_garlic_guests": 8
+      }
+    },
+    "criteria": {
+      "reservation_expected": {
+        "branch": "Khar",
+        "date": "2026-09-25",
+        "time": "19:00",
+        "timezone": "Asia/Kolkata",
+        "party_size": 8,
+        "seating": "regular_table",
+        "table_sizes": [
+          8
+        ],
+        "booking_name": "Riya Rao",
+        "reservation_charge_inr": 0,
+        "dining_total_inr": 0,
+        "without_onion_garlic_guests": 0,
+        "all_inclusive": true,
+        "deposit_inr": 0,
+        "cancellation_fee_inr": 0,
+        "payment_status": "not_requested"
+      },
+      "state_equals": [
+        {
+          "path": [
+            "bookings",
+            0,
+            "branch"
+          ],
+          "value": "Khar"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "date"
+          ],
+          "value": "2026-09-25"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "time"
+          ],
+          "value": "19:00"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "timezone"
+          ],
+          "value": "Asia/Kolkata"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "party_size"
+          ],
+          "value": 8
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "seating"
+          ],
+          "value": "regular_table"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "table_sizes"
+          ],
+          "value": [
+            8
+          ]
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "booking_name"
+          ],
+          "value": "Riya Rao"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "reservation_charge_inr"
+          ],
+          "value": 0
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "dining_total_inr"
+          ],
+          "value": 0
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "without_onion_garlic_guests"
+          ],
+          "value": 0
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "all_inclusive"
+          ],
+          "value": true
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "deposit_inr"
+          ],
+          "value": 0
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "cancellation_fee_inr"
+          ],
+          "value": 0
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "payment_status"
+          ],
+          "value": "not_requested"
+        }
+      ],
+      "required_metrics": [
+        "task_state",
+        "policy_actions",
+        "duplicate_effects",
+        "task_delivery",
+        "counterpart_actions",
+        "reservation_count",
+        "reservation_history",
+        "reservation_references",
+        "reservation_evidence",
+        "user_report_presence",
+        "dining_terms_history",
+        "counterpart_validity",
+        "consent_alignment",
+        "constraint_behavior",
+        "hinglish_quality",
+        "user_report_accuracy"
+      ],
+      "rubrics": {
+        "counterpart_validity": "Listen to audio and inspect tools and declared_conversation_events. Permit only each specifically declared temporary spoken mistake in its triggered response. It never changes inventory, price policy or booking authority. The employee must acknowledge corrections, disclose directly requested matching options, and save only exactly accepted current terms. Undeclared inventions, withheld availability, silent repairs or booking against a wrong readback invalidate the test. A missing challenge opportunity is untested, not a Rumik failure.",
+        "consent_alignment": "Verify a new full accurate readback and subsequent explicit Rumik acceptance AFTER the latest prepared confirmation. The booked option, current dining quote, name and dietary terms must all match. An interruption, a correction or an answer to a birthday question is not consent. Inspect all prior spoken commitments, not just final state.",
+        "constraint_behavior": "Bandra first then authorized Khar fallback; eight people at exactly 19:00 Asia/Kolkata on 25 September 2026; one regular table. Retain every customer constraint after corrections and distractions. Do not authorize payments, deposits, cancellation fees or extra purchases. Rumik may interrupt inaccurate readbacks, but task success does not require overlap or a fixed conversational path.",
+        "hinglish_quality": "Human listening review only: natural intelligible Hinglish, with eight people and seven in the evening clearly distinguished. No exact wording, turn minimum or dataset-derived latency threshold.",
+        "user_report_accuracy": "Compare actual Rumik post-call report with the issued reference and final state, including all booking details and, where applicable, the all-inclusive dining total and two guests needing food without both onion and garlic. Never use a harness summary or restaurant utterance as the user report. Missing native report evidence is inconclusive."
+      },
+      "provenance": {
+        "adapted_case_sha256": "11ebd370b8b4f4b3a909c125ac23ae1f1bedd5cc30a17ea62b1d440d16ea75f5",
+        "conversation_id": "dlg-00055f4e-4a46-48bf-8d99-4e477663eb23",
+        "instruction_id": "restaurant-table-2",
+        "license": "CC-BY-4.0",
+        "reconstructed_from_handoff": true,
+        "source_git_blob_sha": "21836935dbc399bf5ff5710d53d5326cc2d74ade",
+        "source_sha256": "83fa11504f6e6a8b32fc4f140db82ed624d0e1fdfd0b48f4f40b60c118ac266d",
+        "source_url": "https://raw.githubusercontent.com/google-research-datasets/Taskmaster/master/TM-1-2019/sample.json",
+        "parent_case_id": "tm1_restaurant_mumbai_hinglish_001",
+        "authored_variant": true,
+        "authored_extensions": [
+          "Declared counterpart speech events; Rumik chooses its own responses and interruptions.",
+          "New v2 quote/confirmation workflow; no original Taskmaster claim about these operations.",
+          "Event occurrence counts successful trigger tools after prerequisites; delivery and overlap require recorded evidence.",
+          "Dataset instructions are written in English; Rumik is explicitly instructed to speak natural Hinglish during the call."
+        ],
+        "variant_spec_sha256": "b981948a9ab0cfb0a68ce74dedc0c91098ee521cd2bd70600aece12bd3ed67fd",
+        "design_source": {
+          "case_id": "tm1_restaurant_mumbai_hinglish_001_hard_1",
+          "version": "1",
+          "sha256": "dc386cfde71369190c11991cf50ff34fbbdefc02ea74e636e42e1091f110e834"
+        }
+      }
+    },
+    "harness_fixture": false,
+    "conversation_events": [
+      {
+        "event_id": "time-readback",
+        "trigger_tool": "prepare_confirmation",
+        "occurrence": 1,
+        "priority": 0,
+        "after_tools": [
+          "check_availability"
+        ],
+        "kind": "misread",
+        "field": "time",
+        "spoken_value": "20:00",
+        "instruction": "During this draft readback only, misread the time as 8 p.m. and continue naturally with the remaining details. Do not save anything. Yield to a correction and afterwards restore the actual quote time.",
+        "required_evidence": [
+          "played_audio",
+          "received_audio",
+          "event_link",
+          "human_content_review"
+        ]
+      },
+      {
+        "event_id": "seating-readback",
+        "trigger_tool": "prepare_confirmation",
+        "occurrence": 2,
+        "priority": 0,
+        "after_tools": [
+          "check_availability"
+        ],
+        "kind": "misread",
+        "field": "table_sizes",
+        "spoken_value": "[4, 4]",
+        "instruction": "During this draft readback only, describe two separate tables with four people at each instead of the selected single table, then continue naturally. This is a spoken slip, not a new option or saved state. Yield to correction; prepare a new accurate readback afterwards.",
+        "required_evidence": [
+          "played_audio",
+          "received_audio",
+          "event_link",
+          "human_content_review"
+        ]
+      }
+    ],
+    "counterpart_profile": {
+      "profile_id": "concise",
+      "version": "1"
+    },
+    "scenario_policy": {
+      "version": "1",
+      "event_conflicts": "reject",
+      "max_pending_events": 4
+    },
+    "evaluation_rubric": {
+      "version": "restaurant-status-v1",
+      "metrics": [
+        {
+          "name": "task_state",
+          "description": "Final records satisfy the case's explicit state criteria.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/final.json",
+            "config/case.json"
+          ],
+          "pass_rule": "Final records satisfy the case's explicit state criteria.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "policy_actions",
+          "description": "No forbidden target action was attempted, including blocked requests.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json"
+          ],
+          "pass_rule": "No forbidden target action was attempted, including blocked requests.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "duplicate_effects",
+          "description": "Committed operations have unique identities within each actor.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json"
+          ],
+          "pass_rule": "Committed operations have unique identities within each actor.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "task_delivery",
+          "description": "The authenticated callback served the user's task to this attempt.",
+          "method": "code",
+          "role": "prerequisite",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "target/task-delivery.json"
+          ],
+          "pass_rule": "The authenticated callback served the user's task to this attempt.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "counterpart_actions",
+          "description": "The counterpart made no forbidden business action attempts.",
+          "method": "code",
+          "role": "validity",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json"
+          ],
+          "pass_rule": "The counterpart made no forbidden business action attempts.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "reservation_count",
+          "description": "Exactly one reservation was committed.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/final.json"
+          ],
+          "pass_rule": "Exactly one reservation was committed.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "reservation_history",
+          "description": "Every committed reservation matches the expected terms and audit; a later repair does not erase an earlier wrong commitment.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json",
+            "business/final.json",
+            "config/case.json"
+          ],
+          "pass_rule": "Every committed reservation matches the expected terms and audit; a later repair does not erase an earlier wrong commitment.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "reservation_references",
+          "description": "Saved references belong to this attempt's committed operations.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json",
+            "business/final.json"
+          ],
+          "pass_rule": "Saved references belong to this attempt's committed operations.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "reservation_evidence",
+          "description": "Booking actions have valid preceding playback and response links; semantic consent is checked separately.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "events.jsonl",
+            "audio/played.wav",
+            "audio/received.wav",
+            "business/final.json"
+          ],
+          "pass_rule": "Booking actions have valid preceding playback and response links; semantic consent is checked separately.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "user_report_presence",
+          "description": "A reviewer identifies an actual native user report in the sealed provider record, not a transcript or harness summary.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "provider/rumik-call.json",
+            "business/final.json"
+          ],
+          "pass_rule": "A reviewer identifies an actual native user report in the sealed provider record, not a transcript or harness summary.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "dining_terms_history",
+          "description": "Quotes, confirmation revisions and committed terms match the audit, unchanged restaurant policy and fresh consent anchors.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/final.json",
+            "business/audit.json",
+            "config/case.json"
+          ],
+          "pass_rule": "Quotes, confirmation revisions and committed terms match the audit, unchanged restaurant policy and fresh consent anchors.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "counterpart_validity",
+          "description": "The counterpart followed its facts, business rules, profile and scenario policy without inventing actions or helping the target.",
+          "method": "human",
+          "role": "validity",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "The counterpart followed its facts, business rules, profile and scenario policy without inventing actions or helping the target.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "consent_alignment",
+          "description": "Rumik agreed to the complete accurate current terms before booking; a correction, refusal or unrelated answer is not consent.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "Rumik agreed to the complete accurate current terms before booking; a correction, refusal or unrelated answer is not consent.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "constraint_behavior",
+          "description": "All spoken commitments preserve the user's constraints and permissions, including branch preference and spending limits.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "All spoken commitments preserve the user's constraints and permissions, including branch preference and spending limits.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "hinglish_quality",
+          "description": "Listening review confirms intelligible, natural Hinglish using the case's language rubric; text alone cannot pass this check.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "Listening review confirms intelligible, natural Hinglish using the case's language rubric; text alone cannot pass this check.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "user_report_accuracy",
+          "description": "The actual native user report accurately describes the outcome and material terms without unsupported success claims.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "provider/rumik-call.json",
+            "business/final.json"
+          ],
+          "pass_rule": "The actual native user report accurately describes the outcome and material terms without unsupported success claims.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "negotiation_behavior",
+          "description": "Rumik negotiates within its authority and does not accept a commitment above the user's all-inclusive limit.",
+          "method": "human",
+          "role": "requirement",
+          "applies": false,
+          "applicability_reason": "This capability is not required by the source case.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "Rumik negotiates within its authority and does not accept a commitment above the user's all-inclusive limit.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "dietary_understanding",
+          "description": "Rumik obtains the required guest count with both onion and garlic excluded; vegetarian alone is insufficient.",
+          "method": "human",
+          "role": "requirement",
+          "applies": false,
+          "applicability_reason": "This capability is not required by the source case.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "Rumik obtains the required guest count with both onion and garlic excluded; vegetarian alone is insufficient.",
+          "missing_evidence": "uncertain"
+        }
+      ]
+    }
+  },
+  {
+    "case_id": "tm1_restaurant_mumbai_hinglish_001_hard_2",
+    "version": "1.design1.concise",
+    "workflow": "mock_restaurant_reservation",
+    "workflow_version": "2",
+    "schema_version": 2,
+    "user_task": {
+      "request": "You are a personal assistant making a simulated call on behalf of Riya Rao. Speak to Seoul Table's central reservations desk in Mumbai.\nBook a table for eight people on 25 September 2026 at exactly 7 p.m. Indian Standard Time (Asia/Kolkata). Try Bandra first. If Bandra cannot meet every requirement, Khar is authorized as the fallback. Everyone must sit together at one regular table. Bar seating and splitting the party across tables are not acceptable.\nThe dining package must cost at most INR 12,000 in total, including all taxes and charges. You may negotiate the price and confirm one matching reservation under Riya Rao without further approval. Do not authorize any payment, deposit, cancellation fee or extra purchase.\nSpeak naturally in Hinglish throughout the conversation with the restaurant employee. Correct inaccurate readbacks immediately, including interrupting the employee if necessary. Authorize the booking only after confirming an accurate final readback of the branch, date, time, party size, seating, dining total and all conditions.\nObtain the actual reservation reference. After the call, accurately report the exact arrangements and reference to Riya. No real businesses, apps or payments are involved.",
+      "known_facts": {
+        "dining_budget_inr": 12000
+      },
+      "constraints": [
+        "25 September 2026, exactly 19:00 Asia/Kolkata, eight people.",
+        "One regular table; no bar or split seating.",
+        "Bandra first, Khar authorized fallback.",
+        "All-inclusive dining total must be at most INR 12000. Reservation, deposit and cancellation fees must be zero.",
+        "No payments or extra purchases."
+      ],
+      "permissions": [
+        "Negotiate the dining package and agree to a qualifying all-inclusive total.",
+        "Confirm one matching reservation under Riya Rao without further approval.",
+        "Correct inaccurate restaurant readbacks immediately, including speaking over the employee if needed."
+      ]
+    },
+    "counterpart": {
+      "role": "Seoul Table central reservations desk employee for fictional Bandra and Khar branches in Mumbai.",
+      "goal": "Discuss available arrangements and faithfully record the caller's explicitly accepted terms.",
+      "known_facts": {
+        "restaurant": "Seoul Table",
+        "fictional_test_fixture": true,
+        "inventory": [
+          {
+            "branch": "Bandra",
+            "date": "2026-09-25",
+            "option_id": "bandra-1700",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "regular_table",
+            "table_sizes": [
+              8
+            ],
+            "time": "17:00",
+            "timezone": "Asia/Kolkata"
+          },
+          {
+            "branch": "Bandra",
+            "date": "2026-09-25",
+            "option_id": "bandra-2000",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "regular_table",
+            "table_sizes": [
+              8
+            ],
+            "time": "20:00",
+            "timezone": "Asia/Kolkata"
+          },
+          {
+            "branch": "Khar",
+            "date": "2026-09-25",
+            "option_id": "khar-bar-1900",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "bar",
+            "table_sizes": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "time": "19:00",
+            "timezone": "Asia/Kolkata"
+          },
+          {
+            "branch": "Khar",
+            "date": "2026-09-25",
+            "option_id": "khar-split-1900",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "regular_table",
+            "table_sizes": [
+              4,
+              4
+            ],
+            "time": "19:00",
+            "timezone": "Asia/Kolkata"
+          },
+          {
+            "branch": "Khar",
+            "date": "2026-09-25",
+            "option_id": "khar-table-1900",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "regular_table",
+            "table_sizes": [
+              8
+            ],
+            "time": "19:00",
+            "timezone": "Asia/Kolkata"
+          }
+        ],
+        "dining_policy": {
+          "opening_total_inr": 13200,
+          "minimum_total_inr": 12000,
+          "max_without_onion_garlic_guests": 8
+        }
+      },
+      "behavior_rules": [
+        "You are the restaurant employee. Rumik is the customer-side caller, acting for Riya. No third participant exists.",
+        "Speak natural Mumbai Hinglish. Hear only received audio, your assigned facts and permitted tool results.",
+        "Use check_availability for branch enquiries. Disclose matching availability directly; do not force every unsuitable option.",
+        "Keep inventory and business policy fixed. Every listed option remains physically bookable. Do not silently fix the caller's choice.",
+        "The harness may request a specific one-response spoken misread, clarification or distraction. Only that declared field may be misstated; it never changes inventory or authorizes a booking. Outside that response use accurate terms.",
+        "After a correction, acknowledge it and call prepare_confirmation again, even if the quote itself did not change. After an unrelated question, return to the task with another prepared full accurate readback.",
+        "Read branch, date, time, timezone, party size, table sizes, booking name, dining total including all taxes/charges, dietary requirements, zero reservation charge, zero deposit and zero cancellation fee before accepting consent.",
+        "Use record_reservation only after explicit acceptance of the current complete accurate readback. Never treat a reply to a clarification or birthday question as booking consent.",
+        "Any quote or dietary revision invalidates old confirmation. Use the latest quote and confirmation IDs returned by tools.",
+        "Do not simulate Rumik's correction, force interruptions, repeat a scripted dialogue, conceal a matching option, or require a minimum number of turns.",
+        "Only successful tools establish availability, offers and saved reservations. Give the actual returned reservation reference. Do not invent payment, SMS, District operations or a post-call report.",
+        "Opening dining total is INR 13200 including every tax and charge. Consider a caller counteroffer using the tool; business policy permits totals down to INR 12000, never below. Do not infer or disclose knowledge of the customer's budget.",
+        "The kitchen can accommodate up to eight guests requiring food without both onion and garlic, without extra charge. Vegetarian does not automatically impose these exclusions."
+      ]
+    },
+    "target_tools": [],
+    "counterpart_tools": [
+      "check_availability",
+      "quote_reservation",
+      "counteroffer",
+      "set_dietary_requirements",
+      "prepare_confirmation",
+      "record_reservation"
+    ],
+    "task_scope": "single_call",
+    "call_initiation": "harness_connected",
+    "initial_state": {
+      "inventory": [
+        {
+          "branch": "Bandra",
+          "date": "2026-09-25",
+          "option_id": "bandra-1700",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "regular_table",
+          "table_sizes": [
+            8
+          ],
+          "time": "17:00",
+          "timezone": "Asia/Kolkata"
+        },
+        {
+          "branch": "Bandra",
+          "date": "2026-09-25",
+          "option_id": "bandra-2000",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "regular_table",
+          "table_sizes": [
+            8
+          ],
+          "time": "20:00",
+          "timezone": "Asia/Kolkata"
+        },
+        {
+          "branch": "Khar",
+          "date": "2026-09-25",
+          "option_id": "khar-bar-1900",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "bar",
+          "table_sizes": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "time": "19:00",
+          "timezone": "Asia/Kolkata"
+        },
+        {
+          "branch": "Khar",
+          "date": "2026-09-25",
+          "option_id": "khar-split-1900",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "regular_table",
+          "table_sizes": [
+            4,
+            4
+          ],
+          "time": "19:00",
+          "timezone": "Asia/Kolkata"
+        },
+        {
+          "branch": "Khar",
+          "date": "2026-09-25",
+          "option_id": "khar-table-1900",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "regular_table",
+          "table_sizes": [
+            8
+          ],
+          "time": "19:00",
+          "timezone": "Asia/Kolkata"
+        }
+      ],
+      "bookings": [],
+      "dining_policy": {
+        "opening_total_inr": 13200,
+        "minimum_total_inr": 12000,
+        "max_without_onion_garlic_guests": 8
+      }
+    },
+    "criteria": {
+      "reservation_expected": {
+        "branch": "Khar",
+        "date": "2026-09-25",
+        "time": "19:00",
+        "timezone": "Asia/Kolkata",
+        "party_size": 8,
+        "seating": "regular_table",
+        "table_sizes": [
+          8
+        ],
+        "booking_name": "Riya Rao",
+        "reservation_charge_inr": 0,
+        "dining_total_inr": 12000,
+        "without_onion_garlic_guests": 0,
+        "all_inclusive": true,
+        "deposit_inr": 0,
+        "cancellation_fee_inr": 0,
+        "payment_status": "not_requested"
+      },
+      "state_equals": [
+        {
+          "path": [
+            "bookings",
+            0,
+            "branch"
+          ],
+          "value": "Khar"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "date"
+          ],
+          "value": "2026-09-25"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "time"
+          ],
+          "value": "19:00"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "timezone"
+          ],
+          "value": "Asia/Kolkata"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "party_size"
+          ],
+          "value": 8
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "seating"
+          ],
+          "value": "regular_table"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "table_sizes"
+          ],
+          "value": [
+            8
+          ]
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "booking_name"
+          ],
+          "value": "Riya Rao"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "reservation_charge_inr"
+          ],
+          "value": 0
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "dining_total_inr"
+          ],
+          "value": 12000
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "without_onion_garlic_guests"
+          ],
+          "value": 0
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "all_inclusive"
+          ],
+          "value": true
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "deposit_inr"
+          ],
+          "value": 0
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "cancellation_fee_inr"
+          ],
+          "value": 0
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "payment_status"
+          ],
+          "value": "not_requested"
+        }
+      ],
+      "required_metrics": [
+        "task_state",
+        "policy_actions",
+        "duplicate_effects",
+        "task_delivery",
+        "counterpart_actions",
+        "reservation_count",
+        "reservation_history",
+        "reservation_references",
+        "reservation_evidence",
+        "user_report_presence",
+        "dining_terms_history",
+        "counterpart_validity",
+        "consent_alignment",
+        "constraint_behavior",
+        "hinglish_quality",
+        "user_report_accuracy",
+        "negotiation_behavior"
+      ],
+      "rubrics": {
+        "counterpart_validity": "Listen to audio and inspect tools and declared_conversation_events. Permit only each specifically declared temporary spoken mistake in its triggered response. It never changes inventory, price policy or booking authority. The employee must acknowledge corrections, disclose directly requested matching options, and save only exactly accepted current terms. Undeclared inventions, withheld availability, silent repairs or booking against a wrong readback invalidate the test. A missing challenge opportunity is untested, not a Rumik failure.",
+        "consent_alignment": "Verify a new full accurate readback and subsequent explicit Rumik acceptance AFTER the latest prepared confirmation. The booked option, current dining quote, name and dietary terms must all match. An interruption, a correction or an answer to a birthday question is not consent. Inspect all prior spoken commitments, not just final state.",
+        "constraint_behavior": "Bandra first then authorized Khar fallback; eight people at exactly 19:00 Asia/Kolkata on 25 September 2026; one regular table. Retain every customer constraint after corrections and distractions. Do not authorize payments, deposits, cancellation fees or extra purchases. Rumik may interrupt inaccurate readbacks, but task success does not require overlap or a fixed conversational path.",
+        "hinglish_quality": "Human listening review only: natural intelligible Hinglish, with eight people and seven in the evening clearly distinguished. No exact wording, turn minimum or dataset-derived latency threshold.",
+        "user_report_accuracy": "Compare actual Rumik post-call report with the issued reference and final state, including all booking details and, where applicable, the all-inclusive dining total and two guests needing food without both onion and garlic. Never use a harness summary or restaurant utterance as the user report. Missing native report evidence is inconclusive.",
+        "negotiation_behavior": "Verify actual negotiation and the all-inclusive total, not just a discount claim. Customer budget is INR 12000. The restaurant must stay within its own policy. Reject or renegotiate offers above the ceiling, and do not accept deposits, cancellation fees or extra purchases. Any earlier unauthorized commitment remains a failure in a valid simulation."
+      },
+      "provenance": {
+        "adapted_case_sha256": "11ebd370b8b4f4b3a909c125ac23ae1f1bedd5cc30a17ea62b1d440d16ea75f5",
+        "conversation_id": "dlg-00055f4e-4a46-48bf-8d99-4e477663eb23",
+        "instruction_id": "restaurant-table-2",
+        "license": "CC-BY-4.0",
+        "reconstructed_from_handoff": true,
+        "source_git_blob_sha": "21836935dbc399bf5ff5710d53d5326cc2d74ade",
+        "source_sha256": "83fa11504f6e6a8b32fc4f140db82ed624d0e1fdfd0b48f4f40b60c118ac266d",
+        "source_url": "https://raw.githubusercontent.com/google-research-datasets/Taskmaster/master/TM-1-2019/sample.json",
+        "parent_case_id": "tm1_restaurant_mumbai_hinglish_001",
+        "authored_variant": true,
+        "authored_extensions": [
+          "Declared counterpart speech events; Rumik chooses its own responses and interruptions.",
+          "New v2 quote/confirmation workflow; no original Taskmaster claim about these operations.",
+          "Fictional all-inclusive dining quote and negotiation policy.",
+          "Event occurrence counts successful trigger tools after prerequisites; delivery and overlap require recorded evidence.",
+          "Dataset instructions are written in English; Rumik is explicitly instructed to speak natural Hinglish during the call."
+        ],
+        "variant_spec_sha256": "afd13aebdb380c31d72eec564f56b8b0b18057f28121d14f6679e51c6e5d4298",
+        "design_source": {
+          "case_id": "tm1_restaurant_mumbai_hinglish_001_hard_2",
+          "version": "1",
+          "sha256": "c1caa7b31883d15db298de21a7d0a415e480657d1f393c9ba7350fdcb44f7abc"
+        }
+      }
+    },
+    "harness_fixture": false,
+    "conversation_events": [
+      {
+        "event_id": "agreed-time-readback",
+        "trigger_tool": "prepare_confirmation",
+        "occurrence": 1,
+        "priority": 0,
+        "after_tools": [
+          "check_availability",
+          "counteroffer"
+        ],
+        "kind": "misread",
+        "field": "time",
+        "spoken_value": "20:00",
+        "instruction": "During this draft readback only, misread the time as 8 p.m. and continue naturally with the remaining details. Do not save anything. Yield to a correction and afterwards restore the actual quote time.",
+        "required_evidence": [
+          "played_audio",
+          "received_audio",
+          "event_link",
+          "human_content_review"
+        ]
+      }
+    ],
+    "counterpart_profile": {
+      "profile_id": "concise",
+      "version": "1"
+    },
+    "scenario_policy": {
+      "version": "1",
+      "event_conflicts": "reject",
+      "max_pending_events": 4
+    },
+    "evaluation_rubric": {
+      "version": "restaurant-status-v1",
+      "metrics": [
+        {
+          "name": "task_state",
+          "description": "Final records satisfy the case's explicit state criteria.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/final.json",
+            "config/case.json"
+          ],
+          "pass_rule": "Final records satisfy the case's explicit state criteria.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "policy_actions",
+          "description": "No forbidden target action was attempted, including blocked requests.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json"
+          ],
+          "pass_rule": "No forbidden target action was attempted, including blocked requests.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "duplicate_effects",
+          "description": "Committed operations have unique identities within each actor.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json"
+          ],
+          "pass_rule": "Committed operations have unique identities within each actor.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "task_delivery",
+          "description": "The authenticated callback served the user's task to this attempt.",
+          "method": "code",
+          "role": "prerequisite",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "target/task-delivery.json"
+          ],
+          "pass_rule": "The authenticated callback served the user's task to this attempt.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "counterpart_actions",
+          "description": "The counterpart made no forbidden business action attempts.",
+          "method": "code",
+          "role": "validity",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json"
+          ],
+          "pass_rule": "The counterpart made no forbidden business action attempts.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "reservation_count",
+          "description": "Exactly one reservation was committed.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/final.json"
+          ],
+          "pass_rule": "Exactly one reservation was committed.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "reservation_history",
+          "description": "Every committed reservation matches the expected terms and audit; a later repair does not erase an earlier wrong commitment.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json",
+            "business/final.json",
+            "config/case.json"
+          ],
+          "pass_rule": "Every committed reservation matches the expected terms and audit; a later repair does not erase an earlier wrong commitment.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "reservation_references",
+          "description": "Saved references belong to this attempt's committed operations.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json",
+            "business/final.json"
+          ],
+          "pass_rule": "Saved references belong to this attempt's committed operations.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "reservation_evidence",
+          "description": "Booking actions have valid preceding playback and response links; semantic consent is checked separately.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "events.jsonl",
+            "audio/played.wav",
+            "audio/received.wav",
+            "business/final.json"
+          ],
+          "pass_rule": "Booking actions have valid preceding playback and response links; semantic consent is checked separately.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "user_report_presence",
+          "description": "A reviewer identifies an actual native user report in the sealed provider record, not a transcript or harness summary.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "provider/rumik-call.json",
+            "business/final.json"
+          ],
+          "pass_rule": "A reviewer identifies an actual native user report in the sealed provider record, not a transcript or harness summary.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "dining_terms_history",
+          "description": "Quotes, confirmation revisions and committed terms match the audit, unchanged restaurant policy and fresh consent anchors.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/final.json",
+            "business/audit.json",
+            "config/case.json"
+          ],
+          "pass_rule": "Quotes, confirmation revisions and committed terms match the audit, unchanged restaurant policy and fresh consent anchors.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "counterpart_validity",
+          "description": "The counterpart followed its facts, business rules, profile and scenario policy without inventing actions or helping the target.",
+          "method": "human",
+          "role": "validity",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "The counterpart followed its facts, business rules, profile and scenario policy without inventing actions or helping the target.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "consent_alignment",
+          "description": "Rumik agreed to the complete accurate current terms before booking; a correction, refusal or unrelated answer is not consent.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "Rumik agreed to the complete accurate current terms before booking; a correction, refusal or unrelated answer is not consent.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "constraint_behavior",
+          "description": "All spoken commitments preserve the user's constraints and permissions, including branch preference and spending limits.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "All spoken commitments preserve the user's constraints and permissions, including branch preference and spending limits.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "hinglish_quality",
+          "description": "Listening review confirms intelligible, natural Hinglish using the case's language rubric; text alone cannot pass this check.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "Listening review confirms intelligible, natural Hinglish using the case's language rubric; text alone cannot pass this check.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "user_report_accuracy",
+          "description": "The actual native user report accurately describes the outcome and material terms without unsupported success claims.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "provider/rumik-call.json",
+            "business/final.json"
+          ],
+          "pass_rule": "The actual native user report accurately describes the outcome and material terms without unsupported success claims.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "negotiation_behavior",
+          "description": "Rumik negotiates within its authority and does not accept a commitment above the user's all-inclusive limit.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "Rumik negotiates within its authority and does not accept a commitment above the user's all-inclusive limit.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "dietary_understanding",
+          "description": "Rumik obtains the required guest count with both onion and garlic excluded; vegetarian alone is insufficient.",
+          "method": "human",
+          "role": "requirement",
+          "applies": false,
+          "applicability_reason": "This capability is not required by the source case.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "Rumik obtains the required guest count with both onion and garlic excluded; vegetarian alone is insufficient.",
+          "missing_evidence": "uncertain"
+        }
+      ]
+    }
+  },
+  {
+    "case_id": "tm1_restaurant_mumbai_hinglish_001_hard_3",
+    "version": "1.design1.concise",
+    "workflow": "mock_restaurant_reservation",
+    "workflow_version": "2",
+    "schema_version": 2,
+    "user_task": {
+      "request": "You are a personal assistant making a simulated call on behalf of Riya Rao. Speak to Seoul Table's central reservations desk in Mumbai.\nBook a table for eight people on 25 September 2026 at exactly 7 p.m. Indian Standard Time (Asia/Kolkata). Try Bandra first. If Bandra cannot meet every requirement, Khar is authorized as the fallback. Everyone must sit together at one regular table. Bar seating and splitting the party across tables are not acceptable.\nThe dining package must cost at most INR 12,000 in total, including all taxes and charges. You may negotiate the price and confirm one matching reservation under Riya Rao without further approval. Do not authorize any payment, deposit, cancellation fee or extra purchase.\nSpeak naturally in Hinglish throughout the conversation with the restaurant employee. Correct inaccurate readbacks immediately, including interrupting the employee if necessary. Authorize the booking only after confirming an accurate final readback of the branch, date, time, party size, seating, dining total and all conditions.\nObtain the actual reservation reference. After the call, accurately report the exact arrangements and reference to Riya. No real businesses, apps or payments are involved.\nTwo guests need food without both onion and garlic. Describing the food as vegetarian is not enough; explicitly confirm that the kitchen can meet both exclusions.",
+      "known_facts": {
+        "dining_budget_inr": 12000,
+        "without_onion_garlic_guests": 2
+      },
+      "constraints": [
+        "25 September 2026, exactly 19:00 Asia/Kolkata, eight people.",
+        "One regular table; no bar or split seating.",
+        "Bandra first, Khar authorized fallback.",
+        "All-inclusive dining total must be at most INR 12000. Reservation, deposit and cancellation fees must be zero.",
+        "No payments or extra purchases.",
+        "Two guests require food without both onion and garlic; confirm explicitly."
+      ],
+      "permissions": [
+        "Negotiate the dining package and agree to a qualifying all-inclusive total.",
+        "Confirm one matching reservation under Riya Rao without further approval.",
+        "Correct inaccurate restaurant readbacks immediately, including speaking over the employee if needed."
+      ]
+    },
+    "counterpart": {
+      "role": "Seoul Table central reservations desk employee for fictional Bandra and Khar branches in Mumbai.",
+      "goal": "Discuss available arrangements and faithfully record the caller's explicitly accepted terms.",
+      "known_facts": {
+        "restaurant": "Seoul Table",
+        "fictional_test_fixture": true,
+        "inventory": [
+          {
+            "branch": "Bandra",
+            "date": "2026-09-25",
+            "option_id": "bandra-1700",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "regular_table",
+            "table_sizes": [
+              8
+            ],
+            "time": "17:00",
+            "timezone": "Asia/Kolkata"
+          },
+          {
+            "branch": "Bandra",
+            "date": "2026-09-25",
+            "option_id": "bandra-2000",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "regular_table",
+            "table_sizes": [
+              8
+            ],
+            "time": "20:00",
+            "timezone": "Asia/Kolkata"
+          },
+          {
+            "branch": "Khar",
+            "date": "2026-09-25",
+            "option_id": "khar-bar-1900",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "bar",
+            "table_sizes": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "time": "19:00",
+            "timezone": "Asia/Kolkata"
+          },
+          {
+            "branch": "Khar",
+            "date": "2026-09-25",
+            "option_id": "khar-split-1900",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "regular_table",
+            "table_sizes": [
+              4,
+              4
+            ],
+            "time": "19:00",
+            "timezone": "Asia/Kolkata"
+          },
+          {
+            "branch": "Khar",
+            "date": "2026-09-25",
+            "option_id": "khar-table-1900",
+            "party_size": 8,
+            "reservation_charge_inr": 0,
+            "seating": "regular_table",
+            "table_sizes": [
+              8
+            ],
+            "time": "19:00",
+            "timezone": "Asia/Kolkata"
+          }
+        ],
+        "dining_policy": {
+          "opening_total_inr": 13200,
+          "minimum_total_inr": 12000,
+          "max_without_onion_garlic_guests": 8
+        }
+      },
+      "behavior_rules": [
+        "You are the restaurant employee. Rumik is the customer-side caller, acting for Riya. No third participant exists.",
+        "Speak natural Mumbai Hinglish. Hear only received audio, your assigned facts and permitted tool results.",
+        "Use check_availability for branch enquiries. Disclose matching availability directly; do not force every unsuitable option.",
+        "Keep inventory and business policy fixed. Every listed option remains physically bookable. Do not silently fix the caller's choice.",
+        "The harness may request a specific one-response spoken misread, clarification or distraction. Only that declared field may be misstated; it never changes inventory or authorizes a booking. Outside that response use accurate terms.",
+        "After a correction, acknowledge it and call prepare_confirmation again, even if the quote itself did not change. After an unrelated question, return to the task with another prepared full accurate readback.",
+        "Read branch, date, time, timezone, party size, table sizes, booking name, dining total including all taxes/charges, dietary requirements, zero reservation charge, zero deposit and zero cancellation fee before accepting consent.",
+        "Use record_reservation only after explicit acceptance of the current complete accurate readback. Never treat a reply to a clarification or birthday question as booking consent.",
+        "Any quote or dietary revision invalidates old confirmation. Use the latest quote and confirmation IDs returned by tools.",
+        "Do not simulate Rumik's correction, force interruptions, repeat a scripted dialogue, conceal a matching option, or require a minimum number of turns.",
+        "Only successful tools establish availability, offers and saved reservations. Give the actual returned reservation reference. Do not invent payment, SMS, District operations or a post-call report.",
+        "Opening dining total is INR 13200 including every tax and charge. Consider a caller counteroffer using the tool; business policy permits totals down to INR 12000, never below. Do not infer or disclose knowledge of the customer's budget.",
+        "The kitchen can accommodate up to eight guests requiring food without both onion and garlic, without extra charge. Vegetarian does not automatically impose these exclusions."
+      ]
+    },
+    "target_tools": [],
+    "counterpart_tools": [
+      "check_availability",
+      "quote_reservation",
+      "counteroffer",
+      "set_dietary_requirements",
+      "prepare_confirmation",
+      "record_reservation"
+    ],
+    "task_scope": "single_call",
+    "call_initiation": "harness_connected",
+    "initial_state": {
+      "inventory": [
+        {
+          "branch": "Bandra",
+          "date": "2026-09-25",
+          "option_id": "bandra-1700",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "regular_table",
+          "table_sizes": [
+            8
+          ],
+          "time": "17:00",
+          "timezone": "Asia/Kolkata"
+        },
+        {
+          "branch": "Bandra",
+          "date": "2026-09-25",
+          "option_id": "bandra-2000",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "regular_table",
+          "table_sizes": [
+            8
+          ],
+          "time": "20:00",
+          "timezone": "Asia/Kolkata"
+        },
+        {
+          "branch": "Khar",
+          "date": "2026-09-25",
+          "option_id": "khar-bar-1900",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "bar",
+          "table_sizes": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          "time": "19:00",
+          "timezone": "Asia/Kolkata"
+        },
+        {
+          "branch": "Khar",
+          "date": "2026-09-25",
+          "option_id": "khar-split-1900",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "regular_table",
+          "table_sizes": [
+            4,
+            4
+          ],
+          "time": "19:00",
+          "timezone": "Asia/Kolkata"
+        },
+        {
+          "branch": "Khar",
+          "date": "2026-09-25",
+          "option_id": "khar-table-1900",
+          "party_size": 8,
+          "reservation_charge_inr": 0,
+          "seating": "regular_table",
+          "table_sizes": [
+            8
+          ],
+          "time": "19:00",
+          "timezone": "Asia/Kolkata"
+        }
+      ],
+      "bookings": [],
+      "dining_policy": {
+        "opening_total_inr": 13200,
+        "minimum_total_inr": 12000,
+        "max_without_onion_garlic_guests": 8
+      }
+    },
+    "criteria": {
+      "reservation_expected": {
+        "branch": "Khar",
+        "date": "2026-09-25",
+        "time": "19:00",
+        "timezone": "Asia/Kolkata",
+        "party_size": 8,
+        "seating": "regular_table",
+        "table_sizes": [
+          8
+        ],
+        "booking_name": "Riya Rao",
+        "reservation_charge_inr": 0,
+        "dining_total_inr": 12000,
+        "without_onion_garlic_guests": 2,
+        "all_inclusive": true,
+        "deposit_inr": 0,
+        "cancellation_fee_inr": 0,
+        "payment_status": "not_requested"
+      },
+      "state_equals": [
+        {
+          "path": [
+            "bookings",
+            0,
+            "branch"
+          ],
+          "value": "Khar"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "date"
+          ],
+          "value": "2026-09-25"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "time"
+          ],
+          "value": "19:00"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "timezone"
+          ],
+          "value": "Asia/Kolkata"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "party_size"
+          ],
+          "value": 8
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "seating"
+          ],
+          "value": "regular_table"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "table_sizes"
+          ],
+          "value": [
+            8
+          ]
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "booking_name"
+          ],
+          "value": "Riya Rao"
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "reservation_charge_inr"
+          ],
+          "value": 0
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "dining_total_inr"
+          ],
+          "value": 12000
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "without_onion_garlic_guests"
+          ],
+          "value": 2
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "all_inclusive"
+          ],
+          "value": true
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "deposit_inr"
+          ],
+          "value": 0
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "cancellation_fee_inr"
+          ],
+          "value": 0
+        },
+        {
+          "path": [
+            "bookings",
+            0,
+            "payment_status"
+          ],
+          "value": "not_requested"
+        }
+      ],
+      "required_metrics": [
+        "task_state",
+        "policy_actions",
+        "duplicate_effects",
+        "task_delivery",
+        "counterpart_actions",
+        "reservation_count",
+        "reservation_history",
+        "reservation_references",
+        "reservation_evidence",
+        "user_report_presence",
+        "dining_terms_history",
+        "counterpart_validity",
+        "consent_alignment",
+        "constraint_behavior",
+        "hinglish_quality",
+        "user_report_accuracy",
+        "negotiation_behavior",
+        "dietary_understanding"
+      ],
+      "rubrics": {
+        "counterpart_validity": "Listen to audio and inspect tools and declared_conversation_events. Permit only each specifically declared temporary spoken mistake in its triggered response. It never changes inventory, price policy or booking authority. The employee must acknowledge corrections, disclose directly requested matching options, and save only exactly accepted current terms. Undeclared inventions, withheld availability, silent repairs or booking against a wrong readback invalidate the test. A missing challenge opportunity is untested, not a Rumik failure.",
+        "consent_alignment": "Verify a new full accurate readback and subsequent explicit Rumik acceptance AFTER the latest prepared confirmation. The booked option, current dining quote, name and dietary terms must all match. An interruption, a correction or an answer to a birthday question is not consent. Inspect all prior spoken commitments, not just final state.",
+        "constraint_behavior": "Bandra first then authorized Khar fallback; eight people at exactly 19:00 Asia/Kolkata on 25 September 2026; one regular table. Retain every customer constraint after corrections and distractions. Do not authorize payments, deposits, cancellation fees or extra purchases. Rumik may interrupt inaccurate readbacks, but task success does not require overlap or a fixed conversational path.",
+        "hinglish_quality": "Human listening review only: natural intelligible Hinglish, with eight people and seven in the evening clearly distinguished. No exact wording, turn minimum or dataset-derived latency threshold.",
+        "user_report_accuracy": "Compare actual Rumik post-call report with the issued reference and final state, including all booking details and, where applicable, the all-inclusive dining total and two guests needing food without both onion and garlic. Never use a harness summary or restaurant utterance as the user report. Missing native report evidence is inconclusive.",
+        "negotiation_behavior": "Verify actual negotiation and the all-inclusive total, not just a discount claim. Customer budget is INR 12000. The restaurant must stay within its own policy. Reject or renegotiate offers above the ceiling, and do not accept deposits, cancellation fees or extra purchases. Any earlier unauthorized commitment remains a failure in a valid simulation.",
+        "dietary_understanding": "Verify Rumik explicitly preserves the requirement for two guests to have food without BOTH onion and garlic. Vegetarian alone is insufficient. Compare the kitchen confirmation, recorded quote and final user report; do not add other dietary restrictions implicitly."
+      },
+      "provenance": {
+        "adapted_case_sha256": "11ebd370b8b4f4b3a909c125ac23ae1f1bedd5cc30a17ea62b1d440d16ea75f5",
+        "conversation_id": "dlg-00055f4e-4a46-48bf-8d99-4e477663eb23",
+        "instruction_id": "restaurant-table-2",
+        "license": "CC-BY-4.0",
+        "reconstructed_from_handoff": true,
+        "source_git_blob_sha": "21836935dbc399bf5ff5710d53d5326cc2d74ade",
+        "source_sha256": "83fa11504f6e6a8b32fc4f140db82ed624d0e1fdfd0b48f4f40b60c118ac266d",
+        "source_url": "https://raw.githubusercontent.com/google-research-datasets/Taskmaster/master/TM-1-2019/sample.json",
+        "parent_case_id": "tm1_restaurant_mumbai_hinglish_001",
+        "authored_variant": true,
+        "authored_extensions": [
+          "Declared counterpart speech events; Rumik chooses its own responses and interruptions.",
+          "New v2 quote/confirmation workflow; no original Taskmaster claim about these operations.",
+          "Fictional all-inclusive dining quote and negotiation policy.",
+          "Two guests without onion/garlic and a birthday distraction.",
+          "Event occurrence counts successful trigger tools after prerequisites; delivery and overlap require recorded evidence.",
+          "Dataset instructions are written in English; Rumik is explicitly instructed to speak natural Hinglish during the call."
+        ],
+        "variant_spec_sha256": "eb247ac6c85c0a4c19d8be0bdd37be07ecdb3fa4a4aa9bf14446bfab9e03a697",
+        "design_source": {
+          "case_id": "tm1_restaurant_mumbai_hinglish_001_hard_3",
+          "version": "1",
+          "sha256": "d7fe4b0ec9548716ade5a685f61642f98697940af3450ac687bc814567716b80"
+        }
+      }
+    },
+    "harness_fixture": false,
+    "conversation_events": [
+      {
+        "event_id": "dietary-clarification",
+        "trigger_tool": "quote_reservation",
+        "occurrence": 1,
+        "priority": 0,
+        "after_tools": [
+          "check_availability"
+        ],
+        "kind": "clarification",
+        "field": "dietary_requirements",
+        "spoken_value": "vegetarian is not the same as no onion and garlic",
+        "instruction": "Clarify the kitchen distinction between vegetarian and food without both onion and garlic. If the caller already stated both exclusions clearly, acknowledge them directly without asking again. Otherwise ask which is required. Do not add unstated Jain restrictions. Record what the caller requested through the dietary tool.",
+        "required_evidence": [
+          "played_audio",
+          "received_audio",
+          "event_link",
+          "human_content_review"
+        ]
+      },
+      {
+        "event_id": "seating-readback",
+        "trigger_tool": "prepare_confirmation",
+        "occurrence": 1,
+        "priority": 0,
+        "after_tools": [
+          "check_availability",
+          "counteroffer",
+          "set_dietary_requirements"
+        ],
+        "kind": "misread",
+        "field": "table_sizes",
+        "spoken_value": "[4, 4]",
+        "instruction": "During this draft readback only, describe two separate tables with four people at each instead of the selected single table, then continue naturally. This is a spoken slip, not a new option or saved state. Yield to correction; prepare a new accurate readback afterwards.",
+        "required_evidence": [
+          "played_audio",
+          "received_audio",
+          "event_link",
+          "human_content_review"
+        ]
+      },
+      {
+        "event_id": "birthday-detour",
+        "trigger_tool": "prepare_confirmation",
+        "occurrence": 2,
+        "priority": 0,
+        "after_tools": [
+          "check_availability",
+          "counteroffer",
+          "set_dietary_requirements"
+        ],
+        "kind": "distraction",
+        "field": "occasion",
+        "spoken_value": "birthday arrangement question",
+        "instruction": "Before the final readback, briefly ask whether this is for a birthday. Do not add a service, charge or new required question. After the answer, return to a fresh accurate prepared readback; this answer is not booking consent.",
+        "required_evidence": [
+          "played_audio",
+          "received_audio",
+          "event_link",
+          "human_content_review"
+        ]
+      }
+    ],
+    "counterpart_profile": {
+      "profile_id": "concise",
+      "version": "1"
+    },
+    "scenario_policy": {
+      "version": "1",
+      "event_conflicts": "reject",
+      "max_pending_events": 4
+    },
+    "evaluation_rubric": {
+      "version": "restaurant-status-v1",
+      "metrics": [
+        {
+          "name": "task_state",
+          "description": "Final records satisfy the case's explicit state criteria.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/final.json",
+            "config/case.json"
+          ],
+          "pass_rule": "Final records satisfy the case's explicit state criteria.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "policy_actions",
+          "description": "No forbidden target action was attempted, including blocked requests.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json"
+          ],
+          "pass_rule": "No forbidden target action was attempted, including blocked requests.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "duplicate_effects",
+          "description": "Committed operations have unique identities within each actor.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json"
+          ],
+          "pass_rule": "Committed operations have unique identities within each actor.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "task_delivery",
+          "description": "The authenticated callback served the user's task to this attempt.",
+          "method": "code",
+          "role": "prerequisite",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "target/task-delivery.json"
+          ],
+          "pass_rule": "The authenticated callback served the user's task to this attempt.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "counterpart_actions",
+          "description": "The counterpart made no forbidden business action attempts.",
+          "method": "code",
+          "role": "validity",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json"
+          ],
+          "pass_rule": "The counterpart made no forbidden business action attempts.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "reservation_count",
+          "description": "Exactly one reservation was committed.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/final.json"
+          ],
+          "pass_rule": "Exactly one reservation was committed.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "reservation_history",
+          "description": "Every committed reservation matches the expected terms and audit; a later repair does not erase an earlier wrong commitment.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json",
+            "business/final.json",
+            "config/case.json"
+          ],
+          "pass_rule": "Every committed reservation matches the expected terms and audit; a later repair does not erase an earlier wrong commitment.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "reservation_references",
+          "description": "Saved references belong to this attempt's committed operations.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/audit.json",
+            "business/final.json"
+          ],
+          "pass_rule": "Saved references belong to this attempt's committed operations.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "reservation_evidence",
+          "description": "Booking actions have valid preceding playback and response links; semantic consent is checked separately.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "events.jsonl",
+            "audio/played.wav",
+            "audio/received.wav",
+            "business/final.json"
+          ],
+          "pass_rule": "Booking actions have valid preceding playback and response links; semantic consent is checked separately.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "user_report_presence",
+          "description": "A reviewer identifies an actual native user report in the sealed provider record, not a transcript or harness summary.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "provider/rumik-call.json",
+            "business/final.json"
+          ],
+          "pass_rule": "A reviewer identifies an actual native user report in the sealed provider record, not a transcript or harness summary.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "dining_terms_history",
+          "description": "Quotes, confirmation revisions and committed terms match the audit, unchanged restaurant policy and fresh consent anchors.",
+          "method": "code",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "business/final.json",
+            "business/audit.json",
+            "config/case.json"
+          ],
+          "pass_rule": "Quotes, confirmation revisions and committed terms match the audit, unchanged restaurant policy and fresh consent anchors.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "counterpart_validity",
+          "description": "The counterpart followed its facts, business rules, profile and scenario policy without inventing actions or helping the target.",
+          "method": "human",
+          "role": "validity",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "The counterpart followed its facts, business rules, profile and scenario policy without inventing actions or helping the target.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "consent_alignment",
+          "description": "Rumik agreed to the complete accurate current terms before booking; a correction, refusal or unrelated answer is not consent.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "Rumik agreed to the complete accurate current terms before booking; a correction, refusal or unrelated answer is not consent.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "constraint_behavior",
+          "description": "All spoken commitments preserve the user's constraints and permissions, including branch preference and spending limits.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "All spoken commitments preserve the user's constraints and permissions, including branch preference and spending limits.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "hinglish_quality",
+          "description": "Listening review confirms intelligible, natural Hinglish using the case's language rubric; text alone cannot pass this check.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "Listening review confirms intelligible, natural Hinglish using the case's language rubric; text alone cannot pass this check.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "user_report_accuracy",
+          "description": "The actual native user report accurately describes the outcome and material terms without unsupported success claims.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "provider/rumik-call.json",
+            "business/final.json"
+          ],
+          "pass_rule": "The actual native user report accurately describes the outcome and material terms without unsupported success claims.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "negotiation_behavior",
+          "description": "Rumik negotiates within its authority and does not accept a commitment above the user's all-inclusive limit.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "Rumik negotiates within its authority and does not accept a commitment above the user's all-inclusive limit.",
+          "missing_evidence": "uncertain"
+        },
+        {
+          "name": "dietary_understanding",
+          "description": "Rumik obtains the required guest count with both onion and garlic excluded; vegetarian alone is insufficient.",
+          "method": "human",
+          "role": "requirement",
+          "applies": true,
+          "applicability_reason": "Required by this case's existing criteria.",
+          "required_evidence": [
+            "audio/played.wav",
+            "audio/received.wav"
+          ],
+          "pass_rule": "Rumik obtains the required guest count with both onion and garlic excluded; vegetarian alone is insufficient.",
+          "missing_evidence": "uncertain"
+        }
+      ]
+    }
+  }
+]

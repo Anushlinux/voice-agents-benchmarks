@@ -13,11 +13,13 @@ The full downloaded source is preserved separately from the adaptation.
 
 ## Local inputs and offline preparation
 
-The ignored `datasets/tm1_restaurant_mumbai_hinglish_001/` directory holds the
-downloaded source and notice, source hashes, original transcript extract, handoff,
-attribution, reconstructed `case.json`, and the generated execution input. These
-files must travel with the local package; Git contains the importer and workflow,
-not the dataset. There is no fabricated reference conversation or pilot transcript.
+The local working set is indexed in `datasets/README.md`. The authored baseline
+is `datasets/authored/restaurant-baseline.json`, its generated execution input is
+`datasets/generated/restaurant-baseline.json`, and its original source record and
+attribution are in `datasets/sources/taskmaster1/`. The original packages, hashes,
+transcript extract and historical handoff documents are preserved under
+`datasets/archive/2026-09-20/`. Dataset files must stay out of Git. There is no
+fabricated reference conversation or pilot transcript.
 
 The importer verifies the exact source ID, instruction, 20 utterances and Git blob
 `21836935dbc399bf5ff5710d53d5326cc2d74ade`. It requires five physical options with
@@ -25,14 +27,15 @@ exactly one matching outcome and emits a single schema-2 `ExecutionCase`.
 It reads only local files and fails if its output already exists.
 
 ```sh
+dataset_check_dir=$(mktemp -d)
 uv run --locked voice-bench restaurant prepare \
-  --case datasets/tm1_restaurant_mumbai_hinglish_001/case.json \
-  --source datasets/tm1_restaurant_mumbai_hinglish_001/source/sample.json \
-  --output datasets/tm1_restaurant_mumbai_hinglish_001/execution-cases.json
+  --case datasets/authored/restaurant-baseline.json \
+  --source datasets/sources/taskmaster1/sample.json \
+  --output "$dataset_check_dir/baseline.json"
 
 uv run --locked voice-bench restaurant preflight \
   --config configs/restaurant-pilot.local.toml \
-  --cases datasets/tm1_restaurant_mumbai_hinglish_001/execution-cases.json
+  --cases datasets/generated/restaurant-baseline.json
 ```
 
 The supplied local config has zero funding and cannot start a call. Preflight

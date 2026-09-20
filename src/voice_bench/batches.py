@@ -63,25 +63,48 @@ def report(store, batch_id, root, *, evaluation_version=None, review_version=Non
     plans = batch["plans"]
     runs = store.runs(batch_id)
     rows = []
+    if review_version and not evaluation_version:
+        raise ValueError("Select the evaluation version before selecting its review")
     for run in runs:
         result = dict(run.get("result", {}))
         directory = root / str(batch_id) / run["run_id"]
+        selection = {"evaluation": "not_selected", "review": "not_selected"}
+        evaluation_path = None
         if evaluation_version:
             path = safe_path(directory, f"evaluation/{evaluation_version}/result.json")
             if path.exists():
+                evaluation_path = path
                 verify_bundle(directory)
                 evaluation = json.loads(path.read_text())
                 if evaluation.get("mode") == "shadow":
                     raise ValueError("Shadow comparisons cannot be used as benchmark grades")
                 result.update(evaluation)
+                selection["evaluation"] = "loaded"
+            else:
+                selection["evaluation"] = "missing"
         if review_version:
             path = safe_path(directory, f"review/{review_version}/result.json")
             if path.exists():
+                if evaluation_path is None:
+                    raise ValueError("Selected review has no matching evaluation")
                 verify_bundle(directory)
                 review = json.loads(path.read_text())
                 if review["evaluation_version"] != evaluation_version:
                     raise ValueError("Review references a different evaluation version")
+                if review.get("evaluation_sha256") != digest(evaluation_path.read_bytes()):
+                    raise ValueError(
+                        "Review evaluation checksum does not match the selected evaluation"
+                    )
                 result.update(review)
+                selection["review"] = "loaded"
+            else:
+                selection["review"] = "missing"
+        if "missing" in selection.values():
+            result = {
+                "validity": "unresolved",
+                "outcome": "unresolved",
+                "evaluation_progress": {"status": "missing_selected_stage"},
+            }
         rows.append(
             {
                 "run_id": run["run_id"],
@@ -107,6 +130,11 @@ def report(store, batch_id, root, *, evaluation_version=None, review_version=Non
                 "conversation_events": result.get("conversation_events", []),
                 "rubric_version": result.get("rubric_version"),
                 "metric_decisions": result.get("metric_decisions", []),
+                "evaluation_selection": selection,
+                "evaluation_progress": result.get("evaluation_progress", {}),
+                "failure_attribution": run.get("result", {}).get("attribution", "unknown"),
+                "failure_stage": run.get("result", {}).get("failure_stage"),
+                "execution_error": run.get("result", {}).get("error"),
             }
         )
     counts = {
@@ -128,6 +156,8 @@ def report(store, batch_id, root, *, evaluation_version=None, review_version=Non
     counts["attempt_records"] = len(rows)
     return {
         "batch_id": str(batch_id),
+        "purpose": batch.get("frozen", {}).get("config", {}).get("purpose", "legacy_unspecified"),
+        "frozen_config_digest": batch.get("config_digest"),
         "counts": counts,
         "attempts": rows,
         "pass_rate": {
@@ -135,6 +165,12 @@ def report(store, batch_id, root, *, evaluation_version=None, review_version=Non
             "denominator": counts["valid"],
             "unit": "valid attempts",
             "value": counts["passed"] / counts["valid"] if counts["valid"] else None,
+        },
+        "failure_rate": {
+            "numerator": counts["failed"],
+            "denominator": counts["valid"],
+            "unit": "valid attempts",
+            "value": counts["failed"] / counts["valid"] if counts["valid"] else None,
         },
         "planned_items": plans,
         "status": batch.get("status", "prepared"),

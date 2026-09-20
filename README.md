@@ -1,12 +1,18 @@
 # Rumik personal-assistant benchmark
 
+**Benchmark outputs: [RESULTS.md](RESULTS.md).** The latest run is the 20 September
+2026 restaurant baseline: one completed browser conversation, a booking that did
+not meet the task requirements, and a formal verdict awaiting human review.
+The results page lists what each evaluator found, which evaluators did not run,
+and links to the saved recording and structured outputs.
+
 Benchmark a **hosted Rumik assistant acting on a user's behalf**. Rumik receives the user's assignment and speaks with a simulated restaurant employee, delivery agent, driver, or support representative. OpenAI Realtime plays that other person. Only Rumik is the target being evaluated; this is not a Rumik-versus-OpenAI comparison.
 
 This follows the Rumik team direction relayed by the user on 2026-09-20. It supersedes the earlier assumption that Rumik represents a business answering an OpenAI customer's request. Indian settings, spoken Hinglish, booking, cancellation, negotiation and delivery coordination guide the intended dataset; domain workflows and coverage remain a separate workstream.
 
 Dataset instructions may be written in English. Explicitly instruct Rumik to speak Hinglish during the call; do not translate the dataset into Hinglish merely to set the speaking language.
 
-**Status: role-separated single-call implementation; live qualification pending.** The harness delivers a private user task through its authenticated before-call callback, gives the counterpart separately scoped business tools, records audio/actions, and grades final state. No live provider success is claimed. Alongside the infrastructure fixture, a mock restaurant reservation workflow supports [one explicitly selected Taskmaster-derived browser pilot](docs/RESTAURANT_PILOT.md). Its source and reconstructed dataset files remain local and ignored by Git. [Three harder Hinglish variants](docs/RESTAURANT_HARD_CASES.md) add negotiation, dietary accommodation and observable correction opportunities while preserving that baseline. No live results are claimed.
+**Status: one current-code browser baseline completed and model-evaluated; human review pending.** The harness delivers a private user task through its authenticated before-call callback, gives the counterpart separately scoped business tools, records audio/actions, and grades final state. The latest run ended cleanly with complete evidence, but its booking did not satisfy the task. Alongside the infrastructure fixture, a mock restaurant reservation workflow supports [one explicitly selected Taskmaster-derived browser pilot](docs/RESTAURANT_PILOT.md). Its source and reconstructed dataset files remain local. [Three harder Hinglish variants](docs/RESTAURANT_HARD_CASES.md) add negotiation, dietary accommodation and observable correction opportunities while preserving that baseline. Those variants have no live results yet; telephone qualification is also pending.
 
 ```mermaid
 flowchart LR
@@ -36,6 +42,16 @@ remain unsupported. No new live qualification is claimed.
 behavior profiles, bounded scenario policies and explicit restaurant metric rubrics.
 `voice-bench design prepare` produces a new case version offline while preserving
 the source task and business state. Existing cases and saved results retain their semantics.
+
+## Local dataset review
+
+Start at `datasets/README.md` for the reorganized local dataset. Two authored
+files and two generated files hold the existing four restaurant cases; source
+attribution is separate, and original packages and preparation outputs are
+preserved in an archive. `datasets/REVIEW.md` explains the limits of these cases.
+Eight new Indian personal-assistant task designs are documented separately as
+proposals, with their missing workflow support stated explicitly. They are not
+executable cases or additional live coverage.
 
 ## Start without providers
 

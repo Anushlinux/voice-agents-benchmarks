@@ -1,0 +1,58 @@
+{
+  "ATTRIBUTION.md": {
+    "sha256": "2061ab1f91d0c678dd9f4f435abdb2d5a293b10a349aac01e398c213a3c4a749",
+    "bytes": 1770
+  },
+  "CODEX_HANDOFF.md": {
+    "sha256": "3ed86d3da08e22131adadc5a2f52137b86fa2917c40a2ce199b21abeb55f4c4d",
+    "bytes": 11699
+  },
+  "IMPLEMENTATION_RESULT.md": {
+    "sha256": "44f252d0302546a4c3dd680eea20c421be19649f52fc71fd07a675afbd7ed09c",
+    "bytes": 2041
+  },
+  "RUNNING_PILOT.md": {
+    "sha256": "32b17b85a76f70b7dae8afeb0bff1e5ec3b3c9ebc1508e29f9f8faed22c62cb5",
+    "bytes": 7709
+  },
+  "case.json": {
+    "sha256": "11ebd370b8b4f4b3a909c125ac23ae1f1bedd5cc30a17ea62b1d440d16ea75f5",
+    "bytes": 6733
+  },
+  "execution-cases.json": {
+    "sha256": "5e8b1138b4fc3203e09be4d037213341a57fc9df80f384565f9717e1ff3cf526",
+    "bytes": 8411
+  },
+  "offline-plan.json": {
+    "sha256": "4c6658392458ac9f65f3d541e34c282beed042bca2cce2429322a12f65eb4d0d",
+    "bytes": 404
+  },
+  "pilot-blockers.json": {
+    "sha256": "c85aee9974a91c7cd4200fb1517e38c3edd06d2e10a83b131710e198e1778970",
+    "bytes": 982
+  },
+  "restaurant-pilot.local.toml": {
+    "sha256": "eeb420b75809dce7f2e8cc363533c26507787e4cb203cb3f108370853574f499",
+    "bytes": 1221
+  },
+  "source/README.md": {
+    "sha256": "05e1bc05724716ca7905f567a2ec30d99c8d2f5f58e926c2ca7d9da116002446",
+    "bytes": 8046
+  },
+  "source/sample.json": {
+    "sha256": "83fa11504f6e6a8b32fc4f140db82ed624d0e1fdfd0b48f4f40b60c118ac266d",
+    "bytes": 7116
+  },
+  "source-hashes.json": {
+    "sha256": "66a0ee0fed0a04563295a2bd4a6cb7a6c39f5dbe283d9cdb5e489859afe5f7b6",
+    "bytes": 339
+  },
+  "source_transcript.json": {
+    "sha256": "383412ec7596810663bfb10aa6d9e9af5d38b47c120aefaee356e76d958d8b23",
+    "bytes": 2384
+  },
+  "validation.json": {
+    "sha256": "54a9da90458124867b381884f3dbe15d348b02cbabfa8148adf3d66c79962d0d",
+    "bytes": 1017
+  }
+}

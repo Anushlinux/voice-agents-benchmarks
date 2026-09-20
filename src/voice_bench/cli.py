@@ -82,7 +82,7 @@ def parser():
     evaluate.add_argument("--with-model", action="store_true")
     evaluate.add_argument("--config", type=Path)
     review = commands.add_parser("review")
-    review.add_argument("action", choices=["export", "import"])
+    review.add_argument("action", choices=["export", "import", "package"])
     review.add_argument("directory", type=Path)
     review.add_argument("--version", required=True)
     review.add_argument("--file", type=Path)
@@ -293,6 +293,12 @@ def dispatch(args):
 
         if args.action == "export":
             return review_template(args.directory, args.version)
+        if args.action == "package":
+            from voice_bench.evaluation.review_package import prepare_review_package
+
+            if args.file is None:
+                raise ValueError("Review package requires --file for its new output")
+            return prepare_review_package(args.directory, args.version, args.file)
         if args.file is None:
             raise ValueError("Review import requires --file")
         path = import_review(args.directory, args.version, json.loads(args.file.read_text()))
