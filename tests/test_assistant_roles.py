@@ -294,3 +294,33 @@ def test_report_completion_needs_explicit_target_permission():
     data["completion"] = "target_report_then_hangup"
     with pytest.raises(ValidationError):
         ExecutionCase.model_validate(data)
+
+
+def test_report_correction_preserves_history_and_cannot_change_closed_or_other_call(
+    store, prepared
+):
+    _, (first, second) = prepared
+    store.bind("rumik", "revisable-report", first)
+    service = BusinessService(store)
+    with store.locked_run(first) as run:
+        run["tool_access"]["target"] = ["submit_user_report"]
+        run["report_policy"] = "revisable_until_close"
+    service.serve_user_task("revisable-report", "test-agent")
+    # Reproduce the two Sana submissions: a premature report followed by correction.
+    original = "No booking: the only package costs INR 10,800, above the INR 9,000 limit."
+    corrected = "No booking: packages cost INR 10,800 and INR 9,600, both above INR 9,000."
+    first_result = service.submit_user_report("revisable-report", "test-agent", original)
+    assert first_result["report_revision"] == 1
+    assert not service.submit_user_report("revisable-report", "other-agent", corrected)["ok"]
+    revised = service.submit_user_report("revisable-report", "test-agent", corrected)
+    assert revised["report_saved"] and revised["report_revision"] == 2
+    assert service.submit_user_report("revisable-report", "test-agent", corrected) == revised
+    saved = store.run(first)
+    assert [r["text"] for r in saved["target_report_history"]] == [original, corrected]
+    assert saved["target_report_history"][1]["supersedes_revision"] == 1
+    assert saved["target_user_report"]["text"] == corrected
+    assert len(saved["target_report_requests"]) == 4
+    assert not store.run(second).get("target_user_report")
+    service.seal(first)
+    assert not service.submit_user_report("revisable-report", "test-agent", original)["ok"]
+    assert store.run(first)["target_user_report"] == saved["target_user_report"]

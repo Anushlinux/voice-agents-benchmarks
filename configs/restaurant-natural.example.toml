@@ -23,8 +23,10 @@ voice = ""
 instructions = "Act as the assigned employee. Respond to received speech and permitted tool results. Answer the caller's question, state relevant alternatives, and clarify only what is still unclear."
 max_output_tokens = 2048
 conversation_idle_seconds = 45
-silence_recovery_seconds = 0
-max_silence_recovery_prompts = 0
+# One natural follow-up after completed playback; exhaustion is still a timeout,
+# never successful task completion. Freeze this behavior in each new batch.
+silence_recovery_seconds = 10
+max_silence_recovery_prompts = 1
 [counterpart.turn_detection]
 type = "semantic_vad"
 eagerness = "low"

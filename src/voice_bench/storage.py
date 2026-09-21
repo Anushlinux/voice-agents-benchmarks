@@ -52,6 +52,8 @@ class PostgresStore:
 
     def migrate(self):
         with self.connect() as conn:
+            if conn.info.encoding != "utf-8":
+                raise ValueError("Benchmark database must use UTF8 encoding")
             conn.execute("SELECT pg_advisory_xact_lock(81203499)")
             conn.execute(SCHEMA)
 

@@ -78,7 +78,7 @@ def test_version_one_is_preserved_and_new_cases_keep_private_dietary_authority(c
     original = deepcopy(catalog)
     case = convert_catalog(catalog)[0]
     assert catalog == original
-    assert case.workflow_version == "5" and case.version.startswith("8-")
+    assert case.workflow_version == "6" and case.version.startswith("10-")
     assert case.completion == "target_report_then_conversation_end"
     assert "2 guests need food without onion and garlic." in case.user_task.constraints
     assert case.criteria["dietary_guests"] == 2
@@ -132,7 +132,8 @@ def test_price_scope_reaches_lookup_offer_and_saved_booking(catalog):
     )
     assert saved["ok"]
     assert saved["reservation"]["pricing"] == terms["pricing"]
-    assert saved["reference_delivery"]["version"] == "natural-reference-v2"
+    # Newly prepared cases speak a compact numeric reference; version 5 keeps v2 delivery.
+    assert saved["reference_delivery"]["version"] == "natural-reference-v3"
     assert type(WORKFLOWS[(workflow.name, "2")]) is NaturalRestaurantWorkflowV2
 
 

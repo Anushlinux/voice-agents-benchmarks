@@ -40,3 +40,62 @@ async def test_startup_buffer_still_has_a_hard_limit(tmp_path):
             session.check_health()
     finally:
         await session.close("test")
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("mode", ["local_error", "ready", "registration_error"])
+async def test_browser_checks_local_audio_before_any_provider_dispatch(tmp_path, monkeypatch, mode):
+    from types import SimpleNamespace
+
+    from voice_bench.channels.browser import adapter as browser
+
+    calls = []
+
+    class Session:
+        def __init__(self, evidence, **kwargs):
+            pass
+
+        async def prepare(self):
+            calls.append("prepare")
+            if mode == "local_error":
+                raise HarnessFailure("local audio unavailable")
+
+        async def join(self, call):
+            calls.append("join")
+
+        async def close(self, reason):
+            calls.append("close")
+
+    class Target:
+        async def register(self, agent):
+            calls.append("register")
+            if mode == "registration_error":
+                raise TimeoutError("Unknown registration result")
+            return {"call_id": "call", "access_token": "test"}
+
+        async def start_browser(self, token):
+            calls.append("start_browser")
+            return {"callId": "call"}
+
+    monkeypatch.setattr(browser, "BrowserSession", Session)
+    store = SimpleNamespace(bind=lambda *args: calls.append("bind"), bindings=lambda _: [])
+    channel = browser.BrowserAdapter(Target(), store)
+    sink = LocalEvidence(tmp_path, uuid4(), uuid4())
+    request = SimpleNamespace(
+        agent_ref="test", run=SimpleNamespace(run_id=sink.run_id), setup_timeout_seconds=10
+    )
+    assert not await channel.reconcile(sink.run_id, sink), "A fresh adapter proves nothing"
+    if mode == "ready":
+        await channel.connect(request, sink)
+        assert calls == ["prepare", "register", "bind", "start_browser", "join"]
+    elif mode == "local_error":
+        with pytest.raises(HarnessFailure, match="Local browser audio preparation"):
+            await channel.connect(request, sink)
+        assert calls == ["prepare"]
+        assert not any(e["source"] == "target" for e in await sink.event_snapshot())
+        assert await channel.reconcile(sink.run_id, sink), "No provider request needs termination"
+    else:
+        with pytest.raises(TimeoutError):
+            await channel.connect(request, sink)
+        assert calls == ["prepare", "register"]
+        assert not await channel.reconcile(sink.run_id, sink), "Unknown writes remain unresolved"

@@ -11,3 +11,7 @@ class HarnessFailure(RuntimeError):
 
 class TransportFailure(RuntimeError):
     pass
+
+
+class ConversationTimeout(TransportFailure):
+    """A local patience limit expired; this does not establish a network fault."""

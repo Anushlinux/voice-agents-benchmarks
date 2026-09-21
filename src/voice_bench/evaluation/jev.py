@@ -13,6 +13,7 @@ import httpx
 from pydantic import Field, model_validator
 
 from voice_bench.evaluation.scoring import load_bundle, validate_reference
+from voice_bench.evaluation.speech_support import ACTOR_KNOWLEDGE_GUIDANCE
 from voice_bench.evidence.local import canonical, digest, safe_path, write_derived
 from voice_bench.models import Contract, EvidenceRef
 
@@ -33,6 +34,7 @@ GUIDANCE = (
     "not automatically different people. Budget protection is not bargaining. A justified "
     "no-booking outcome can be success and has no issued reference. Missing reports differ "
     "from false reports. Attribute each observation to the actor who controlled it. "
+    + ACTOR_KNOWLEDGE_GUIDANCE
 )
 
 
@@ -148,6 +150,14 @@ def prepare(directory, source_version, rubric, config):
         "target_user_report": json.loads((directory / "target/user-report.json").read_bytes())
         if "target/user-report.json" in refs
         else None,
+        "target_report_requests": json.loads(
+            (directory / "target/report-requests.json").read_bytes()
+        )
+        if "target/report-requests.json" in refs
+        else None,
+        "target_report_history": json.loads((directory / "target/report-history.json").read_bytes())
+        if "target/report-history.json" in refs
+        else None,
         "execution_result": json.loads((directory / "result.json").read_bytes())
         if "result.json" in refs
         else None,
@@ -156,7 +166,10 @@ def prepare(directory, source_version, rubric, config):
         "audit": json.loads((directory / "business/audit.json").read_bytes()),
         "scope": {"task_scope": case["task_scope"], "call_initiation": case["call_initiation"]},
         "limitations": "Text-only shadow judgment; no listening or remote-perception proof. "
-        "A supplied authenticated report is evidence of report text, not business success.",
+        "A supplied authenticated report is evidence of report text, not business success. "
+        "Grade the latest accepted target_user_report. Earlier accepted reports and rejected "
+        "corrections remain in history/requests. Rejected corrections show attempted recovery, "
+        "not successful delivery; do not infer that the target never corrected its understanding.",
     }
     questions = {}
     for name, question in rubric.questions.items():
@@ -214,7 +227,14 @@ def validate_response(response, questions):
         if not isinstance(probabilities, dict) or set(probabilities) != expected:
             raise ValueError("Jev probabilities do not match the rubric")
         total = sum(number(p) for p in probabilities.values())
-        if not math.isclose(total, 1, abs_tol=1e-5):
+        # Observed Jev choice outputs round probabilities to two decimals.
+        # Bound tolerance by half a rounding unit per category, only when every
+        # value has that precision. Retain the original values; never renormalize.
+        rounded = answer["type"] == "choice" and all(
+            math.isclose(p * 100, round(p * 100), abs_tol=1e-8) for p in probabilities.values()
+        )
+        tolerance = 0.005 * len(probabilities) + 1e-8 if rounded else 1e-5
+        if not math.isclose(total, 1, abs_tol=tolerance):
             raise ValueError("Jev probabilities do not sum to one")
         number(answer.get("confidence"))
         if answer["type"] == "choice":
@@ -291,6 +311,15 @@ async def evaluate(
             response.raise_for_status()
             body = response.json()
             result["answers"] = validate_response(body, prepared["request"]["questions"])
+            result["probability_validation"] = {
+                "policy": "choice-two-decimal-rounding-v2",
+                "raw_values_preserved": True,
+                "sums": {
+                    name: sum(answer["probabilities"].values())
+                    for name, answer in result["answers"].items()
+                    if "probabilities" in answer
+                },
+            }
             result["resolved_model"] = body["model"]
             result["usage"] = body.get("usage")
             result["status"] = "completed"

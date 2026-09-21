@@ -1,0 +1,1 @@
+No reservation could be made because the only available times (6:00 pm or 8:15 pm) fall outside the allowed window of 19:00‑19:30.

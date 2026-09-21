@@ -144,7 +144,7 @@ class LocalEvidence:
                     observed_monotonic_ns=item["observed_ns"]
                     if item.get("observed_ns") is not None
                     else time.monotonic_ns(),
-                    observed_at=datetime.now(UTC),
+                    observed_at=item.get("observed_at") or datetime.now(UTC),
                     payload=item.get("payload", {}),
                 )
                 for index, item in enumerate(observations)

@@ -1,0 +1,6 @@
+turn_index,item_id,clock_id,status,playback_start_seconds,playback_end_seconds,speech_start_seconds,speech_end_seconds,target_speech_start_seconds,ttfs_ms,observed_wait_ms,target_first_token_seconds,ttft_ms,ttft_status
+1,item_EQb4Ao6TlUCRHmBaWVzJj,chromium-audio-context,answered,4.1706666666666665,14.370645833333333,4.2,14.18,16.616,2436.0,,,,unavailable_no_hosted_token_event
+2,item_EQb4b9v3BuWKMtkh0iUcC,chromium-audio-context,answered,31.253333333333334,43.10466666666667,31.26,42.92,45.736,2815.9999999999955,,,,unavailable_no_hosted_token_event
+3,item_EQb50SFqZMg16pcbhka15,chromium-audio-context,answered,56.624,73.374,56.66,73.32,78.716,5396.000000000001,,,,unavailable_no_hosted_token_event
+4,item_EQb5da1C5xbt6NBKWe8kJ,chromium-audio-context,answered,94.784,117.44533333333334,94.784,117.18,120.876,3695.999999999998,,,,unavailable_no_hosted_token_event
+5,item_EQb69qULjDd3W0hJAfrjh,chromium-audio-context,answered,126.75733333333334,149.81733333333332,127.18,149.66,152.976,3316.0000000000027,,,,unavailable_no_hosted_token_event

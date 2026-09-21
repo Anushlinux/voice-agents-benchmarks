@@ -6,7 +6,12 @@ from typing import Literal
 
 from pydantic import Field, ValidationError, field_validator, model_validator
 
-from voice_bench.business.reservations import natural_reference_delivery, reservation_reference
+from voice_bench.business.reservations import (
+    compact_reference_delivery,
+    compact_reservation_reference,
+    natural_reference_delivery,
+    reservation_reference,
+)
 from voice_bench.models import Contract
 
 
@@ -236,7 +241,7 @@ class NaturalRestaurantWorkflow:
         if not anchors or min(anchors["event_sequences"]) <= self.consent_cutoff(offer):
             return {"ok": False, "error": "fresh_conversation_evidence_required"}
         # Structural anchors are NOT semantic consent; separate review remains mandatory.
-        reference = reservation_reference(context["run_id"], context["operation_id"])
+        reference = self.issue_reference(context)
         booking = {
             **deepcopy(offer["terms"]),
             "booking_name": request.booking_name.strip(),
@@ -260,6 +265,9 @@ class NaturalRestaurantWorkflow:
 
     def consent_cutoff(self, offer):
         return offer["prepared_after_sequence"]
+
+    def issue_reference(self, context):
+        return reservation_reference(context["run_id"], context["operation_id"])
 
 
 class OptionalDietaryOfferRequest(OfferRequest):
@@ -406,6 +414,24 @@ class NaturalRestaurantWorkflowV5(NaturalRestaurantWorkflowV4):
 
     version = "5"
 
+    def response_tools(self, state, context):
+        """Offer only structurally possible actions, without assuming agreement."""
+        names = {"check_availability"}
+        if state["bookings"]:
+            return names
+        if any(
+            lookup["result"]["matching_options"] or lookup["result"]["other_time_options"]
+            for lookup in state["lookups"]
+        ):
+            names.add("offer_reservation")
+        offer = next(
+            (o for o in state["offers"] if o["offer_id"] == state["active_offer_id"]), None
+        )
+        anchors = context.get("consent_anchors")
+        if offer and anchors and min(anchors["event_sequences"]) > self.consent_cutoff(offer):
+            names.add("record_reservation")
+        return names
+
     def execute(self, state, name, arguments, *, context=None):
         result = super().execute(state, name, arguments, context=context)
         if name == "check_availability" and result.get("ok"):
@@ -440,3 +466,27 @@ class NaturalRestaurantWorkflowV5(NaturalRestaurantWorkflowV4):
 
     def consent_cutoff(self, offer):
         return offer.get("terms_available_after_sequence", offer["prepared_after_sequence"])
+
+
+class NaturalRestaurantWorkflowV6(NaturalRestaurantWorkflowV5):
+    """Issue a six-digit reference spoken in one sentence.
+
+    Saved calls show hosted Rumik's turn budget is about 400 completion tokens including
+    hidden reasoning. The version 4/5 phonetic recital produced eight fragmented target
+    turns and a reasoning-only generation right before the report. Digits in pairs give
+    the same audit trail with far less for either model to process. Consent, lookup and
+    offer rules are unchanged from version 5.
+    """
+
+    version = "6"
+
+    def issue_reference(self, context):
+        return compact_reservation_reference(context["run_id"], context["operation_id"])
+
+    def book(self, state, request, context):
+        result = super().book(state, request, context)
+        if result["ok"]:
+            result["reference_delivery"] = compact_reference_delivery(
+                result["reservation"]["reference"]
+            )
+        return result

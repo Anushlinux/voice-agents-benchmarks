@@ -1,0 +1,9 @@
+turn_index,item_id,clock_id,status,playback_start_seconds,playback_end_seconds,speech_start_seconds,speech_end_seconds,target_speech_start_seconds,ttfs_ms,observed_wait_ms,target_first_token_seconds,ttft_ms,ttft_status
+1,item_EQgmEfg1sukOq9heNce7k,chromium-audio-context,answered,5.424,10.152,5.452,9.652,11.869333333333334,2217.3333333333344,,11.024,1372.0,measured_first_text_packet_after_rendered_speech
+2,item_EQgmSU32OEsKGlo1PgDq2,chromium-audio-context,answered,18.890666666666668,25.240666666666666,18.932,25.092,27.309333333333335,2217.333333333336,,26.261333333333333,1169.3333333333342,measured_first_text_packet_after_rendered_speech
+3,item_EQgmoUZcyNtkHpuPgPwc8,chromium-audio-context,answered,40.016,55.916,40.032,55.732,58.06933333333333,2337.3333333333335,,56.784,1051.9999999999995,measured_first_text_packet_after_rendered_speech
+4,item_EQgnAHMaCxReJFwI2hJNP,chromium-audio-context,answered,62.885333333333335,65.66333333333333,62.912,65.272,67.80933333333333,2537.333333333322,,66.61333333333333,1341.3333333333242,measured_first_text_packet_after_rendered_speech
+5,item_EQgnL9RpoPshXKoyc40nJ,chromium-audio-context,answered,73.136,80.186,73.152,79.932,83.94933333333333,4017.333333333326,,82.79466666666667,2862.6666666666692,measured_first_text_packet_after_rendered_speech
+6,item_EQgneXI99XoDByAjbC6Cg,chromium-audio-context,answered,92.99733333333333,99.44733333333333,93.112,99.172,102.32933333333334,3157.3333333333408,,101.27466666666666,2102.6666666666642,measured_first_text_packet_after_rendered_speech
+7,item_EQgnxegtyUfjT2CBSMLfJ,chromium-audio-context,answered,111.41333333333333,119.16333333333333,111.532,118.932,121.22933333333333,2297.333333333327,,,,no_first_text_packet_observed
+8,item_EQgoElX0TmIqitLBWJv2F,chromium-audio-context,answered,128.528,135.928,128.652,135.492,138.18933333333334,2697.333333333347,,,,no_first_text_packet_observed

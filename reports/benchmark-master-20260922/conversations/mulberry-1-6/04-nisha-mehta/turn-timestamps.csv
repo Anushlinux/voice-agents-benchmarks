@@ -1,0 +1,3 @@
+turn_index,item_id,clock_id,status,playback_start_seconds,playback_end_seconds,speech_start_seconds,speech_end_seconds,target_speech_start_seconds,ttfs_ms,observed_wait_ms,target_first_token_seconds,ttft_ms,ttft_status
+1,item_EQggF1HLEYNXQ0umGHwak,chromium-audio-context,answered,4.586666666666667,8.02,4.6066666666666665,7.926666666666667,10.896,2969.333333333334,,9.952,2025.3333333333333,measured_first_text_packet_after_rendered_speech
+2,item_EQggd7GMOQ9x7ZMfTSNvt,chromium-audio-context,answered,29.24266666666667,48.29266666666667,29.366666666666667,47.766666666666666,52.576,4809.333333333335,,51.49333333333333,3726.6666666666665,measured_first_text_packet_after_rendered_speech

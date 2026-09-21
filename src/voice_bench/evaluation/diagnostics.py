@@ -3,6 +3,7 @@
 import json
 
 from voice_bench.evaluation.playback import playback_integrity
+from voice_bench.evaluation.target_generation import target_generation_diagnostics
 
 
 def conversation_diagnostics(directory, pipeline):
@@ -11,6 +12,7 @@ def conversation_diagnostics(directory, pipeline):
         return json.loads(path.read_text()) if path.exists() else {}
 
     events = [json.loads(line) for line in (directory / "events.jsonl").read_text().splitlines()]
+    generation = target_generation_diagnostics(events)
     execution = read("result.json")
     evaluation = read("evaluation/auto-v2/result.json")
     case = read("config/case.json")
@@ -21,6 +23,8 @@ def conversation_diagnostics(directory, pipeline):
     stats = [e for e in transport if e["payload"].get("name") == "audio_transport_stats"]
     required_report = case.get("completion", "counterpart") != "counterpart"
     symptoms = []
+    if generation["reasoning_dominated_samples"]:
+        symptoms.append("target_generation_dominated_by_reasoning")
     if required_report and not report:
         symptoms.append("required_private_report_missing")
     if any(e["kind"] == "conversation_idle_timeout" for e in events):
@@ -98,8 +102,8 @@ def conversation_diagnostics(directory, pipeline):
         "Local playback and outgoing packets do not prove remote perception.",
         "Missing or unchanged packet counters can reflect silence handling; they do not "
         "establish target failure.",
-        "Hosted turn completion, reply generation and speech synthesis are not exposed "
-        "by these browser observations.",
+        "Provider-reported generation events are passive client observations. They do not "
+        "expose the configured output limit or provider finish_reason and may be incomplete.",
         "Repetition, irrelevant questions and semantic consent require conversation review.",
     ]
     if not stats:
@@ -143,6 +147,7 @@ def conversation_diagnostics(directory, pipeline):
                 anchor(e) for e in transport if e["payload"].get("name") != "audio_transport_stats"
             ],
         },
+        "target_generation": generation,
         "audio_references": [
             name
             for name in ("audio/played.wav", "audio/received.wav")

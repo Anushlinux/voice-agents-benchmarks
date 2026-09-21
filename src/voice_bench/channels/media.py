@@ -125,13 +125,21 @@ class MediaSession:
                 continue
             yield frame
         if self.error:
-            if "queue_overflow" in self.error:
+            if self.harness_error:
                 raise HarnessFailure(self.error)
             raise TransportFailure(self.error)
 
+    @property
+    def harness_error(self):
+        return bool(self.error) and (
+            "queue_overflow" in self.error
+            or self.error
+            in {"evidence_write_failed", "event_delivery_failed", "capture_playback_failed"}
+        )
+
     def check_health(self):
         if self.error:
-            if "queue_overflow" in self.error:
+            if self.harness_error:
                 raise HarnessFailure(self.error)
             raise TransportFailure(self.error)
         if self.closed.is_set():
@@ -139,6 +147,7 @@ class MediaSession:
 
     async def send_audio(self, frame):
         if self.closed.is_set():
+            self.check_health()
             raise TransportFailure("Transport is closed")
         if frame.sample_rate_hz not in self.converters:
             self.converters[frame.sample_rate_hz] = Resampler(frame.sample_rate_hz, self.rate)
@@ -191,6 +200,9 @@ class MediaSession:
             clock_id=clock_id,
         )
 
+    async def flush_evidence(self):
+        """Non-browser channels persist observations before returning."""
+
     async def cancel_playback(self):
         while not self.outgoing.empty():
             self.outgoing.get_nowait()
@@ -216,7 +228,7 @@ class MediaSession:
 
         def finished(t):
             if not t.cancelled() and t.exception():
-                self.fail(type(t.exception()).__name__)
+                self.fail(self.error or type(t.exception()).__name__)
 
         task.add_done_callback(finished)
         return task

@@ -47,6 +47,9 @@ class ExecutionCase(Contract):
     user_task: UserTask
     counterpart: CounterpartBrief
     target_tools: tuple[str, ...] = ()
+    # Legacy cases retain their first-final-report contract. New cases can permit
+    # corrections while the call is open without erasing earlier submissions.
+    report_policy: Literal["final_once", "revisable_until_close"] = "final_once"
     completion: Literal[
         "counterpart", "target_report_then_hangup", "target_report_then_conversation_end"
     ] = "counterpart"

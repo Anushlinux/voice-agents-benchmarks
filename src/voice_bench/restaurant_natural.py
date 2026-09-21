@@ -3,7 +3,7 @@
 import json
 from copy import deepcopy
 
-from voice_bench.business.natural_restaurant import NaturalRestaurantWorkflowV5
+from voice_bench.business.natural_restaurant import NaturalRestaurantWorkflowV6
 from voice_bench.contracts import ExecutionCase
 from voice_bench.evaluation.rubrics import EvaluationRubric, MetricDefinition
 from voice_bench.evidence.local import canonical, digest, publish
@@ -197,9 +197,14 @@ def user_instructions(constraints, permissions):
         if constraints["booking_kind"] == "table_only"
         else f"The total dining-package charge must not exceed INR {constraints['max_total_inr']}.",
         "No deposit, cancellation fee or mandatory extras are authorized.",
-        f"{constraints['required_without_onion_garlic_guests']} guests need food without "
-        "onion and garlic.",
     ]
+    # A zero count is not a fact about the guests' diets. Saying it invited a dietary
+    # detour in a saved call; omit it so Rumik has one less rule to weigh per turn.
+    if constraints["required_without_onion_garlic_guests"]:
+        lines.append(
+            f"{constraints['required_without_onion_garlic_guests']} guests need food without "
+            "onion and garlic."
+        )
     if constraints["booking_kind"] == "table_only":
         lines.append(
             "Reserve the table only. Meals the guests independently choose and pay for at "
@@ -288,7 +293,7 @@ def acceptable_options(options, constraints):
 
 
 def convert_catalog(catalog, *, automated=False):
-    workflow = NaturalRestaurantWorkflowV5()
+    workflow = NaturalRestaurantWorkflowV6()
     cases = []
     for spec in catalog["cases"]:
         brief = spec["counterpart_brief"]
@@ -327,7 +332,7 @@ def convert_catalog(catalog, *, automated=False):
         constraint_text, permission_text = user_instructions(constraints, permissions)
         case = ExecutionCase(
             case_id=spec["case_id"],
-            version="8-natural-automated" if automated else "8-natural-english",
+            version="10-natural-automated" if automated else "10-natural-english",
             schema_version=2,
             workflow=workflow.name,
             workflow_version=workflow.version,
@@ -335,6 +340,7 @@ def convert_catalog(catalog, *, automated=False):
             call_initiation="harness_connected",
             completion="target_report_then_conversation_end",
             target_tools=("submit_user_report",),
+            report_policy="revisable_until_close",
             counterpart_tools=tuple(workflow.tool_definitions),
             initial_state=initial,
             user_task=UserTask(

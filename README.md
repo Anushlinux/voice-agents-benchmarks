@@ -1,6 +1,8 @@
 # Rumik personal-assistant benchmark
 
-**Full 10-case results:** [Read the complete plain-English report, evaluations, conversation audio and transcripts](reports/full-dataset-preflight-20260921/simple-report/README.md). All ten cases ran; the saved overall grades are 0 passed, 2 failed and 8 unresolved. The report explains the observed failures and grading limits.
+**Master benchmark report (22 September 2026):** [Muga vs Mulberry 1.5 vs Mulberry 1.6 on all ten cases, with every recording, transcript, Rumik transcript, private report and evaluation](reports/benchmark-master-20260922/README.md).
+
+**Earlier 10-case Muga results (21 September 2026):** [Read the complete plain-English report, evaluations, conversation audio and transcripts](reports/full-dataset-preflight-20260921/simple-report/README.md). All ten cases ran; the saved overall grades are 0 passed, 2 failed and 8 unresolved. The report explains the observed failures and grading limits.
 
 **Latest diagnostic qualification:** the browser now records audio transport and
 connection observations, and full reports separate observed task completion from

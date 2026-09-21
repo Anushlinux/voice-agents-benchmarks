@@ -10,6 +10,24 @@ def reservation_reference(run_id, operation_id):
     return "SIM-" + uuid5(UUID(str(run_id)), "reservation:" + operation_id).hex[:10].upper()
 
 
+def compact_reservation_reference(run_id, operation_id):
+    """Six digits derived from the same attempt/operation identity, no letters to swallow.
+
+    Hosted Rumik's generation budget is small. A ten-character hex code spelled with
+    phonetic letters became eight separate recognized turns and a long reasoning step.
+    Digits in pairs are one short sentence; the mapping stays deterministic and auditable.
+    """
+    value = int(uuid5(UUID(str(run_id)), "reservation:" + operation_id).hex, 16)
+    return f"SIM-{value % 1_000_000:06d}"
+
+
+def issued_reference(workflow_version, run_id, operation_id):
+    """The reference a given natural workflow version issues for this operation."""
+    if str(workflow_version) == "6":
+        return compact_reservation_reference(run_id, operation_id)
+    return reservation_reference(run_id, operation_id)
+
+
 def reference_delivery(reference):
     """Pronounce an issued identifier without changing it or leaking an answer key."""
     alphabet = dict(
@@ -64,6 +82,26 @@ def natural_reference_delivery(reference):
             "Do not demand a readback. If the caller voluntarily repeats it incorrectly, "
             "identify and spell the missing or different characters before saying goodbye; "
             "merely repeating the same ambiguous pronunciation is not a correction."
+        ),
+    }
+
+
+def compact_reference_delivery(reference):
+    """One short spoken sentence; no phonetic alphabet, no per-character pauses."""
+    prefix, _, digits = reference.partition("-")
+    if not digits.isdigit() or len(digits) % 2:
+        raise ValueError("Compact reference delivery needs an even number of digits")
+    groups = [prefix] + [digits[i : i + 2] for i in range(0, len(digits), 2)]
+    return {
+        "version": "natural-reference-v3",
+        "reference": reference,
+        "spoken_groups": groups,
+        "spoken_form": " ".join(groups),
+        "instruction": (
+            "Say this single issued reference once, in one short sentence: the word "
+            f"{prefix} followed by the digit pairs {', '.join(groups[1:])}, without pausing "
+            "between them. Do not spell letters phonetically, add other codes, or demand a "
+            "readback. If the caller repeats it incorrectly, correct only the wrong digits."
         ),
     }
 

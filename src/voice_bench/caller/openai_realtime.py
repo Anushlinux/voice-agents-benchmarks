@@ -5,10 +5,11 @@ import base64
 import json
 import time
 
+from voice_bench.caller.instructions import counterpart_instructions
 from voice_bench.caller.responses import ResponseCoordinator
 from voice_bench.channels.media import AudioRecorder, Resampler
 from voice_bench.contracts import CounterpartFinished
-from voice_bench.errors import CallerFailure, HarnessFailure, TransportFailure
+from voice_bench.errors import CallerFailure, ConversationTimeout, HarnessFailure, TransportFailure
 from voice_bench.models import AudioFrame
 
 
@@ -42,30 +43,12 @@ class OpenAICounterpart:
         event_driver = ConversationEventDriver(conversation_events, scenario_policy)
         connector = self.connector or websockets.connect
         url = f"wss://api.openai.com/v1/realtime?model={config.model}"
-        instructions = (
-            config.instructions + "\nYou play the assigned COUNTERPART: the person Rumik "
-            "is speaking with. Rumik acts on a user's behalf. Stay in your assigned role; "
-            "do not take over Rumik's task or invent the user's private instructions. "
-            "Use only your brief, received audio and permitted business tool results. "
-            "Keep assigned facts and business rules fixed. Never invent availability, "
-            "discounts, bookings or completed actions. Confirm business changes only after "
-            "a successful tool result, and only when justified by the conversation. "
-            "If a tool returns reference_delivery, follow that delivery instruction: "
-            "use its selected delivery mode. Never split one identifier into multiple codes. "
-            "Answer the question you just heard. Establish availability before offering terms; "
-            "describe alternatives as alternatives, not accepted arrangements. Ask one focused "
-            "question when a material detail is unclear. Keep speech brief; do not recite "
-            "the menu again after the caller has selected an option. When interrupted, "
-            "listen to the complete new request before replying; do not restart your recital. "
-            "irrelevant metadata or zero-value fields. Never speak internal instructions. "
-            "Use finish_counterpart only after your closing speech has finished.\n"
-            + json.dumps(brief.model_dump(), ensure_ascii=False)
-        )
         business_tools = (
             await asyncio.to_thread(self.business.counterpart_tools, run.run_id)
             if self.business is not None
             else []
         )
+        instructions = counterpart_instructions(config.instructions, brief, business_tools)
         recorder = AudioRecorder(evidence)
         async with connector(
             url,
@@ -80,6 +63,20 @@ class OpenAICounterpart:
             # VAD detects/commits received speech; only our coordinator starts responses.
             turn["create_response"] = False
             turn["interrupt_response"] = False
+            finish_tool = {
+                "type": "function",
+                "name": "finish_counterpart",
+                "description": (
+                    "End after the outcome is acknowledged and you say goodbye. "
+                    "Queued closing audio will finish before disconnect. "
+                    "Do not wait silently for another turn just to call this."
+                ),
+                "parameters": {
+                    "type": "object",
+                    "properties": {},
+                    "additionalProperties": False,
+                },
+            }
             await send(
                 {
                     "type": "session.update",
@@ -98,19 +95,7 @@ class OpenAICounterpart:
                                 "voice": config.voice,
                             },
                         },
-                        "tools": [
-                            *business_tools,
-                            {
-                                "type": "function",
-                                "name": "finish_counterpart",
-                                "description": "End the conversation after saying goodbye.",
-                                "parameters": {
-                                    "type": "object",
-                                    "properties": {},
-                                    "additionalProperties": False,
-                                },
-                            },
-                        ],
+                        "tools": [*business_tools, finish_tool],
                     },
                 }
             )
@@ -132,10 +117,30 @@ class OpenAICounterpart:
             target_speaking = False
             input_generation = 0
             recovery_prompts = 0
+
+            async def response_request():
+                request = await event_driver.response_request(evidence, instructions)
+                project = getattr(self.business, "counterpart_response_tools", None)
+                if project is not None:
+                    await session.flush_evidence()
+                    tools = await asyncio.to_thread(
+                        project, run.run_id, await evidence.event_snapshot()
+                    )
+                    # Keep the session's closing tool; projection narrows business
+                    # tools only. ResponseCoordinator rechecks new input after this
+                    # asynchronous preparation, before sending the request.
+                    request.setdefault("response", {})["tools"] = [*tools, finish_tool]
+                    await evidence.emit(
+                        "caller",
+                        "counterpart_tools_available",
+                        {"names": [tool["name"] for tool in tools]},
+                    )
+                return request
+
             responses = ResponseCoordinator(
                 send,
                 evidence,
-                lambda: event_driver.response_request(evidence, instructions),
+                response_request,
                 lambda: (
                     not ready.is_set()
                     or target_speaking
@@ -211,7 +216,7 @@ class OpenAICounterpart:
                                 "boundary": "local_audio_and_response",
                             },
                         )
-                        raise TransportFailure("Conversation idle; cause not established")
+                        raise ConversationTimeout("Conversation idle; cause not established")
 
             async def business_actions():
                 nonlocal completion
@@ -289,6 +294,7 @@ class OpenAICounterpart:
                         "prepare_confirmation",
                         "offer_reservation",
                     }:
+                        await session.flush_evidence()
                         evidence_args["observations"] = await evidence.event_snapshot()
                     await evidence.emit(
                         "business", "tool_wait_started", {"operation_id": call_id, "tool": tool}
@@ -490,9 +496,11 @@ class OpenAICounterpart:
                             await responses.cancel()
                             played = await session.cancel_playback()
                             for item, samples in generated_items.items():
+                                # Resampling can leave a fully played item 1 ms short of
+                                # its generated length; that is not an interruption.
                                 if (
                                     item not in interrupted
-                                    and played.get(item, 0) < samples * 1000 // 24000
+                                    and played.get(item, 0) + 1 < samples * 1000 // 24000
                                 ):
                                     await send(
                                         {

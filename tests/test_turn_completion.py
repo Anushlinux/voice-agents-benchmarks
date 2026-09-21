@@ -14,7 +14,7 @@ from test_natural_restaurant import catalog as catalog
 from test_natural_restaurant import context, query
 from test_reservations import observations
 
-from voice_bench.business.environment import BusinessService
+from voice_bench.business.environment import WORKFLOWS, BusinessService
 from voice_bench.business.natural_restaurant import NaturalRestaurantWorkflowV5
 from voice_bench.caller.responses import ResponseCoordinator
 from voice_bench.evaluation.natural_restaurant import consent_boundary, natural_metrics
@@ -29,11 +29,12 @@ from voice_bench.settings import load_config
 @pytest.mark.asyncio
 async def test_worker_and_grader_accept_heard_terms_before_internal_offer(catalog, tmp_path):
     case = convert_catalog(catalog)[0]
-    workflow = NaturalRestaurantWorkflowV5()
+    # Execute and grade with the case's own workflow; version 6 inherits this rule from 5.
+    workflow = WORKFLOWS[(case.workflow, case.workflow_version)]
     sink = LocalEvidence(tmp_path, uuid4(), uuid4())
     run = {
         "workflow": case.workflow,
-        "workflow_version": "5",
+        "workflow_version": case.workflow_version,
         "state": workflow.initialize(case.initial_state),
         "user_task_served": True,
         "accept_tools": True,

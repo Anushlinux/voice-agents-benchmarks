@@ -8,7 +8,7 @@ from uuid import uuid4
 from voice_bench.business.environment import WORKFLOWS, BusinessService
 from voice_bench.contracts import AttemptResult, CounterpartFinished
 from voice_bench.controller.budget import release, reserve
-from voice_bench.errors import CallerFailure, HarnessFailure, TransportFailure
+from voice_bench.errors import CallerFailure, ConversationTimeout, HarnessFailure, TransportFailure
 from voice_bench.evidence.local import LocalEvidence
 from voice_bench.models import CallRequest, FailureAttribution, RunContext, Validity
 from voice_bench.scenarios import effective_counterpart
@@ -57,6 +57,7 @@ class Controller:
             "initial_state": case.initial_state,
             "harness_fixture": case.harness_fixture,
             "user_task": case.user_task.model_dump(mode="json"),
+            "report_policy": case.report_policy,
             "tool_access": {
                 "target": list(case.target_tools),
                 "counterpart": list(case.counterpart_tools),
@@ -188,7 +189,7 @@ class Controller:
                                     "target_report_idle_timeout",
                                     {"seconds": self.config.counterpart.conversation_idle_seconds},
                                 )
-                                raise TransportFailure("Target silent after employee finished")
+                                raise ConversationTimeout("Target silent after employee finished")
                             if session.closed.is_set():
                                 raise TransportFailure("Target ended without a final report")
                             session.check_health()
@@ -263,7 +264,9 @@ class Controller:
                             "target_hangup_missing_after_report",
                             {"boundary": "mutual_silence_after_report"},
                         )
-                        raise TransportFailure("Report received but call did not finish") from exc
+                        raise ConversationTimeout(
+                            "Report received but call did not finish"
+                        ) from exc
                     if session.error:
                         session.check_health()
                     await evidence.emit("controller", "target_hangup_after_report")
@@ -301,7 +304,11 @@ class Controller:
                     "validity": Validity.INVALID,
                 }
             )
-        except Exception as exc:
+        except Exception as caught:
+            exc = caught
+            # A secondary closed-transport exception must not hide a known local fault.
+            if session is not None and getattr(session, "harness_error", False):
+                exc = HarnessFailure("Local audio or evidence failure")
             # Exception bodies may contain tokens/URLs; preserve type, not arbitrary provider text.
             result = result.model_copy(
                 update={"error": type(exc).__name__, "failure_stage": failure_stage}
@@ -337,6 +344,14 @@ class Controller:
                                 ):
                                     await session.close(result.error or "completed")
                             except Exception as exc:
+                                evidence.integrity_issues.append("session_cleanup_failed")
+                                result = result.model_copy(
+                                    update={
+                                        "error": result.error or "HarnessFailure",
+                                        "attribution": FailureAttribution.HARNESS,
+                                        "validity": Validity.INVALID,
+                                    }
+                                )
                                 await evidence.emit(
                                     "controller",
                                     "session_cleanup_failed",
@@ -351,8 +366,13 @@ class Controller:
             saved = await asyncio.to_thread(self.store.run, run_id)
             if saved.get("target_user_report"):
                 await evidence.json("target/user-report.json", saved["target_user_report"])
-            if saved.get("target_report_requests"):
-                await evidence.json("target/report-requests.json", saved["target_report_requests"])
+            # An empty, sealed request ledger proves no report reached this endpoint.
+            # Omitting it incorrectly turns confirmed absence into missing evidence.
+            await evidence.json(
+                "target/report-requests.json", saved.get("target_report_requests", [])
+            )
+            if saved.get("target_report_history"):
+                await evidence.json("target/report-history.json", saved["target_report_history"])
             await evidence.json("business/final.json", business["state"])
             await evidence.json("business/audit.json", business["audit"])
             await evidence.json("business/requests.json", business["incoming_requests"])

@@ -1,0 +1,1 @@
+Could not book: requested time 7:50 pm does not match allowed reservation time 19:45 for 5 October 2026.

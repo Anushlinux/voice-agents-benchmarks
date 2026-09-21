@@ -55,3 +55,22 @@ def test_missing_evidence_and_incomplete_generation_cannot_pass(tmp_path):
         )
     )
     assert playback_integrity(tmp_path)["status"] == "failed"
+
+
+def test_completeness_does_not_hide_inserted_silence():
+    from voice_bench.evaluation.playback import playback_continuity
+
+    events = [
+        dict(
+            kind="playback_progress",
+            clock_id="chromium-audio-context",
+            payload=dict(item_id="one", sample=start, samples=480, rate=48000),
+        )
+        for start in [0, 480, 1920]
+    ]
+    measured = playback_continuity(events)
+    assert measured["items"][0]["inserted_silence_ms"] == 20
+    assert measured["items"][0]["largest_gap_ms"] == 20
+    assert measured["attribution"] == "unknown"
+    events[-1]["payload"]["sample"] = 900
+    assert playback_continuity(events)["status"] == "uncertain"

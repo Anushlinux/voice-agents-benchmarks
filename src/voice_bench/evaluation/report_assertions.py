@@ -4,9 +4,11 @@ import re
 
 from voice_bench.models import MetricResult
 
+# v2 also accepts a clause opened by a comma and a label without a colon, so the live
+# report "Reservation confirmed, reference SIM-441311" resolves instead of staying uncertain.
 LABEL = re.compile(
-    r"(?:^|(?<=[.;\n]))[ \t]*(?:[-*] )?reference(?:\s+(?:numbers?|codes?))?"
-    r"(?:\s+provided)?\s*:\s*",
+    r"(?:^|(?<=[.;,\n]))[ \t]*(?:[-*] )?reference(?:\s+(?:numbers?|codes?))?"
+    r"(?:\s+provided)?(?:\s*:\s*|\s+(?=[A-Za-z0-9]))",
     re.I,
 )
 CODE = r"[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*"
@@ -40,7 +42,7 @@ def reference_assertions(text):
             }
         )
     return {
-        "version": "explicit-reference-clauses-v1",
+        "version": "explicit-reference-clauses-v2",
         "normalization": "ASCII case and hyphens only; never join separate assertions",
         "status": "extracted" if len(clauses) == 1 and clauses[0]["supported"] else "uncertain",
         "clauses": clauses,
@@ -75,7 +77,7 @@ def reference_metric(report, final, refs):
         status=status,
         explanation=(
             "Compared only explicitly labelled target report references using "
-            "explicit-reference-clauses-v1. Distinct codes remain distinct. "
+            "explicit-reference-clauses-v2. Distinct codes remain distinct. "
             "A match checks identifiers only, not overall report accuracy; unsupported prose "
             "requires review."
         ),

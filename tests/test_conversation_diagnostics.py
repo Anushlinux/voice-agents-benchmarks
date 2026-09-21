@@ -86,6 +86,7 @@ async def test_transport_event_keeps_worker_clock_and_browser_clock_separate(tmp
                 "rows": [],
             },
         )
+        await session.flush_evidence()
         event = (await evidence.event_snapshot())[-1]
         assert event["clock_id"] == evidence.clock_id
         assert event["payload"]["performance_clock"] == "browser-performance"

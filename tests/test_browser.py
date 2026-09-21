@@ -13,6 +13,84 @@ from voice_bench.models import AudioFrame
 
 @pytest.mark.asyncio
 @pytest.mark.skipif(os.environ.get("RUN_BROWSER_TESTS") != "1", reason="Opt-in local Chromium test")
+@pytest.mark.parametrize("startup", range(5))
+async def test_synthetic_microphone_publishes_mono(tmp_path, startup):
+    evidence = LocalEvidence(tmp_path, uuid4(), uuid4())
+    session = BrowserSession(evidence)
+    try:
+        await session.start({}, test=True)
+        settings = await session.page.evaluate("bridge.microphoneSettings()")
+        # The worklet has one output, but MediaStreamDestination independently
+        # defaults to stereo. LiveKit infers its publication mode from this track.
+        assert settings["channelCount"] == 1
+        assert settings["sampleRate"] == session.rate
+        # A running AudioContext can still have a dormant graph. Require actual
+        # rendered frames, as publication depends on the graph having processed.
+        async with asyncio.timeout(2):
+            while not any(e["kind"] == "rendered_block" for e in await evidence.event_snapshot()):
+                await session.flush_evidence()
+                await asyncio.sleep(0.02)
+        ready = [
+            e
+            for e in await evidence.event_snapshot()
+            if e["kind"] == "transport_observation"
+            and e["payload"].get("name") == "microphone_ready"
+        ]
+        assert ready and ready[-1]["payload"]["silent_sink"] is True
+        assert ready[-1]["payload"]["audio_context_seconds"] > 0
+    finally:
+        await session.close("microphone format check")
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(os.environ.get("RUN_BROWSER_TESTS") != "1", reason="Opt-in local Chromium test")
+async def test_streamed_playback_has_no_worker_inserted_gaps(tmp_path, monkeypatch):
+    """Sample delivery alone is insufficient: storage must not pace the microphone."""
+    import json
+
+    evidence = LocalEvidence(tmp_path, uuid4(), uuid4())
+    session = BrowserSession(evidence)
+    try:
+        await session.start({}, test=True)
+        evaluate = session.page.evaluate
+
+        async def delayed_bridge(expression, *args):
+            if "bridge.push(" in expression:
+                # A busy bridge adds round-trip latency, independent of audio time.
+                await asyncio.sleep(0.035)
+            return await evaluate(expression, *args)
+
+        monkeypatch.setattr(session.page, "evaluate", delayed_bridge)
+        # All input is already available. Each chunk is shorter than an utterance;
+        # the browser's audio clock must play the chunks without worker pacing gaps.
+        for index in range(20):
+            await session.send_audio(
+                AudioFrame(
+                    pcm_s16le=struct.pack("<h", 2000) * 6000,
+                    sample_rate_hz=24000,
+                    sample_offset=index * 6000,
+                    clock_id="synthetic",
+                    observed_monotonic_ns=0,
+                    item_id="continuous-speech",
+                )
+            )
+        await asyncio.wait_for(session.drain(), 10)
+    finally:
+        await session.close("continuity regression")
+    events = [
+        json.loads(line) for line in (evidence.directory / "events.jsonl").read_text().splitlines()
+    ]
+    progress = [e["payload"] for e in events if e["kind"] == "playback_progress"]
+    delivered = sum(p["samples"] for p in progress)
+    elapsed = progress[-1]["sample"] + progress[-1]["samples"] - progress[0]["sample"]
+    assert delivered >= 239999
+    # Allow one audio quantum, not cumulative HTTP/storage/scheduler overhead.
+    assert elapsed - delivered <= 128
+    await evidence.finalize(evidence.run_id)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(os.environ.get("RUN_BROWSER_TESTS") != "1", reason="Opt-in local Chromium test")
 @pytest.mark.parametrize("end_actor", ["target", "counterpart"])
 async def test_final_report_preserves_browser_audio_until_hangup(store, tmp_path, end_actor):
     from test_controller import batch, configured
@@ -135,6 +213,10 @@ async def test_browser_full_duplex_playback_cancel_and_cleanup(tmp_path):
                 await asyncio.sleep(0.02)
         played = await session.cancel_playback()
         assert 0 < played["first"] < 1000
+        assert await session.page.evaluate("bridge.push('AAAAAA==', 'stale', 0)") == "cancelled"
+        await session.send_audio(frame.model_copy(update={"item_id": "after-cancel"}))
+        await asyncio.wait_for(session.drain(), 3)
+        assert session.played["after-cancel"] >= 999
         before = session.received_samples
         await asyncio.sleep(0.1)
         assert session.received_samples > before
@@ -224,6 +306,19 @@ async def test_remote_webrtc_audio_contains_real_pcm(tmp_path):
                 await asyncio.sleep(0.05)
     finally:
         await session.close("webrtc regression")
+    native = evidence.directory / "audio/received-native-0.webm"
+    assert native.stat().st_size > 100
+    import shutil
+    import subprocess
+
+    if shutil.which("ffmpeg"):
+        decoded = subprocess.run(
+            ["ffmpeg", "-v", "error", "-i", str(native), "-f", "s16le", "-ac", "1", "-"],
+            capture_output=True,
+            check=True,
+            timeout=10,
+        ).stdout
+        assert len(decoded) > 16000 and any(decoded)
     await evidence.finalize(evidence.run_id)
 
 

@@ -1,5 +1,7 @@
 """Local report artifacts derived from sealed evidence; no provider requests."""
 
+import csv
+import io
 import json
 import sys
 import wave
@@ -101,6 +103,28 @@ def write_attempt_report(directory, destination, pipeline):
         "raw_directory": str(directory.resolve()),
     }
     publish(destination / "details.json", canonical(details))
+    timing_rows = measurements.get("response_timing", {}).get("opportunities", [])
+    timing_csv = io.StringIO()
+    columns = [
+        "turn_index",
+        "item_id",
+        "clock_id",
+        "status",
+        "playback_start_seconds",
+        "playback_end_seconds",
+        "speech_start_seconds",
+        "speech_end_seconds",
+        "target_speech_start_seconds",
+        "ttfs_ms",
+        "observed_wait_ms",
+        "target_first_token_seconds",
+        "ttft_ms",
+        "ttft_status",
+    ]
+    writer = csv.DictWriter(timing_csv, fieldnames=columns, extrasaction="ignore")
+    writer.writeheader()
+    writer.writerows(timing_rows)
+    publish(destination / "turn-timestamps.csv", timing_csv.getvalue().encode())
     try:
         audio = synchronized_audio(directory, destination / "conversation.wav")
     except (ValueError, OSError) as exc:
@@ -142,7 +166,8 @@ def write_attempt_report(directory, destination, pipeline):
         "[Independent transcript](transcript.md) · "
         "[All metrics and raw judge answers](details.json) · "
         "[Failure evidence and uncertainty](diagnostics-v1.json) · "
-        "[Timing, WER and endpointing availability](measurements-v2.json)",
+        "[Timing, WER and endpointing availability](measurements-v2.json) · "
+        "[Per-turn timestamps](turn-timestamps.csv)",
         "",
         f"Observed task completion: **{diagnostics['observed_task_completion']}**. "
         f"Established failure owner: **{diagnostics['established_failure_owner']}**. "
@@ -153,6 +178,33 @@ def write_attempt_report(directory, destination, pipeline):
     ]
     if audio["status"] == "created":
         text.extend([f"![Full conversation]({(destination / 'conversation.wav').resolve()})", ""])
+    text.extend(
+        [
+            "## Turn timestamps",
+            "",
+            "Times below use the browser audio clock. Each row is an employee playback "
+            "item, not a human-annotated semantic turn. First speech is estimated from "
+            "20 ms audio windows. First token is the arrival of Rumik's first text packet "
+            "(`bot-llm-text`) at the browser after that speech ended; it includes network "
+            "transit and is an upper bound on hosted generation latency.",
+            "",
+            "| Turn | Employee speech end (s) | First Rumik token (s) | TTFT (ms) | "
+            "First Rumik speech (s) | TTFS (ms) | Status |",
+            "| --- | --- | --- | --- | --- | --- | --- |",
+        ]
+    )
+
+    def number(value):
+        return f"{value:.3f}" if value is not None else "—"
+
+    for row in timing_rows:
+        text.append(
+            f"| {row['turn_index']} | {number(row.get('speech_end_seconds'))} | "
+            f"{number(row.get('target_first_token_seconds'))} | {number(row.get('ttft_ms'))} | "
+            f"{number(row.get('target_speech_start_seconds'))} | "
+            f"{number(row.get('ttfs_ms'))} | {row['status']} |"
+        )
+    text.append("")
     text.extend(["## Evaluation stages", "", "| Stage | Status |", "| --- | --- |"])
     for name, stage in pipeline.get("stages", {}).items():
         text.append(f"| {name} | {stage['status']} |")

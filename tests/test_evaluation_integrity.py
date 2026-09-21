@@ -28,6 +28,12 @@ from voice_bench.fixture import fixture_case
         ("Wrong reference: AB73. Correct reference: X91.", ["X91"], "uncertain"),
         ("Reference: AB73. Reference: X91.", ["AB-73X91"], "uncertain"),
         ("Reference: AB73 X91.", ["AB-73X91"], "uncertain"),
+        # The live September 22 report: no colon, label opened by a comma.
+        ("Reservation confirmed, reference SIM-441311", ["SIM-441311"], "met"),
+        ("Reservation confirmed, reference SIM-441311.", ["SIM-441312"], "not_met"),
+        ("Reference SIM441311.", ["SIM-441311"], "met"),
+        ("Reference AB73 then correction X91.", ["AB-73X91"], "uncertain"),
+        ("The reference was unclear, so nothing was booked.", [], "uncertain"),
     ],
 )
 def test_reference_regression_cases_preserve_assertions_and_uncertainty(text, issued, status):

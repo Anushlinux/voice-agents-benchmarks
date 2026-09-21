@@ -99,3 +99,25 @@ src/voice_bench/channels/browser/static/
 !/reports/full-dataset-preflight-20260921/simple-report/conversations/10-rohan/README.md
 !/reports/full-dataset-preflight-20260921/simple-report/conversations/10-rohan/transcript.md
 !/reports/full-dataset-preflight-20260921/simple-report/conversations/10-rohan/conversation.mp3
+
+# Explicitly authorized master benchmark report: Muga, Mulberry 1.5 and 1.6 with per-case proof.
+!/reports/benchmark-master-20260922/
+/reports/benchmark-master-20260922/*
+!/reports/benchmark-master-20260922/README.md
+!/reports/benchmark-master-20260922/summary.json
+!/reports/benchmark-master-20260922/build_master.py
+!/reports/benchmark-master-20260922/conversations/
+/reports/benchmark-master-20260922/conversations/*
+!/reports/benchmark-master-20260922/conversations/*/
+/reports/benchmark-master-20260922/conversations/*/*
+!/reports/benchmark-master-20260922/conversations/*/*/
+/reports/benchmark-master-20260922/conversations/*/*/*
+!/reports/benchmark-master-20260922/conversations/*/*/README.md
+!/reports/benchmark-master-20260922/conversations/*/*/transcript.md
+!/reports/benchmark-master-20260922/conversations/*/*/hosted-transcript.md
+!/reports/benchmark-master-20260922/conversations/*/*/evaluation.md
+!/reports/benchmark-master-20260922/conversations/*/*/private-report.txt
+!/reports/benchmark-master-20260922/conversations/*/*/measurements-v2.json
+!/reports/benchmark-master-20260922/conversations/*/*/turn-timestamps.csv
+!/reports/benchmark-master-20260922/conversations/*/*/diagnostics-v1.json
+!/reports/benchmark-master-20260922/conversations/*/*/conversation.mp3

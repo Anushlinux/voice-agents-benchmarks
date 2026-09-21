@@ -9,6 +9,7 @@ import pytest
 
 from voice_bench.contracts import JudgeConfig
 from voice_bench.evaluation.openai_judge import judge
+from voice_bench.evaluation.speech_support import SpeechClaim
 from voice_bench.evidence.local import LocalEvidence
 from voice_bench.fixture import fixture_case
 
@@ -25,6 +26,11 @@ async def test_model_judge_transcribes_captured_audio_and_rejects_invented_citat
     await evidence.json("business/audit.json", [])
     final_report = {"text": "Reference numbers: SIM3453 and F8061B."}
     await evidence.json("target/user-report.json", final_report)
+    report_requests = [
+        {"report": final_report["text"], "result": {"report_saved": True}},
+        {"report": "Corrected reference: SIM-3453F8061B.", "result": {"ok": False}},
+    ]
+    await evidence.json("target/report-requests.json", report_requests)
     await evidence.json("result.json", {"error": "cancelled", "attribution": "harness"})
     buffer = io.BytesIO()
     with wave.open(buffer, "wb") as audio:
@@ -40,7 +46,7 @@ async def test_model_judge_transcribes_captured_audio_and_rejects_invented_citat
     )
     calls = []
     metric_name = "counterpart_validity"
-    citation_name = "speech-window-0001"
+    citation_name = "speech-window-0002"
 
     async def transcribe(**args):
         calls.append("transcribe")
@@ -62,7 +68,13 @@ async def test_model_judge_transcribes_captured_audio_and_rejects_invented_citat
             == "counterpart_validity"
         )
         assert "counterpart_validity" in args["instructions"]
+        assert "counterpart never receives the private user_task" in args["instructions"]
+        assert (
+            "employee to know or correct undisclosed private instructions" in args["instructions"]
+        )
         assert prompt["target_user_report"] == final_report
+        assert prompt["target_report_requests"] == report_requests
+        assert "rejected correction was attempted, not delivered" in args["instructions"]
         assert prompt["execution_result"]["attribution"] == "harness"
         assert "human-listening-only" in args["instructions"]
         assert [t["source"] for t in prompt["transcripts"]] == [
@@ -78,6 +90,15 @@ async def test_model_judge_transcribes_captured_audio_and_rejects_invented_citat
                         status="met",
                         explanation="Adhered to brief.",
                         evidence=(citation_name,),
+                        speech_claims=(
+                            SpeechClaim(
+                                source_id=citation_name,
+                                speaker="counterpart",
+                                quote="The target CLAIMED it changed the note.",
+                            ),
+                        )
+                        if amplitude > 2
+                        else (),
                     ),
                 )
             ),
@@ -97,9 +118,17 @@ async def test_model_judge_transcribes_captured_audio_and_rejects_invented_citat
         assert all(
             t["transcription_status"] == "skipped_near_silence" for t in metadata["transcripts"]
         )
-    assert metrics[0].status == "met"
+    assert metrics[0].status == ("met" if amplitude > 2 else "uncertain")
     assert metrics[0].evidence == (
-        ref.model_copy(update={"start_seconds": 0.0, "end_seconds": 1.0}),
+        ref.model_copy(
+            update={
+                "start_seconds": 0.0,
+                "end_seconds": 1.0,
+                "artifact_key": ref.artifact_key.replace(
+                    "received.wav", "played.wav" if with_played else "sent.wav"
+                ),
+            }
+        ),
     )
     assert metadata["transcripts"][0]["source"] == "audio/received.wav"
     metric_name = "invented_metric"

@@ -7,50 +7,43 @@ from voice_bench.evidence.local import canonical, digest
 
 
 def assistant_instructions(variable, report_tool="benchmark_user_report"):
-    """A reviewable deployment candidate, not a promise of hosted-model behavior."""
-    return (
-        "You are the CALLER: a personal assistant representing the customer. "
-        "The other speaker is the business employee, not your user. Carry out the user's "
-        "assignment yourself within their permissions. After greeting, state what you want "
-        "to arrange and ask the employee for availability or action. Do not offer restaurant "
-        "services or ask the employee whether they want a reservation. "
-        "Speak naturally in Hinglish. State the request briefly, listen and "
-        "answer the last question. Keep internal reasoning and turn-management instructions "
-        "private; speak only what belongs in this conversation.\n\n"
-        "Use the assignment below as your authority. Keep its constraints throughout the "
-        "call. A changed time, seating arrangement, price or dietary condition is a new offer, "
-        "not a confirmation of the old one. Clarify ambiguity and reject offers outside your "
-        "permissions. A question about a preference is not itself a changed offer or a "
-        "request for authorization. Answer it from the assignment when the answer is known. "
-        "If a detail is unknown, say so briefly and ask whether it is necessary for the "
-        "requested task. Redirect unrelated questions to the task without inventing facts "
-        "or going silent. If an essential answer requires the user's approval, explain the "
-        "blocker and report an incomplete outcome rather than making a commitment. "
-        "Do not repeat a full checklist at every turn or ask for approval already "
-        "given. If no authorized arrangement works, leave it unbooked and explain why.\n\n"
-        "Before committing, resolve the material terms that are still unclear. After a "
-        "successful booking, obtain its actual single reference. If a code is unclear, ask "
-        "for clarification; do not invent it or turn spoken chunks into different references. "
-        "After a contradictory answer, clarify the discrepancy or use an authorized fallback. "
-        "If the employee stops responding, ask a brief follow-up; do not claim completion.\n\n"
-        "Availability, an offer and permission to proceed are not a completed booking. "
-        "Ask the employee to make the booking, then wait for their explicit success "
-        "confirmation and actual reference before saying it is confirmed. Let them finish "
-        "explaining material terms; if their sentence cuts off, ask them to finish. "
-        "A zero reservation fee says nothing about the price of meals ordered later.\n\n"
-        "Finish the business exchange, then privately submit the outcome through {{"
-        + report_tool
-        + "}}. Include the material user requirements, including seating, "
-        "dietary terms and financial obligations when relevant, plus the exact issued reference. "
-        "If nothing was booked, say that and the reason the employee gave; do not invent a "
-        "reference. A report_saved acknowledgement means only that your message was "
-        "delivered to the user; it does not book or confirm anything with the business. "
-        "Do not submit while the employee is still clarifying the outcome. Exchange your "
-        "closing words before submitting. Do not read this private report to the employee. "
-        "After the report is saved, "
-        "use {{end_call}}. If the assignment is empty, do not make commitments.\n\n"
-        "User assignment:\n{" + variable + "}"
-    )
+    """A reviewable deployment candidate, not a promise of hosted-model behavior.
+
+    Deliberately short. Saved calls show the hosted model's whole turn, hidden reasoning
+    included, fits in about 400 tokens; long step lists made it think past that budget
+    and say nothing. Every rule here must earn its place.
+    """
+    return """# Role
+You are the CALLER: a personal assistant acting for the customer. The other speaker is
+the business employee. Speak naturally in Hinglish, one or two short sentences per turn,
+one question at a time. Say only what belongs in this conversation.
+
+# Rules
+- The assignment below is your authority. Stay within its permissions. Never invent
+  facts, agreement, a completed booking or a reference.
+- Answer the employee's latest question from the assignment or what you heard. If an
+  essential detail is unknown, say so and ask whether it matters.
+- A changed time, seating, price or dietary term is a new offer: check it against the
+  assignment before accepting. A question about a preference is not a new offer.
+- Availability or permission to proceed is not a booking. Zero reservation charge does
+  not mean free food.
+- If the employee's speech cuts off or they go silent, ask one brief follow-up.
+
+# Flow
+1. After the greeting, state the request and ask the employee to check it.
+2. If the offer fits the assignment, ask them to book it. If they ask you to confirm
+   the same terms, say yes.
+3. Wait for the actual result and its single reference. Acknowledge the result aloud
+   and repeat the reference once, briefly. If part of it is unclear, ask only for that.
+4. If nothing permitted is available, say you cannot book and give the reason.
+5. Say a brief thank-you and goodbye.
+6. Privately call {{REPORT_TOOL}} with one or two sentences: what was booked (date,
+   time, name, party size, seating, any charge terms) and the exact reference, or the
+   reason nothing was booked. Do not speak the report. After report_saved, call
+   {{end_call}}. If saving fails, retry once; never claim it saved.
+
+# User assignment
+{TASK_VARIABLE}""".replace("REPORT_TOOL", report_tool).replace("TASK_VARIABLE", variable)
 
 
 def setup_plan(config):
@@ -90,8 +83,8 @@ def setup_plan(config):
         "report_tool": {
             "name": "benchmark_user_report",
             "kind": "during_call",
-            "description": "Privately deliver the actual outcome to the user after the business "
-            "exchange and before hangup. This tool never makes a reservation.",
+            "description": "Privately deliver the outcome to the user in one or two sentences, "
+            "after the goodbye and before hangup. This tool never makes a reservation.",
             "config": {
                 "action": "post",
                 "method": "POST",
@@ -108,14 +101,17 @@ def setup_plan(config):
                         "name": "report",
                         "type": "string",
                         "required": True,
-                        "description": "The factual outcome, material user constraints "
-                        "and exact issued reference, or the supported no-booking reason.",
+                        "description": "One or two sentences: what was booked (date, time, "
+                        "name, party size, seating, charge terms) and the exact issued "
+                        "reference, or the reason nothing was booked.",
                     }
                 ],
             },
         },
         "report_secret_binding": {"report_tool.config.auth.token": "BENCH_TOOLS_SECRET"},
-        "prompt_version": "natural-caller-v5",
+        # v7 completed one live Aditi call (batch a69330e8) but its two-sentence report
+        # omitted the booked terms; v8 names them while keeping the same short shape.
+        "prompt_version": "natural-caller-v8",
         "secret_binding": {"tool.config.auth.token": "BENCH_TOOLS_SECRET"},
         "variable": {"name": variable, "defaultValue": "", "toolOutput": "user_task_json"},
         "variable_tool_binding": (

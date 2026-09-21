@@ -1,0 +1,1 @@
+Reservation confirmed: Kabir Sethi, 5 guests, indoor regular table, all together, reservation only, no charge, date 2026-10-03, time 20:00, branch Domlur, reference S4CR. All user constraints satisfied.

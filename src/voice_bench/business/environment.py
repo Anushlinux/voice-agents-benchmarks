@@ -10,6 +10,7 @@ from voice_bench.business.natural_restaurant import (
     NaturalRestaurantWorkflowV3,
     NaturalRestaurantWorkflowV4,
     NaturalRestaurantWorkflowV5,
+    NaturalRestaurantWorkflowV6,
 )
 from voice_bench.business.reservations import ReservationWorkflow, consent_anchors
 from voice_bench.evidence.local import canonical, digest
@@ -89,6 +90,9 @@ class BusinessService:
     def counterpart_tools(self, run_id):
         """Return only tool definitions granted to this attempt's simulated person."""
         run = self.store.run(run_id)
+        return self._counterpart_tools(run)
+
+    def _counterpart_tools(self, run):
         if not run.get("user_task_served") or not run["accept_tools"]:
             raise ValueError(
                 "The Rumik task must be delivered before counterpart tools are enabled"
@@ -102,6 +106,22 @@ class BusinessService:
             }
             for name in run.get("tool_access", {}).get("counterpart", [])
         ]
+
+    def counterpart_response_tools(self, run_id, observations):
+        """Project workflow prerequisites, never user permissions or semantic consent.
+
+        The executor still checks every request. Hiding an impossible action from
+        the model is not authority to execute a newly available action.
+        """
+        run = self.store.run(run_id)
+        definitions = self._counterpart_tools(run)
+        workflow = self.workflows[(run["workflow"], run["workflow_version"])]
+        project = getattr(workflow, "response_tools", None)
+        if project is None:
+            return definitions
+        context = conversation_context(run_id, observations)
+        names = project(run["state"], context)
+        return [t for t in definitions if t["name"].removeprefix("business_") in names]
 
     def serve_user_task(self, call_id, agent_id):
         from voice_bench.models import UserTask
@@ -139,26 +159,37 @@ class BusinessService:
             )
             prior = run.get("target_user_report")
             result = {"ok": False, "error": "forbidden_or_closed"}
+            received_at = datetime.now(UTC).isoformat()
+            revisable = run.get("report_policy") == "revisable_until_close"
             if allowed and isinstance(report, str) and report.strip() and len(report) <= 12000:
-                if prior and prior["text"] != report:
+                if prior and prior["text"] != report and not revisable:
                     result = {"ok": False, "error": "final_report_already_saved"}
                 else:
-                    if not prior:
-                        run["target_user_report"] = {
+                    if not prior or prior["text"] != report:
+                        saved = {
                             "text": report,
                             "call_id": call_id,
                             "agent_id": agent_id,
                             "source": "authenticated_rumik_tool",
                             "run_id": str(run_id),
-                            "received_at": datetime.now(UTC).isoformat(),
+                            "received_at": received_at,
                             "task_sha256": run["user_task_delivery"]["sha256"],
                         }
+                        if revisable:
+                            history = run.setdefault("target_report_history", [])
+                            saved["revision"] = len(history) + 1
+                            saved["supersedes_revision"] = prior["revision"] if prior else None
+                            history.append(saved)
+                        run["target_user_report"] = saved
                     result = {"ok": True, "report_saved": True}
+                    if revisable:
+                        result["report_revision"] = run["target_user_report"]["revision"]
             run.setdefault("target_report_requests", []).append(
                 {
                     "agent_id": agent_id,
                     "report": report,
                     "result": result,
+                    "received_at": received_at,
                 }
             )
             return result
@@ -188,12 +219,6 @@ class BusinessService:
                 workflow = self.workflows[(run["workflow"], run["workflow_version"])]
                 state = deepcopy(run["state"])
                 # Observations are worker-supplied, never accepted from HTTP/model arguments.
-                anchors = None
-                trusted = bool(observations) and all(
-                    str(e.get("run_id")) == str(run_id) for e in observations
-                )
-                if trusted:
-                    anchors = consent_anchors(observations)
                 result = workflow.execute(
                     state,
                     tool,
@@ -202,18 +227,7 @@ class BusinessService:
                         "run_id": str(run_id),
                         "operation_id": request_id,
                         "actor": actor,
-                        "consent_anchors": anchors,
-                        "tool_result_sequences": {
-                            e["payload"]["operation_id"]: e["sequence"]
-                            for e in observations
-                            if trusted
-                            and e.get("kind") == "business_tool_result"
-                            and e.get("payload", {}).get("actor") == "counterpart"
-                            and e["payload"].get("result", {}).get("ok")
-                        },
-                        "observed_through_sequence": observations[-1]["sequence"]
-                        if trusted
-                        else None,
+                        **conversation_context(run_id, observations),
                     },
                 )
                 if result["ok"]:
@@ -263,6 +277,23 @@ class BusinessService:
             }
 
 
+def conversation_context(run_id, observations):
+    """Use only the bound worker's observations for both projection and execution."""
+    trusted = bool(observations) and all(str(e.get("run_id")) == str(run_id) for e in observations)
+    return {
+        "consent_anchors": consent_anchors(observations) if trusted else None,
+        "tool_result_sequences": {
+            e["payload"]["operation_id"]: e["sequence"]
+            for e in observations
+            if trusted
+            and e.get("kind") == "business_tool_result"
+            and e.get("payload", {}).get("actor") == "counterpart"
+            and e["payload"].get("result", {}).get("ok")
+        },
+        "observed_through_sequence": observations[-1]["sequence"] if trusted else None,
+    }
+
+
 WORKFLOWS = {
     (w.name, w.version): w
     for w in (
@@ -274,5 +305,6 @@ WORKFLOWS = {
         NaturalRestaurantWorkflowV3(),
         NaturalRestaurantWorkflowV4(),
         NaturalRestaurantWorkflowV5(),
+        NaturalRestaurantWorkflowV6(),
     )
 }

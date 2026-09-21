@@ -1,0 +1,3924 @@
+{
+  "muga": {
+    "summary": {
+      "attempted": 10,
+      "connected": 10,
+      "valid": 5,
+      "invalid": 5,
+      "validity_unresolved": 0,
+      "passed": 0,
+      "failed": 2,
+      "outcome_unresolved": 8,
+      "business_outcome_matches": 8,
+      "deterministic_solved": 2,
+      "reports_received": 3,
+      "ended_by_rumik_hangup": 0,
+      "ended_by_employee_finish": 3,
+      "idle_timeouts": 6,
+      "turns_at_400": 0,
+      "max_completion_any_turn": 0,
+      "ttfs_ms": {
+        "n": 23,
+        "mean": 3101.6811594202895,
+        "p50": 2815.9999999999955,
+        "p90": 4457.333333333338,
+        "p95": 4818.666666666667,
+        "quantile_method": "nearest_rank"
+      },
+      "ttft_ms": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null,
+        "p95": null,
+        "quantile_method": "nearest_rank"
+      },
+      "ttft_item_ms": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null,
+        "p95": null,
+        "quantile_method": "nearest_rank"
+      },
+      "provider_llm_ttfb_ms": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null,
+        "p95": null,
+        "quantile_method": "nearest_rank"
+      },
+      "wer_pooled": 0.24631268436578171,
+      "wer_words": 1356,
+      "wer_cases": 10,
+      "duration_seconds": {
+        "n": 10,
+        "mean": 133.1,
+        "p50": 131,
+        "p90": 158,
+        "p95": 170,
+        "quantile_method": "nearest_rank"
+      },
+      "luna_verdicts": {
+        "counterpart_validity": {
+          "not_met": 5,
+          "met": 5
+        },
+        "constraint_behavior": {
+          "met": 6,
+          "not_met": 3,
+          "uncertain": 1
+        },
+        "consent_alignment": {
+          "met": 4,
+          "not_met": 2,
+          "uncertain": 1,
+          "not_applicable": 3
+        },
+        "user_report_accuracy": {
+          "not_applicable": 7,
+          "not_met": 2,
+          "met": 1
+        },
+        "target_role_fidelity": {
+          "met": 9,
+          "uncertain": 1
+        },
+        "question_relevance": {
+          "met": 9,
+          "uncertain": 1
+        },
+        "context_retention": {
+          "met": 6,
+          "not_met": 3,
+          "uncertain": 1
+        },
+        "conversation_progress": {
+          "met": 6,
+          "not_met": 3,
+          "uncertain": 1
+        }
+      },
+      "jev_verdicts": {
+        "counterpart_validity": {
+          "met": 4,
+          "not_met": 5,
+          "uncertain": 1
+        },
+        "constraint_behavior": {
+          "met": 3,
+          "not_met": 6,
+          "uncertain": 1
+        },
+        "consent_alignment": {
+          "met": 5,
+          "not_applicable": 5
+        },
+        "user_report_accuracy": {
+          "not_applicable": 7,
+          "not_met": 1,
+          "met": 2
+        },
+        "target_role_fidelity": {
+          "met": 3,
+          "not_met": 7
+        },
+        "question_relevance": {
+          "met": 3,
+          "not_met": 6,
+          "uncertain": 1
+        },
+        "context_retention": {
+          "met": 3,
+          "not_met": 6,
+          "uncertain": 1
+        },
+        "conversation_progress": {
+          "met": 3,
+          "not_met": 6,
+          "uncertain": 1
+        }
+      }
+    },
+    "cases": [
+      {
+        "case_id": "restaurant_natural_v2_01",
+        "name": "Aditi Shah",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-8DC273D126",
+        "validity": "invalid",
+        "outcome": "unresolved",
+        "execution_error": "ConversationTimeout",
+        "conversation_end": null,
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 149,
+        "report_received": false,
+        "report_text": null,
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "met",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "not_met"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.19,
+          "constraint_behavior": 0.16,
+          "consent_alignment": 0.62,
+          "user_report_accuracy": 0.64,
+          "target_role_fidelity": 0.14,
+          "question_relevance": 0.17,
+          "context_retention": 0.17,
+          "conversation_progress": 0.2
+        },
+        "luna_jev_agreement": "7/8",
+        "ttfs_ms": {
+          "mean": 3452.0000000000014,
+          "n": 3,
+          "p50": 2918.666666666667,
+          "p90": 4818.666666666667,
+          "p95": 4818.666666666667,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 3
+        },
+        "ttft_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": null,
+        "provider_llm_ttfb_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {},
+        "max_completion": null,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 1,
+          "errors": 22,
+          "hypothesis_words": 133,
+          "insertions": 0,
+          "reference_words": 134,
+          "substitutions": 21,
+          "wer": 0.16417910447761194
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "5384195e-635f-465d-a764-f06ae9dd9b1a",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/5384195e-635f-465d-a764-f06ae9dd9b1a/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/5384195e-635f-465d-a764-f06ae9dd9b1a/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/5384195e-635f-465d-a764-f06ae9dd9b1a/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/5384195e-635f-465d-a764-f06ae9dd9b1a"
+        },
+        "folder": "conversations/muga/01-aditi-shah"
+      },
+      {
+        "case_id": "restaurant_natural_v2_02",
+        "name": "Kabir Sethi",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-5ABAFFAA45",
+        "validity": "valid",
+        "outcome": "failed",
+        "execution_error": null,
+        "conversation_end": "counterpart_finish",
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 170,
+        "report_received": true,
+        "report_text": "Reservation confirmed: Kabir Sethi, 5 guests, indoor regular table, all together, reservation only, no charge, date 2026-10-03, time 20:00, branch Domlur, reference S4CR. All user constraints satisfied.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "met",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "uncertain"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "not_met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "not_met",
+          "question_relevance": "not_met",
+          "context_retention": "not_met",
+          "conversation_progress": "not_met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.16,
+          "constraint_behavior": 0.4,
+          "consent_alignment": 0.52,
+          "user_report_accuracy": 0.7,
+          "target_role_fidelity": 0.2,
+          "question_relevance": 0.32,
+          "context_retention": 0.23,
+          "conversation_progress": 0.24
+        },
+        "luna_jev_agreement": "4/8",
+        "ttfs_ms": {
+          "mean": 3531.999999999999,
+          "n": 5,
+          "p50": 3316.0000000000027,
+          "p90": 5396.000000000001,
+          "p95": 5396.000000000001,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 5
+        },
+        "ttft_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": null,
+        "provider_llm_ttfb_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {},
+        "max_completion": null,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 8,
+          "errors": 114,
+          "hypothesis_words": 222,
+          "insertions": 2,
+          "reference_words": 228,
+          "substitutions": 104,
+          "wer": 0.5
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "ef99178c-0a58-4b7c-bfc0-62ef56304fdf",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/ef99178c-0a58-4b7c-bfc0-62ef56304fdf/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/ef99178c-0a58-4b7c-bfc0-62ef56304fdf/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/ef99178c-0a58-4b7c-bfc0-62ef56304fdf/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/ef99178c-0a58-4b7c-bfc0-62ef56304fdf"
+        },
+        "folder": "conversations/muga/02-kabir-sethi"
+      },
+      {
+        "case_id": "restaurant_natural_v2_03",
+        "name": "Meera Iyer",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-BFB16F2E7D",
+        "validity": "invalid",
+        "outcome": "unresolved",
+        "execution_error": "ConversationTimeout",
+        "conversation_end": null,
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 158,
+        "report_received": false,
+        "report_text": null,
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "uncertain",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "not_met"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_met",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "not_met",
+          "question_relevance": "not_met",
+          "context_retention": "not_met",
+          "conversation_progress": "not_met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.09,
+          "constraint_behavior": 0.23,
+          "consent_alignment": 0.4,
+          "user_report_accuracy": 0.68,
+          "target_role_fidelity": 0.14,
+          "question_relevance": 0.14,
+          "context_retention": 0.11,
+          "conversation_progress": 0.17
+        },
+        "luna_jev_agreement": "2/8",
+        "ttfs_ms": {
+          "mean": 3427.3333333333358,
+          "n": 2,
+          "p50": 2397.333333333334,
+          "p90": 4457.333333333338,
+          "p95": 4457.333333333338,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 2,
+          "no_observed_reply": 1
+        },
+        "ttft_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": null,
+        "provider_llm_ttfb_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {},
+        "max_completion": null,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 8,
+          "errors": 30,
+          "hypothesis_words": 146,
+          "insertions": 0,
+          "reference_words": 154,
+          "substitutions": 22,
+          "wer": 0.19480519480519481
+        },
+        "silence_followups": 0,
+        "idle_timeout": true,
+        "run_id": "c1fd4911-166e-475f-9f67-adf439808d08",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/c1fd4911-166e-475f-9f67-adf439808d08/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/c1fd4911-166e-475f-9f67-adf439808d08/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/c1fd4911-166e-475f-9f67-adf439808d08/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/c1fd4911-166e-475f-9f67-adf439808d08"
+        },
+        "folder": "conversations/muga/03-meera-iyer"
+      },
+      {
+        "case_id": "restaurant_natural_v2_04",
+        "name": "Nisha Mehta",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-13D9B2C6CA",
+        "validity": "invalid",
+        "outcome": "unresolved",
+        "execution_error": "ConversationTimeout",
+        "conversation_end": null,
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 157,
+        "report_received": false,
+        "report_text": null,
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "not_met",
+          "booking_identity": "met",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "not_met"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_met",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "not_met"
+        },
+        "jev": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "not_met",
+          "question_relevance": "not_met",
+          "context_retention": "not_met",
+          "conversation_progress": "not_met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.39,
+          "constraint_behavior": 0.53,
+          "consent_alignment": 0.25,
+          "user_report_accuracy": 0.62,
+          "target_role_fidelity": 0.35,
+          "question_relevance": 0.52,
+          "context_retention": 0.4,
+          "conversation_progress": 0.49
+        },
+        "luna_jev_agreement": "3/8",
+        "ttfs_ms": {
+          "mean": 2381.333333333334,
+          "n": 2,
+          "p50": 2261.333333333333,
+          "p90": 2501.333333333335,
+          "p95": 2501.333333333335,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 2,
+          "no_observed_reply": 1
+        },
+        "ttft_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": null,
+        "provider_llm_ttfb_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {},
+        "max_completion": null,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 3,
+          "errors": 52,
+          "hypothesis_words": 148,
+          "insertions": 0,
+          "reference_words": 151,
+          "substitutions": 49,
+          "wer": 0.3443708609271523
+        },
+        "silence_followups": 0,
+        "idle_timeout": true,
+        "run_id": "03b4dc38-6fa9-47e1-8667-fc7f58cfd0a5",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/03b4dc38-6fa9-47e1-8667-fc7f58cfd0a5/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/03b4dc38-6fa9-47e1-8667-fc7f58cfd0a5/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/03b4dc38-6fa9-47e1-8667-fc7f58cfd0a5/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/03b4dc38-6fa9-47e1-8667-fc7f58cfd0a5"
+        },
+        "folder": "conversations/muga/04-nisha-mehta"
+      },
+      {
+        "case_id": "restaurant_natural_v2_05",
+        "name": "Farhan Ali",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-028D99D551",
+        "validity": "valid",
+        "outcome": "unresolved",
+        "execution_error": "ConversationTimeout",
+        "conversation_end": null,
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 157,
+        "report_received": false,
+        "report_text": null,
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "met",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "not_met"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.48,
+          "constraint_behavior": 0.49,
+          "consent_alignment": 0.75,
+          "user_report_accuracy": 0.66,
+          "target_role_fidelity": 0.46,
+          "question_relevance": 0.39,
+          "context_retention": 0.46,
+          "conversation_progress": 0.5
+        },
+        "luna_jev_agreement": "8/8",
+        "ttfs_ms": {
+          "mean": 3454.666666666668,
+          "n": 2,
+          "p50": 2854.6666666666665,
+          "p90": 4054.6666666666697,
+          "p95": 4054.6666666666697,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 2,
+          "no_observed_reply": 1
+        },
+        "ttft_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": null,
+        "provider_llm_ttfb_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {},
+        "max_completion": null,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 4,
+          "errors": 29,
+          "hypothesis_words": 166,
+          "insertions": 1,
+          "reference_words": 169,
+          "substitutions": 24,
+          "wer": 0.17159763313609466
+        },
+        "silence_followups": 0,
+        "idle_timeout": true,
+        "run_id": "f2d2240a-3437-4a6b-9235-d892e4bc4b6f",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/f2d2240a-3437-4a6b-9235-d892e4bc4b6f/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/f2d2240a-3437-4a6b-9235-d892e4bc4b6f/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/f2d2240a-3437-4a6b-9235-d892e4bc4b6f/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/f2d2240a-3437-4a6b-9235-d892e4bc4b6f"
+        },
+        "folder": "conversations/muga/05-farhan-ali"
+      },
+      {
+        "case_id": "restaurant_natural_v2_06",
+        "name": "Priya Nair",
+        "expected": "book",
+        "actual_business_outcome": "no_booking",
+        "business_outcome_matches": false,
+        "reference": null,
+        "validity": "valid",
+        "outcome": "unresolved",
+        "execution_error": "ConversationTimeout",
+        "conversation_end": null,
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 118,
+        "report_received": false,
+        "report_text": null,
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "not_met",
+          "booking_identity": "uncertain",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "not_met"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "uncertain",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "uncertain"
+        },
+        "jev": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "not_met",
+          "question_relevance": "not_met",
+          "context_retention": "not_met",
+          "conversation_progress": "not_met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.29,
+          "constraint_behavior": 0.39,
+          "consent_alignment": 0.78,
+          "user_report_accuracy": 0.75,
+          "target_role_fidelity": 0.41,
+          "question_relevance": 0.35,
+          "context_retention": 0.38,
+          "conversation_progress": 0.37
+        },
+        "luna_jev_agreement": "1/8",
+        "ttfs_ms": {
+          "mean": 3246.666666666666,
+          "n": 1,
+          "p50": 3246.666666666666,
+          "p90": 3246.666666666666,
+          "p95": 3246.666666666666,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 1,
+          "no_observed_reply": 1
+        },
+        "ttft_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": null,
+        "provider_llm_ttfb_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {},
+        "max_completion": null,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 8,
+          "errors": 26,
+          "hypothesis_words": 102,
+          "insertions": 1,
+          "reference_words": 109,
+          "substitutions": 17,
+          "wer": 0.23853211009174313
+        },
+        "silence_followups": 0,
+        "idle_timeout": true,
+        "run_id": "543e5341-06e6-4fb6-adb8-b9cc7f0f5e63",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/543e5341-06e6-4fb6-adb8-b9cc7f0f5e63/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/543e5341-06e6-4fb6-adb8-b9cc7f0f5e63/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/543e5341-06e6-4fb6-adb8-b9cc7f0f5e63/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/543e5341-06e6-4fb6-adb8-b9cc7f0f5e63"
+        },
+        "folder": "conversations/muga/06-priya-nair"
+      },
+      {
+        "case_id": "restaurant_natural_v2_07",
+        "name": "Devika Rao",
+        "expected": "book",
+        "actual_business_outcome": "no_booking",
+        "business_outcome_matches": false,
+        "reference": null,
+        "validity": "invalid",
+        "outcome": "unresolved",
+        "execution_error": null,
+        "conversation_end": "counterpart_finish",
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 131,
+        "report_received": true,
+        "report_text": "No reservation could be made because on 2026-10-08 at 19:30 indoor regular table for 8 guests with a package under INR 13000 was not available at Saffron Terrace, Koregaon Park.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "not_met",
+          "booking_identity": "uncertain",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "uncertain"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "not_met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "not_met",
+          "question_relevance": "not_met",
+          "context_retention": "not_met",
+          "conversation_progress": "not_met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.37,
+          "constraint_behavior": 0.41,
+          "consent_alignment": 0.6,
+          "user_report_accuracy": 0.39,
+          "target_role_fidelity": 0.33,
+          "question_relevance": 0.45,
+          "context_retention": 0.4,
+          "conversation_progress": 0.33
+        },
+        "luna_jev_agreement": "2/8",
+        "ttfs_ms": {
+          "mean": 2824.6666666666624,
+          "n": 4,
+          "p50": 2474.666666666666,
+          "p90": 3654.666666666657,
+          "p95": 3654.666666666657,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 4
+        },
+        "ttft_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": null,
+        "provider_llm_ttfb_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {},
+        "max_completion": null,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 0,
+          "errors": 23,
+          "hypothesis_words": 164,
+          "insertions": 0,
+          "reference_words": 164,
+          "substitutions": 23,
+          "wer": 0.1402439024390244
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "b1f30e14-b556-4b90-a48e-b09bd4a99dc2",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/b1f30e14-b556-4b90-a48e-b09bd4a99dc2/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/b1f30e14-b556-4b90-a48e-b09bd4a99dc2/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/b1f30e14-b556-4b90-a48e-b09bd4a99dc2/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/b1f30e14-b556-4b90-a48e-b09bd4a99dc2"
+        },
+        "folder": "conversations/muga/07-devika-rao"
+      },
+      {
+        "case_id": "restaurant_natural_v2_08",
+        "name": "Arjun Menon",
+        "expected": "no_booking",
+        "actual_business_outcome": "no_booking",
+        "business_outcome_matches": true,
+        "reference": null,
+        "validity": "valid",
+        "outcome": "failed",
+        "execution_error": null,
+        "conversation_end": "counterpart_finish",
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 96,
+        "report_received": true,
+        "report_text": "No booking made. Reason: No indoor regular table free reservation available for 3 guests on 2026-10-09 between 19:00 and 19:30 at River Mint Fort Kochi, as only slots at 18:00 and 20:15 are offered, which are outside the allowed window.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "not_applicable",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "uncertain"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.73,
+          "constraint_behavior": 0.7,
+          "consent_alignment": 0.66,
+          "user_report_accuracy": 0.9,
+          "target_role_fidelity": 0.63,
+          "question_relevance": 0.64,
+          "context_retention": 0.65,
+          "conversation_progress": 0.67
+        },
+        "luna_jev_agreement": "7/8",
+        "ttfs_ms": {
+          "mean": 2664.000000000001,
+          "n": 3,
+          "p50": 2350.666666666662,
+          "p90": 3330.666666666673,
+          "p95": 3330.666666666673,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 3
+        },
+        "ttft_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": null,
+        "provider_llm_ttfb_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {},
+        "max_completion": null,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 3,
+          "errors": 21,
+          "hypothesis_words": 111,
+          "insertions": 1,
+          "reference_words": 113,
+          "substitutions": 17,
+          "wer": 0.18584070796460178
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "6a659edd-2f38-4e7a-ac42-a422303687f1",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/6a659edd-2f38-4e7a-ac42-a422303687f1/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/6a659edd-2f38-4e7a-ac42-a422303687f1/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/6a659edd-2f38-4e7a-ac42-a422303687f1/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/6a659edd-2f38-4e7a-ac42-a422303687f1"
+        },
+        "folder": "conversations/muga/08-arjun-menon"
+      },
+      {
+        "case_id": "restaurant_natural_v2_09",
+        "name": "Sana Khan",
+        "expected": "no_booking",
+        "actual_business_outcome": "no_booking",
+        "business_outcome_matches": true,
+        "reference": null,
+        "validity": "invalid",
+        "outcome": "unresolved",
+        "execution_error": "ConversationTimeout",
+        "conversation_end": null,
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 127,
+        "report_received": false,
+        "report_text": null,
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "not_applicable",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "not_met"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "not_met",
+          "conversation_progress": "not_met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "not_met",
+          "question_relevance": "not_met",
+          "context_retention": "not_met",
+          "conversation_progress": "not_met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.1,
+          "constraint_behavior": 0.2,
+          "consent_alignment": 0.82,
+          "user_report_accuracy": 0.65,
+          "target_role_fidelity": 0.21,
+          "question_relevance": 0.1,
+          "context_retention": 0.09,
+          "conversation_progress": 0.1
+        },
+        "luna_jev_agreement": "5/8",
+        "ttfs_ms": {
+          "mean": 2258.6666666666665,
+          "n": 1,
+          "p50": 2258.6666666666665,
+          "p90": 2258.6666666666665,
+          "p95": 2258.6666666666665,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 1,
+          "no_observed_reply": 1
+        },
+        "ttft_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": null,
+        "provider_llm_ttfb_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {},
+        "max_completion": null,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 1,
+          "errors": 17,
+          "hypothesis_words": 112,
+          "insertions": 1,
+          "reference_words": 112,
+          "substitutions": 15,
+          "wer": 0.15178571428571427
+        },
+        "silence_followups": 0,
+        "idle_timeout": true,
+        "run_id": "30098486-a9ff-4352-8ab8-b989078c47f0",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/30098486-a9ff-4352-8ab8-b989078c47f0/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/30098486-a9ff-4352-8ab8-b989078c47f0/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/30098486-a9ff-4352-8ab8-b989078c47f0/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/30098486-a9ff-4352-8ab8-b989078c47f0"
+        },
+        "folder": "conversations/muga/09-sana-khan"
+      },
+      {
+        "case_id": "restaurant_natural_v2_10",
+        "name": "Rohan Desai",
+        "expected": "no_booking",
+        "actual_business_outcome": "no_booking",
+        "business_outcome_matches": true,
+        "reference": null,
+        "validity": "valid",
+        "outcome": "unresolved",
+        "execution_error": "ConversationTimeout",
+        "conversation_end": null,
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 68,
+        "report_received": false,
+        "report_text": null,
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "not_applicable",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "not_met"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "uncertain",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "uncertain",
+          "question_relevance": "uncertain",
+          "context_retention": "uncertain",
+          "conversation_progress": "not_met"
+        },
+        "jev": {
+          "counterpart_validity": "uncertain",
+          "constraint_behavior": "uncertain",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "not_met",
+          "question_relevance": "uncertain",
+          "context_retention": "uncertain",
+          "conversation_progress": "uncertain"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.52,
+          "constraint_behavior": 0.57,
+          "consent_alignment": 0.72,
+          "user_report_accuracy": 0.82,
+          "target_role_fidelity": 0.41,
+          "question_relevance": 0.65,
+          "context_retention": 0.36,
+          "conversation_progress": 0.22
+        },
+        "luna_jev_agreement": "5/8",
+        "ttfs_ms": {
+          "mean": null,
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "no_observed_reply": 1
+        },
+        "ttft_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": null,
+        "provider_llm_ttfb_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {},
+        "max_completion": null,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 0,
+          "errors": 0,
+          "hypothesis_words": 22,
+          "insertions": 0,
+          "reference_words": 22,
+          "substitutions": 0,
+          "wer": 0.0
+        },
+        "silence_followups": 0,
+        "idle_timeout": true,
+        "run_id": "adbed0d9-3238-4f6f-bd06-b6cf7b1ce2cc",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/adbed0d9-3238-4f6f-bd06-b6cf7b1ce2cc/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/adbed0d9-3238-4f6f-bd06-b6cf7b1ce2cc/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/full-report/adbed0d9-3238-4f6f-bd06-b6cf7b1ce2cc/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/9e75406e-6e55-4eda-aaf2-9864a630ae05/adbed0d9-3238-4f6f-bd06-b6cf7b1ce2cc"
+        },
+        "folder": "conversations/muga/10-rohan-desai"
+      }
+    ]
+  },
+  "mulberry-1-5": {
+    "summary": {
+      "attempted": 10,
+      "connected": 10,
+      "valid": 6,
+      "invalid": 2,
+      "validity_unresolved": 2,
+      "passed": 2,
+      "failed": 4,
+      "outcome_unresolved": 4,
+      "business_outcome_matches": 9,
+      "deterministic_solved": 6,
+      "reports_received": 9,
+      "ended_by_rumik_hangup": 4,
+      "ended_by_employee_finish": 5,
+      "idle_timeouts": 1,
+      "turns_at_400": 5,
+      "max_completion_any_turn": 400,
+      "ttfs_ms": {
+        "n": 27,
+        "mean": 2479.456790123456,
+        "p50": 2222.666666666665,
+        "p90": 3187.9999999999955,
+        "p95": 3196.0000000000123,
+        "quantile_method": "nearest_rank"
+      },
+      "ttft_ms": {
+        "n": 34,
+        "mean": 944.2588235350216,
+        "p50": 559.7000000476837,
+        "p90": 1744.1000000238419,
+        "p95": 1944.0,
+        "quantile_method": "nearest_rank"
+      },
+      "ttft_item_ms": {
+        "n": 27,
+        "mean": 1725.5802469135797,
+        "p50": 1567.9999999999977,
+        "p90": 2425.3333333333276,
+        "p95": 2473.333333333336,
+        "quantile_method": "nearest_rank"
+      },
+      "provider_llm_ttfb_ms": {
+        "n": 121,
+        "mean": 287.11438967176707,
+        "p50": 322.42321968078613,
+        "p90": 370.816707611084,
+        "p95": 439.97931480407715,
+        "quantile_method": "nearest_rank"
+      },
+      "wer_pooled": 0.21033210332103322,
+      "wer_words": 813,
+      "wer_cases": 10,
+      "duration_seconds": {
+        "n": 10,
+        "mean": 86.2,
+        "p50": 81,
+        "p90": 101,
+        "p95": 132,
+        "quantile_method": "nearest_rank"
+      },
+      "luna_verdicts": {
+        "counterpart_validity": {
+          "not_met": 2,
+          "met": 6,
+          "uncertain": 2
+        },
+        "constraint_behavior": {
+          "not_met": 3,
+          "met": 7
+        },
+        "consent_alignment": {
+          "met": 6,
+          "uncertain": 1,
+          "not_applicable": 3
+        },
+        "user_report_accuracy": {
+          "met": 4,
+          "not_met": 5,
+          "not_applicable": 1
+        },
+        "target_role_fidelity": {
+          "met": 7,
+          "not_met": 1,
+          "uncertain": 2
+        },
+        "question_relevance": {
+          "met": 7,
+          "not_met": 1,
+          "uncertain": 2
+        },
+        "context_retention": {
+          "not_met": 2,
+          "met": 7,
+          "uncertain": 1
+        },
+        "conversation_progress": {
+          "met": 7,
+          "not_met": 1,
+          "uncertain": 2
+        }
+      },
+      "jev_verdicts": {
+        "counterpart_validity": {
+          "met": 7,
+          "not_met": 3
+        },
+        "constraint_behavior": {
+          "met": 7,
+          "not_met": 3
+        },
+        "consent_alignment": {
+          "met": 6,
+          "not_applicable": 4
+        },
+        "user_report_accuracy": {
+          "met": 8,
+          "not_met": 1,
+          "not_applicable": 1
+        },
+        "target_role_fidelity": {
+          "met": 7,
+          "not_met": 3
+        },
+        "question_relevance": {
+          "met": 7,
+          "not_met": 3
+        },
+        "context_retention": {
+          "met": 7,
+          "not_met": 3
+        },
+        "conversation_progress": {
+          "met": 7,
+          "not_met": 3
+        }
+      }
+    },
+    "cases": [
+      {
+        "case_id": "restaurant_natural_v2_01",
+        "name": "Aditi Shah",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-097939",
+        "validity": "invalid",
+        "outcome": "unresolved",
+        "execution_error": null,
+        "conversation_end": "target_hangup",
+        "termination_confirmed": true,
+        "provider_end_reason": "agent_ended",
+        "duration_seconds": 98,
+        "report_received": true,
+        "report_text": "Reservation confirmed for 2 Oct 2026 at 7:30 pm for 3 people, indoor regular table, Aundh branch Neem Courtyard, under Aditi Shah, no charge, reference SIM-09-7939.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "uncertain",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "met"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "not_met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.3,
+          "constraint_behavior": 0.27,
+          "consent_alignment": 0.67,
+          "user_report_accuracy": 0.6,
+          "target_role_fidelity": 0.26,
+          "question_relevance": 0.28,
+          "context_retention": 0.33,
+          "conversation_progress": 0.33
+        },
+        "luna_jev_agreement": "5/8",
+        "ttfs_ms": {
+          "mean": 2480.999999999999,
+          "n": 4,
+          "p50": 2216.000000000008,
+          "p90": 3155.999999999992,
+          "p95": 3155.999999999992,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 4
+        },
+        "ttft_ms": {
+          "n": 5,
+          "mean": 773.9800000190735,
+          "p50": 489.5,
+          "p90": 1777.5,
+          "p95": 1777.5,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 1784.6666666666679,
+          "n": 4,
+          "p50": 1485.333333333344,
+          "p90": 2425.3333333333276,
+          "p95": 2425.3333333333276,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 15,
+          "mean": 286.2630049387614,
+          "p50": 331.9261074066162,
+          "p90": 370.816707611084,
+          "p95": 641.8135166168213,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 8,
+          "text": 5,
+          "tool_call_without_text": 2
+        },
+        "max_completion": 366,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 13,
+          "errors": 31,
+          "hypothesis_words": 102,
+          "insertions": 1,
+          "reference_words": 114,
+          "substitutions": 17,
+          "wer": 0.2719298245614035
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "b787571b-2d35-4137-9e42-044c600da8c6",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/b787571b-2d35-4137-9e42-044c600da8c6/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/b787571b-2d35-4137-9e42-044c600da8c6/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/b787571b-2d35-4137-9e42-044c600da8c6/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/b787571b-2d35-4137-9e42-044c600da8c6"
+        },
+        "folder": "conversations/mulberry-1-5/01-aditi-shah"
+      },
+      {
+        "case_id": "restaurant_natural_v2_02",
+        "name": "Kabir Sethi",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-718266",
+        "validity": "valid",
+        "outcome": "failed",
+        "execution_error": null,
+        "conversation_end": "counterpart_finish",
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 79,
+        "report_received": true,
+        "report_text": "Booked indoor regular table for 5 at Domlur on 2026-10-03 at 20:00 under Kabir Sethi, no reservation charge, reference SIM-718266.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "uncertain",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "met"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.49,
+          "constraint_behavior": 0.49,
+          "consent_alignment": 0.75,
+          "user_report_accuracy": 0.74,
+          "target_role_fidelity": 0.44,
+          "question_relevance": 0.44,
+          "context_retention": 0.49,
+          "conversation_progress": 0.53
+        },
+        "luna_jev_agreement": "7/8",
+        "ttfs_ms": {
+          "mean": 2407.9999999999995,
+          "n": 3,
+          "p50": 2067.9999999999986,
+          "p90": 3187.9999999999955,
+          "p95": 3187.9999999999955,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 3
+        },
+        "ttft_ms": {
+          "n": 5,
+          "mean": 621.4799999952317,
+          "p50": 427.19999998807907,
+          "p90": 1521.199999988079,
+          "p95": 1521.199999988079,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 1567.9999999999989,
+          "n": 3,
+          "p50": 1282.6666666666665,
+          "p90": 2237.333333333332,
+          "p95": 2237.333333333332,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 11,
+          "mean": 293.64718090404165,
+          "p50": 321.0277557373047,
+          "p90": 346.0121154785156,
+          "p95": 349.7035503387451,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 5,
+          "text": 5,
+          "tool_call_without_text": 1
+        },
+        "max_completion": 316,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 2,
+          "errors": 13,
+          "hypothesis_words": 83,
+          "insertions": 2,
+          "reference_words": 83,
+          "substitutions": 9,
+          "wer": 0.1566265060240964
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "8f965bce-ba03-4cba-a958-4790636c1ba4",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/8f965bce-ba03-4cba-a958-4790636c1ba4/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/8f965bce-ba03-4cba-a958-4790636c1ba4/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/8f965bce-ba03-4cba-a958-4790636c1ba4/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/8f965bce-ba03-4cba-a958-4790636c1ba4"
+        },
+        "folder": "conversations/mulberry-1-5/02-kabir-sethi"
+      },
+      {
+        "case_id": "restaurant_natural_v2_03",
+        "name": "Meera Iyer",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-929661",
+        "validity": "unresolved",
+        "outcome": "unresolved",
+        "execution_error": null,
+        "conversation_end": "counterpart_finish",
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 101,
+        "report_received": true,
+        "report_text": "Booked indoor regular table for 2 on 2026-10-04 at 6:45 PM under Meera Iyer, no charge, reference SIM-92-691.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "met",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "not_met"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "uncertain",
+          "constraint_behavior": "met",
+          "consent_alignment": "uncertain",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "not_met",
+          "question_relevance": "not_met",
+          "context_retention": "not_met",
+          "conversation_progress": "not_met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.19,
+          "constraint_behavior": 0.36,
+          "consent_alignment": 0.38,
+          "user_report_accuracy": 0.64,
+          "target_role_fidelity": 0.2,
+          "question_relevance": 0.23,
+          "context_retention": 0.26,
+          "conversation_progress": 0.22
+        },
+        "luna_jev_agreement": "1/8",
+        "ttfs_ms": {
+          "mean": 2226.0000000000036,
+          "n": 4,
+          "p50": 1916.0000000000039,
+          "p90": 3196.0000000000123,
+          "p95": 3196.0000000000123,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 4
+        },
+        "ttft_ms": {
+          "n": 4,
+          "mean": 766.4249999970198,
+          "p50": 415.9000000357628,
+          "p90": 1571.7999999523163,
+          "p95": 1571.7999999523163,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 1453.666666666668,
+          "n": 4,
+          "p50": 1138.6666666666656,
+          "p90": 2282.666666666671,
+          "p95": 2282.666666666671,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 13,
+          "mean": 253.59291296738846,
+          "p50": 311.1264705657959,
+          "p90": 350.3425121307373,
+          "p95": 353.7178039550781,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 8,
+          "text": 4,
+          "tool_call_without_text": 1
+        },
+        "max_completion": 400,
+        "turns_at_400": 1,
+        "wer": {
+          "deletions": 4,
+          "errors": 22,
+          "hypothesis_words": 95,
+          "insertions": 3,
+          "reference_words": 96,
+          "substitutions": 15,
+          "wer": 0.22916666666666666
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "9dfb4bbd-6b4b-49f5-be16-73263237b724",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/9dfb4bbd-6b4b-49f5-be16-73263237b724/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/9dfb4bbd-6b4b-49f5-be16-73263237b724/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/9dfb4bbd-6b4b-49f5-be16-73263237b724/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/9dfb4bbd-6b4b-49f5-be16-73263237b724"
+        },
+        "folder": "conversations/mulberry-1-5/03-meera-iyer"
+      },
+      {
+        "case_id": "restaurant_natural_v2_04",
+        "name": "Nisha Mehta",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-271196",
+        "validity": "valid",
+        "outcome": "failed",
+        "execution_error": null,
+        "conversation_end": "counterpart_finish",
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 92,
+        "report_received": true,
+        "report_text": "Booked indoor regular table for 6 on 2026-10-05 at 19:45 under Nisha Mehta, no reservation charge, reference SIM-27-1196.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "met",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "met"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.3,
+          "constraint_behavior": 0.35,
+          "consent_alignment": 0.68,
+          "user_report_accuracy": 0.29,
+          "target_role_fidelity": 0.25,
+          "question_relevance": 0.28,
+          "context_retention": 0.33,
+          "conversation_progress": 0.37
+        },
+        "luna_jev_agreement": "6/8",
+        "ttfs_ms": {
+          "mean": 2565.333333333334,
+          "n": 3,
+          "p50": 2625.333333333334,
+          "p90": 3125.3333333333303,
+          "p95": 3125.3333333333303,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 3
+        },
+        "ttft_ms": {
+          "n": 3,
+          "mean": 1110.5,
+          "p50": 1238.0,
+          "p90": 1574.300000011921,
+          "p95": 1574.300000011921,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 1830.2222222222238,
+          "n": 3,
+          "p50": 2016.0,
+          "p90": 2282.666666666671,
+          "p95": 2282.666666666671,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 14,
+          "mean": 291.8618747166225,
+          "p50": 315.2806758880615,
+          "p90": 413.4056568145752,
+          "p95": 439.97931480407715,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 10,
+          "text": 3,
+          "tool_call_without_text": 1
+        },
+        "max_completion": 336,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 2,
+          "errors": 19,
+          "hypothesis_words": 94,
+          "insertions": 2,
+          "reference_words": 94,
+          "substitutions": 15,
+          "wer": 0.20212765957446807
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "7be17052-6d5d-48ba-9fb7-f8655e748244",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/7be17052-6d5d-48ba-9fb7-f8655e748244/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/7be17052-6d5d-48ba-9fb7-f8655e748244/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/7be17052-6d5d-48ba-9fb7-f8655e748244/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/7be17052-6d5d-48ba-9fb7-f8655e748244"
+        },
+        "folder": "conversations/mulberry-1-5/04-nisha-mehta"
+      },
+      {
+        "case_id": "restaurant_natural_v2_05",
+        "name": "Farhan Ali",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-641022",
+        "validity": "valid",
+        "outcome": "failed",
+        "execution_error": null,
+        "conversation_end": "counterpart_finish",
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 81,
+        "report_received": true,
+        "report_text": "Booked 6 Oct 2026 at 7:30pm indoor regular table for 4 under Farhan Ali, no charge, reference SIM-641022",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "not_met",
+          "booking_identity": "met",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "met"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "not_met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "not_met",
+          "question_relevance": "not_met",
+          "context_retention": "not_met",
+          "conversation_progress": "not_met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.24,
+          "constraint_behavior": 0.42,
+          "consent_alignment": 0.35,
+          "user_report_accuracy": 0.37,
+          "target_role_fidelity": 0.26,
+          "question_relevance": 0.35,
+          "context_retention": 0.32,
+          "conversation_progress": 0.22
+        },
+        "luna_jev_agreement": "4/8",
+        "ttfs_ms": {
+          "mean": 2570.6666666666665,
+          "n": 3,
+          "p50": 2583.9999999999995,
+          "p90": 3103.999999999999,
+          "p95": 3103.999999999999,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 3
+        },
+        "ttft_ms": {
+          "n": 3,
+          "mean": 918.6333333651224,
+          "p50": 559.7000000476837,
+          "p90": 1744.1000000238419,
+          "p95": 1744.1000000238419,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 1884.888888888889,
+          "n": 3,
+          "p50": 2002.6666666666663,
+          "p90": 2473.333333333336,
+          "p95": 2473.333333333336,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 10,
+          "mean": 291.8163537979126,
+          "p50": 293.31088066101074,
+          "p90": 365.3826713562012,
+          "p95": 416.65101051330566,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 6,
+          "text": 3,
+          "tool_call_without_text": 1
+        },
+        "max_completion": 400,
+        "turns_at_400": 1,
+        "wer": {
+          "deletions": 0,
+          "errors": 15,
+          "hypothesis_words": 82,
+          "insertions": 1,
+          "reference_words": 81,
+          "substitutions": 14,
+          "wer": 0.18518518518518517
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "11403373-e2eb-4fe4-83b0-e2f9d0c3a603",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/11403373-e2eb-4fe4-83b0-e2f9d0c3a603/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/11403373-e2eb-4fe4-83b0-e2f9d0c3a603/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/11403373-e2eb-4fe4-83b0-e2f9d0c3a603/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/11403373-e2eb-4fe4-83b0-e2f9d0c3a603"
+        },
+        "folder": "conversations/mulberry-1-5/05-farhan-ali"
+      },
+      {
+        "case_id": "restaurant_natural_v2_06",
+        "name": "Priya Nair",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-385061",
+        "validity": "valid",
+        "outcome": "failed",
+        "execution_error": null,
+        "conversation_end": "target_hangup",
+        "termination_confirmed": true,
+        "provider_end_reason": "agent_ended",
+        "duration_seconds": 132,
+        "report_received": true,
+        "report_text": "Reservation for 7 people on 2026-10-07 at 20:00 under Priya Nair, indoor regular table, dining package total INR 9,800, reference सिम 385061.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "met",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "uncertain"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "not_met",
+          "question_relevance": "not_met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.24,
+          "constraint_behavior": 0.22,
+          "consent_alignment": 0.66,
+          "user_report_accuracy": 0.66,
+          "target_role_fidelity": 0.23,
+          "question_relevance": 0.23,
+          "context_retention": 0.31,
+          "conversation_progress": 0.28
+        },
+        "luna_jev_agreement": "5/8",
+        "ttfs_ms": {
+          "mean": 2371.333333333328,
+          "n": 6,
+          "p50": 2134.6666666666606,
+          "p90": 3074.6666666666583,
+          "p95": 3074.6666666666583,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 6
+        },
+        "ttft_ms": {
+          "n": 7,
+          "mean": 759.5142857091768,
+          "p50": 535.9000000357628,
+          "p90": 1558.8999999761581,
+          "p95": 1558.8999999761581,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 1638.444444444439,
+          "n": 6,
+          "p50": 1367.999999999995,
+          "p90": 2275.9999999999964,
+          "p95": 2275.9999999999964,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 25,
+          "mean": 269.85816955566406,
+          "p50": 319.98395919799805,
+          "p90": 383.1934928894043,
+          "p95": 453.55963706970215,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 16,
+          "text": 6,
+          "text_then_interrupted": 1,
+          "tool_call_without_text": 2
+        },
+        "max_completion": 392,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 18,
+          "errors": 36,
+          "hypothesis_words": 126,
+          "insertions": 1,
+          "reference_words": 143,
+          "substitutions": 17,
+          "wer": 0.2517482517482518
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "49fbd498-9f9e-4d5d-8e94-53530f00c159",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/49fbd498-9f9e-4d5d-8e94-53530f00c159/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/49fbd498-9f9e-4d5d-8e94-53530f00c159/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/49fbd498-9f9e-4d5d-8e94-53530f00c159/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/49fbd498-9f9e-4d5d-8e94-53530f00c159"
+        },
+        "folder": "conversations/mulberry-1-5/06-priya-nair"
+      },
+      {
+        "case_id": "restaurant_natural_v2_07",
+        "name": "Devika Rao",
+        "expected": "book",
+        "actual_business_outcome": "no_booking",
+        "business_outcome_matches": false,
+        "reference": null,
+        "validity": "invalid",
+        "outcome": "unresolved",
+        "execution_error": "ConversationTimeout",
+        "conversation_end": null,
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 87,
+        "report_received": false,
+        "report_text": null,
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "not_met",
+          "booking_identity": "uncertain",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "not_met"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "uncertain",
+          "question_relevance": "uncertain",
+          "context_retention": "uncertain",
+          "conversation_progress": "not_met"
+        },
+        "jev": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "not_applicable",
+          "target_role_fidelity": "not_met",
+          "question_relevance": "not_met",
+          "context_retention": "not_met",
+          "conversation_progress": "not_met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.44,
+          "constraint_behavior": 0.5,
+          "consent_alignment": 0.65,
+          "user_report_accuracy": 0.74,
+          "target_role_fidelity": 0.6,
+          "question_relevance": 0.48,
+          "context_retention": 0.51,
+          "conversation_progress": 0.59
+        },
+        "luna_jev_agreement": "3/8",
+        "ttfs_ms": {
+          "mean": null,
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "no_observed_reply": 2
+        },
+        "ttft_ms": {
+          "n": 0,
+          "mean": null,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": null,
+          "n": 0,
+          "p50": null,
+          "p90": null,
+          "p95": null,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 7,
+          "mean": 308.96949768066406,
+          "p50": 261.5532875061035,
+          "p90": 719.4781303405762,
+          "p95": 719.4781303405762,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 5,
+          "completed_without_text": 2
+        },
+        "max_completion": 400,
+        "turns_at_400": 2,
+        "wer": {
+          "deletions": 1,
+          "errors": 6,
+          "hypothesis_words": 43,
+          "insertions": 0,
+          "reference_words": 44,
+          "substitutions": 5,
+          "wer": 0.13636363636363635
+        },
+        "silence_followups": 1,
+        "idle_timeout": true,
+        "run_id": "e9db6979-92ef-4752-b000-549b7da8fa33",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/e9db6979-92ef-4752-b000-549b7da8fa33/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/e9db6979-92ef-4752-b000-549b7da8fa33/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/e9db6979-92ef-4752-b000-549b7da8fa33/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/e9db6979-92ef-4752-b000-549b7da8fa33"
+        },
+        "folder": "conversations/mulberry-1-5/07-devika-rao"
+      },
+      {
+        "case_id": "restaurant_natural_v2_08",
+        "name": "Arjun Menon",
+        "expected": "no_booking",
+        "actual_business_outcome": "no_booking",
+        "business_outcome_matches": true,
+        "reference": null,
+        "validity": "unresolved",
+        "outcome": "unresolved",
+        "execution_error": null,
+        "conversation_end": "target_hangup",
+        "termination_confirmed": true,
+        "provider_end_reason": "agent_ended",
+        "duration_seconds": 63,
+        "report_received": true,
+        "report_text": "No authorized time slot available as only 19:00-19:30 is allowed, so no reservation could be made.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "not_applicable",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "uncertain"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "uncertain",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "uncertain",
+          "question_relevance": "uncertain",
+          "context_retention": "met",
+          "conversation_progress": "uncertain"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.65,
+          "constraint_behavior": 0.68,
+          "consent_alignment": 0.65,
+          "user_report_accuracy": 0.8,
+          "target_role_fidelity": 0.52,
+          "question_relevance": 0.58,
+          "context_retention": 0.61,
+          "conversation_progress": 0.66
+        },
+        "luna_jev_agreement": "3/8",
+        "ttfs_ms": null,
+        "ttfs_counts": null,
+        "ttft_ms": {
+          "n": 3,
+          "mean": 1826.9666666785877,
+          "p50": 766.8000000119209,
+          "p90": 4231.100000023842,
+          "p95": 4231.100000023842,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": null,
+        "provider_llm_ttfb_ms": {
+          "n": 11,
+          "mean": 278.0804417350075,
+          "p50": 323.5890865325928,
+          "p90": 358.66427421569824,
+          "p95": 374.6635913848877,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 6,
+          "text": 3,
+          "tool_call_without_text": 2
+        },
+        "max_completion": 319,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 0,
+          "errors": 11,
+          "hypothesis_words": 57,
+          "insertions": 1,
+          "reference_words": 56,
+          "substitutions": 10,
+          "wer": 0.19642857142857142
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "0585e8a6-c168-4961-8558-a19ed69c5fbe",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/0585e8a6-c168-4961-8558-a19ed69c5fbe/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/0585e8a6-c168-4961-8558-a19ed69c5fbe/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/0585e8a6-c168-4961-8558-a19ed69c5fbe/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/0585e8a6-c168-4961-8558-a19ed69c5fbe"
+        },
+        "folder": "conversations/mulberry-1-5/08-arjun-menon"
+      },
+      {
+        "case_id": "restaurant_natural_v2_09",
+        "name": "Sana Khan",
+        "expected": "no_booking",
+        "actual_business_outcome": "no_booking",
+        "business_outcome_matches": true,
+        "reference": null,
+        "validity": "valid",
+        "outcome": "passed",
+        "execution_error": null,
+        "conversation_end": "target_hangup",
+        "termination_confirmed": true,
+        "provider_end_reason": "agent_ended",
+        "duration_seconds": 52,
+        "report_received": true,
+        "report_text": "Cannot book: total charge INR 9,600 exceeds the allowed limit of INR 9,000.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "not_applicable",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "uncertain"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "uncertain"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.64,
+          "constraint_behavior": 0.67,
+          "consent_alignment": 0.64,
+          "user_report_accuracy": 0.86,
+          "target_role_fidelity": 0.48,
+          "question_relevance": 0.57,
+          "context_retention": 0.65,
+          "conversation_progress": 0.66
+        },
+        "luna_jev_agreement": "7/8",
+        "ttfs_ms": {
+          "mean": 2936.0,
+          "n": 2,
+          "p50": 1936.0,
+          "p90": 3936.0,
+          "p95": 3936.0,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 2
+        },
+        "ttft_ms": {
+          "n": 2,
+          "mean": 1279.6500000059605,
+          "p50": 615.3000000119209,
+          "p90": 1944.0,
+          "p95": 1944.0,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 1985.333333333335,
+          "n": 2,
+          "p50": 1305.3333333333335,
+          "p90": 2665.3333333333367,
+          "p95": 2665.3333333333367,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 8,
+          "mean": 310.19094586372375,
+          "p50": 331.7677974700928,
+          "p90": 473.909854888916,
+          "p95": 473.909854888916,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 4,
+          "text": 2,
+          "tool_call_without_text": 2
+        },
+        "max_completion": 284,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 4,
+          "errors": 14,
+          "hypothesis_words": 52,
+          "insertions": 0,
+          "reference_words": 56,
+          "substitutions": 10,
+          "wer": 0.25
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "19e86f77-6377-4364-9d17-aa032d566332",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/19e86f77-6377-4364-9d17-aa032d566332/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/19e86f77-6377-4364-9d17-aa032d566332/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/19e86f77-6377-4364-9d17-aa032d566332/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/19e86f77-6377-4364-9d17-aa032d566332"
+        },
+        "folder": "conversations/mulberry-1-5/09-sana-khan"
+      },
+      {
+        "case_id": "restaurant_natural_v2_10",
+        "name": "Rohan Desai",
+        "expected": "no_booking",
+        "actual_business_outcome": "no_booking",
+        "business_outcome_matches": true,
+        "reference": null,
+        "validity": "valid",
+        "outcome": "passed",
+        "execution_error": null,
+        "conversation_end": "counterpart_finish",
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 77,
+        "report_received": true,
+        "report_text": "No booking was made because the kitchen cannot meet the onion‑ and garlic‑free requirement for the two guests.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "not_applicable",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "uncertain"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.64,
+          "constraint_behavior": 0.58,
+          "consent_alignment": 0.61,
+          "user_report_accuracy": 0.84,
+          "target_role_fidelity": 0.52,
+          "question_relevance": 0.55,
+          "context_retention": 0.57,
+          "conversation_progress": 0.6
+        },
+        "luna_jev_agreement": "8/8",
+        "ttfs_ms": {
+          "mean": 2692.666666666666,
+          "n": 2,
+          "p50": 2222.666666666665,
+          "p90": 3162.6666666666665,
+          "p95": 3162.6666666666665,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 2,
+          "no_observed_reply": 1
+        },
+        "ttft_ms": {
+          "n": 2,
+          "mean": 1308.800000011921,
+          "p50": 917.5,
+          "p90": 1700.1000000238419,
+          "p95": 1700.1000000238419,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 1993.3333333333323,
+          "n": 2,
+          "p50": 1567.9999999999977,
+          "p90": 2418.666666666667,
+          "p95": 2418.666666666667,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 7,
+          "mean": 352.3123264312744,
+          "p50": 328.65190505981445,
+          "p90": 495.9442615509033,
+          "p95": 495.9442615509033,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 3,
+          "completed_without_text": 1,
+          "text": 2,
+          "tool_call_without_text": 1
+        },
+        "max_completion": 400,
+        "turns_at_400": 1,
+        "wer": {
+          "deletions": 0,
+          "errors": 4,
+          "hypothesis_words": 46,
+          "insertions": 0,
+          "reference_words": 46,
+          "substitutions": 4,
+          "wer": 0.08695652173913043
+        },
+        "silence_followups": 1,
+        "idle_timeout": false,
+        "run_id": "9cf03508-2129-4fb5-9abb-6c6dd5b29979",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/9cf03508-2129-4fb5-9abb-6c6dd5b29979/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/9cf03508-2129-4fb5-9abb-6c6dd5b29979/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/full-report-v2/9cf03508-2129-4fb5-9abb-6c6dd5b29979/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/f65d8b78-d09a-4eb7-af40-f98efd8803ce/9cf03508-2129-4fb5-9abb-6c6dd5b29979"
+        },
+        "folder": "conversations/mulberry-1-5/10-rohan-desai"
+      }
+    ]
+  },
+  "mulberry-1-6": {
+    "summary": {
+      "attempted": 10,
+      "connected": 10,
+      "valid": 6,
+      "invalid": 4,
+      "validity_unresolved": 0,
+      "passed": 4,
+      "failed": 2,
+      "outcome_unresolved": 4,
+      "business_outcome_matches": 8,
+      "deterministic_solved": 7,
+      "reports_received": 10,
+      "ended_by_rumik_hangup": 8,
+      "ended_by_employee_finish": 2,
+      "idle_timeouts": 0,
+      "turns_at_400": 10,
+      "max_completion_any_turn": 400,
+      "ttfs_ms": {
+        "n": 34,
+        "mean": 2963.999999999999,
+        "p50": 2384.0000000000005,
+        "p90": 4384.0,
+        "p95": 4809.333333333335,
+        "quantile_method": "nearest_rank"
+      },
+      "ttft_ms": {
+        "n": 36,
+        "mean": 1166.216666671965,
+        "p50": 641.1999999880791,
+        "p90": 2508.7999999523163,
+        "p95": 3030.0,
+        "quantile_method": "nearest_rank"
+      },
+      "ttft_item_ms": {
+        "n": 32,
+        "mean": 1935.0416666666656,
+        "p50": 1372.0,
+        "p90": 3170.666666666676,
+        "p95": 3726.6666666666665,
+        "quantile_method": "nearest_rank"
+      },
+      "provider_llm_ttfb_ms": {
+        "n": 140,
+        "mean": 307.6462813786098,
+        "p50": 328.8443088531494,
+        "p90": 409.0571403503418,
+        "p95": 447.9076862335205,
+        "quantile_method": "nearest_rank"
+      },
+      "wer_pooled": 0.22590673575129533,
+      "wer_words": 965,
+      "wer_cases": 10,
+      "duration_seconds": {
+        "n": 10,
+        "mean": 86.3,
+        "p50": 69,
+        "p90": 138,
+        "p95": 141,
+        "quantile_method": "nearest_rank"
+      },
+      "luna_verdicts": {
+        "counterpart_validity": {
+          "met": 6,
+          "not_met": 4
+        },
+        "constraint_behavior": {
+          "met": 9,
+          "not_met": 1
+        },
+        "consent_alignment": {
+          "met": 6,
+          "not_met": 1,
+          "not_applicable": 3
+        },
+        "user_report_accuracy": {
+          "met": 6,
+          "not_met": 4
+        },
+        "target_role_fidelity": {
+          "met": 10
+        },
+        "question_relevance": {
+          "met": 9,
+          "not_met": 1
+        },
+        "context_retention": {
+          "met": 9,
+          "not_met": 1
+        },
+        "conversation_progress": {
+          "met": 8,
+          "not_met": 2
+        }
+      },
+      "jev_verdicts": {
+        "counterpart_validity": {
+          "met": 6,
+          "null": 1,
+          "not_met": 3
+        },
+        "constraint_behavior": {
+          "met": 6,
+          "null": 1,
+          "not_met": 3
+        },
+        "consent_alignment": {
+          "met": 4,
+          "null": 1,
+          "not_applicable": 5
+        },
+        "user_report_accuracy": {
+          "met": 7,
+          "null": 1,
+          "not_met": 2
+        },
+        "target_role_fidelity": {
+          "met": 6,
+          "null": 1,
+          "not_met": 3
+        },
+        "question_relevance": {
+          "met": 6,
+          "null": 1,
+          "not_met": 3
+        },
+        "context_retention": {
+          "met": 6,
+          "null": 1,
+          "not_met": 3
+        },
+        "conversation_progress": {
+          "met": 6,
+          "null": 1,
+          "not_met": 3
+        }
+      }
+    },
+    "cases": [
+      {
+        "case_id": "restaurant_natural_v2_01",
+        "name": "Aditi Shah",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-985180",
+        "validity": "valid",
+        "outcome": "passed",
+        "execution_error": null,
+        "conversation_end": "target_hangup",
+        "termination_confirmed": true,
+        "provider_end_reason": "agent_ended",
+        "duration_seconds": 138,
+        "report_received": true,
+        "report_text": "Booked indoor regular table for 3 on 2026-10-02 at 19:30 under name Aditi Shah, no reservation charge, reference SIM-98-5180.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "met",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "met"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.26,
+          "constraint_behavior": 0.21,
+          "consent_alignment": 0.66,
+          "user_report_accuracy": 0.59,
+          "target_role_fidelity": 0.25,
+          "question_relevance": 0.23,
+          "context_retention": 0.31,
+          "conversation_progress": 0.26
+        },
+        "luna_jev_agreement": "8/8",
+        "ttfs_ms": {
+          "mean": 2684.8333333333335,
+          "n": 8,
+          "p50": 2337.3333333333335,
+          "p90": 4017.333333333326,
+          "p95": 4017.333333333326,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 8
+        },
+        "ttft_ms": {
+          "n": 7,
+          "mean": 899.1571428690638,
+          "p50": 641.1999999880791,
+          "p90": 2184.300000011921,
+          "p95": 2184.300000011921,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 1649.9999999999984,
+          "n": 6,
+          "p50": 1341.3333333333242,
+          "p90": 2862.6666666666692,
+          "p95": 2862.6666666666692,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 25,
+          "mean": 329.3665885925293,
+          "p50": 336.7612361907959,
+          "p90": 440.40656089782715,
+          "p95": 447.2084045410156,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 13,
+          "text": 6,
+          "tool_call_without_text": 2,
+          "text_then_interrupted": 1,
+          "completed_without_text": 3
+        },
+        "max_completion": 400,
+        "turns_at_400": 3,
+        "wer": {
+          "deletions": 14,
+          "errors": 42,
+          "hypothesis_words": 162,
+          "insertions": 0,
+          "reference_words": 176,
+          "substitutions": 28,
+          "wer": 0.23863636363636365
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "c394b6c7-ba66-45a3-8c67-d61ed8a1b388",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/c394b6c7-ba66-45a3-8c67-d61ed8a1b388/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/c394b6c7-ba66-45a3-8c67-d61ed8a1b388/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/c394b6c7-ba66-45a3-8c67-d61ed8a1b388/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/c394b6c7-ba66-45a3-8c67-d61ed8a1b388"
+        },
+        "folder": "conversations/mulberry-1-6/01-aditi-shah"
+      },
+      {
+        "case_id": "restaurant_natural_v2_02",
+        "name": "Kabir Sethi",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-401933",
+        "validity": "valid",
+        "outcome": "passed",
+        "execution_error": null,
+        "conversation_end": "target_hangup",
+        "termination_confirmed": true,
+        "provider_end_reason": "agent_ended",
+        "duration_seconds": 119,
+        "report_received": true,
+        "report_text": "Booked indoor regular table for five at Domlur on 3 October 2026 at 8 pm under Kabir Sethi, no charges, reference SIM-401933.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "met",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "met"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.25,
+          "constraint_behavior": 0.22,
+          "consent_alignment": 0.67,
+          "user_report_accuracy": 0.62,
+          "target_role_fidelity": 0.26,
+          "question_relevance": 0.23,
+          "context_retention": 0.28,
+          "conversation_progress": 0.34
+        },
+        "luna_jev_agreement": "8/8",
+        "ttfs_ms": {
+          "mean": 2640.0,
+          "n": 5,
+          "p50": 2332.000000000001,
+          "p90": 4091.9999999999986,
+          "p95": 4091.9999999999986,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 5
+        },
+        "ttft_ms": {
+          "n": 5,
+          "mean": 877.5200000166893,
+          "p50": 517.1000000238419,
+          "p90": 2381.900000035763,
+          "p95": 2381.900000035763,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 1535.9999999999975,
+          "n": 5,
+          "p50": 1160.0000000000036,
+          "p90": 3083.999999999989,
+          "p95": 3083.999999999989,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 18,
+          "mean": 321.8749231762356,
+          "p50": 329.9674987792969,
+          "p90": 468.9679145812988,
+          "p95": 505.45406341552734,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 11,
+          "text": 5,
+          "tool_call_without_text": 2
+        },
+        "max_completion": 400,
+        "turns_at_400": 1,
+        "wer": {
+          "deletions": 13,
+          "errors": 37,
+          "hypothesis_words": 117,
+          "insertions": 2,
+          "reference_words": 128,
+          "substitutions": 22,
+          "wer": 0.2890625
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "9a60190d-e54c-4bc7-8819-698584ead97a",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/9a60190d-e54c-4bc7-8819-698584ead97a/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/9a60190d-e54c-4bc7-8819-698584ead97a/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/9a60190d-e54c-4bc7-8819-698584ead97a/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/9a60190d-e54c-4bc7-8819-698584ead97a"
+        },
+        "folder": "conversations/mulberry-1-6/02-kabir-sethi"
+      },
+      {
+        "case_id": "restaurant_natural_v2_03",
+        "name": "Meera Iyer",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-143712",
+        "validity": "invalid",
+        "outcome": "unresolved",
+        "execution_error": null,
+        "conversation_end": "target_hangup",
+        "termination_confirmed": true,
+        "provider_end_reason": "agent_ended",
+        "duration_seconds": 92,
+        "report_received": true,
+        "report_text": "Booked indoor regular table for 2 at Banyan Kitchen Adyar on 2026-10-04 at 19:30 under Meera Iyer, no charge, reference 14712.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "met",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "not_met"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": null,
+          "constraint_behavior": null,
+          "consent_alignment": null,
+          "user_report_accuracy": null,
+          "target_role_fidelity": null,
+          "question_relevance": null,
+          "context_retention": null,
+          "conversation_progress": null
+        },
+        "jev_confidence": {
+          "counterpart_validity": null,
+          "constraint_behavior": null,
+          "consent_alignment": null,
+          "user_report_accuracy": null,
+          "target_role_fidelity": null,
+          "question_relevance": null,
+          "context_retention": null,
+          "conversation_progress": null
+        },
+        "luna_jev_agreement": "—",
+        "ttfs_ms": {
+          "mean": 2626.666666666665,
+          "n": 5,
+          "p50": 2322.6666666666633,
+          "p90": 3802.666666666667,
+          "p95": 3802.666666666667,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 5,
+          "no_observed_reply": 1
+        },
+        "ttft_ms": {
+          "n": 5,
+          "mean": 852.1800000071526,
+          "p50": 707.5999999642372,
+          "p90": 1907.300000011921,
+          "p95": 1907.300000011921,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 1561.3333333333326,
+          "n": 5,
+          "p50": 1402.6666666666658,
+          "p90": 2641.3333333333358,
+          "p95": 2641.3333333333358,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 20,
+          "mean": 246.73285484313965,
+          "p50": 292.71745681762695,
+          "p90": 343.40405464172363,
+          "p95": 350.08883476257324,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 13,
+          "text": 5,
+          "tool_call_without_text": 2
+        },
+        "max_completion": 400,
+        "turns_at_400": 2,
+        "wer": {
+          "deletions": 11,
+          "errors": 32,
+          "hypothesis_words": 115,
+          "insertions": 1,
+          "reference_words": 125,
+          "substitutions": 20,
+          "wer": 0.256
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "11305410-de36-4d83-a8c0-fa5b8a689888",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/11305410-de36-4d83-a8c0-fa5b8a689888/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/11305410-de36-4d83-a8c0-fa5b8a689888/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/11305410-de36-4d83-a8c0-fa5b8a689888/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/11305410-de36-4d83-a8c0-fa5b8a689888"
+        },
+        "folder": "conversations/mulberry-1-6/03-meera-iyer"
+      },
+      {
+        "case_id": "restaurant_natural_v2_04",
+        "name": "Nisha Mehta",
+        "expected": "book",
+        "actual_business_outcome": "no_booking",
+        "business_outcome_matches": false,
+        "reference": null,
+        "validity": "invalid",
+        "outcome": "unresolved",
+        "execution_error": null,
+        "conversation_end": "target_hangup",
+        "termination_confirmed": true,
+        "provider_end_reason": "agent_ended",
+        "duration_seconds": 57,
+        "report_received": true,
+        "report_text": "Could not book: requested time 7:50 pm does not match allowed reservation time 19:45 for 5 October 2026.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "not_met",
+          "booking_identity": "uncertain",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "uncertain"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "met",
+          "question_relevance": "not_met",
+          "context_retention": "not_met",
+          "conversation_progress": "not_met"
+        },
+        "jev": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "not_met",
+          "question_relevance": "not_met",
+          "context_retention": "not_met",
+          "conversation_progress": "not_met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.51,
+          "constraint_behavior": 0.6,
+          "consent_alignment": 0.63,
+          "user_report_accuracy": 0.64,
+          "target_role_fidelity": 0.57,
+          "question_relevance": 0.57,
+          "context_retention": 0.58,
+          "conversation_progress": 0.52
+        },
+        "luna_jev_agreement": "5/8",
+        "ttfs_ms": {
+          "mean": 3889.3333333333344,
+          "n": 2,
+          "p50": 2969.333333333334,
+          "p90": 4809.333333333335,
+          "p95": 4809.333333333335,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 2
+        },
+        "ttft_ms": {
+          "n": 2,
+          "mean": 1834.5,
+          "p50": 639.0,
+          "p90": 3030.0,
+          "p95": 3030.0,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 2876.0,
+          "n": 2,
+          "p50": 2025.3333333333333,
+          "p90": 3726.6666666666665,
+          "p95": 3726.6666666666665,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 9,
+          "mean": 347.75251812405054,
+          "p50": 338.89007568359375,
+          "p90": 438.4644031524658,
+          "p95": 438.4644031524658,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 5,
+          "text": 2,
+          "tool_call_without_text": 2
+        },
+        "max_completion": 372,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 2,
+          "errors": 14,
+          "hypothesis_words": 59,
+          "insertions": 0,
+          "reference_words": 61,
+          "substitutions": 12,
+          "wer": 0.22950819672131148
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "1df20cf3-11e7-4d73-afa4-2c780d8c83c4",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/1df20cf3-11e7-4d73-afa4-2c780d8c83c4/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/1df20cf3-11e7-4d73-afa4-2c780d8c83c4/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/1df20cf3-11e7-4d73-afa4-2c780d8c83c4/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/1df20cf3-11e7-4d73-afa4-2c780d8c83c4"
+        },
+        "folder": "conversations/mulberry-1-6/04-nisha-mehta"
+      },
+      {
+        "case_id": "restaurant_natural_v2_05",
+        "name": "Farhan Ali",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-846468",
+        "validity": "valid",
+        "outcome": "failed",
+        "execution_error": null,
+        "conversation_end": "counterpart_finish",
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 74,
+        "report_received": true,
+        "report_text": "Booked 6 Oct 2026 19:30 indoor regular table for 4 under Farhan Ali at Jubilee Hills, charge INR 0, reference SIM-84-6468.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "not_met",
+          "booking_identity": "met",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "met"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "not_met",
+          "question_relevance": "not_met",
+          "context_retention": "not_met",
+          "conversation_progress": "not_met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.37,
+          "constraint_behavior": 0.53,
+          "consent_alignment": 0.3,
+          "user_report_accuracy": 0.32,
+          "target_role_fidelity": 0.4,
+          "question_relevance": 0.47,
+          "context_retention": 0.43,
+          "conversation_progress": 0.36
+        },
+        "luna_jev_agreement": "2/8",
+        "ttfs_ms": {
+          "mean": 2650.666666666669,
+          "n": 3,
+          "p50": 2384.0000000000005,
+          "p90": 3284.000000000006,
+          "p95": 3284.000000000006,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 3
+        },
+        "ttft_ms": {
+          "n": 3,
+          "mean": 874.2333333293597,
+          "p50": 616.3999999761581,
+          "p90": 1489.0,
+          "p95": 1489.0,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 1627.111111111114,
+          "n": 3,
+          "p50": 1346.666666666671,
+          "p90": 2212.000000000003,
+          "p95": 2212.000000000003,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 9,
+          "mean": 235.15974150763617,
+          "p50": 321.20418548583984,
+          "p90": 366.8787479400635,
+          "p95": 366.8787479400635,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 5,
+          "text": 3,
+          "tool_call_without_text": 1
+        },
+        "max_completion": 400,
+        "turns_at_400": 1,
+        "wer": {
+          "deletions": 4,
+          "errors": 17,
+          "hypothesis_words": 62,
+          "insertions": 1,
+          "reference_words": 65,
+          "substitutions": 12,
+          "wer": 0.26153846153846155
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "831c5bee-d6e2-4a3f-a69f-faf4c5f062f9",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/831c5bee-d6e2-4a3f-a69f-faf4c5f062f9/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/831c5bee-d6e2-4a3f-a69f-faf4c5f062f9/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/831c5bee-d6e2-4a3f-a69f-faf4c5f062f9/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/831c5bee-d6e2-4a3f-a69f-faf4c5f062f9"
+        },
+        "folder": "conversations/mulberry-1-6/05-farhan-ali"
+      },
+      {
+        "case_id": "restaurant_natural_v2_06",
+        "name": "Priya Nair",
+        "expected": "book",
+        "actual_business_outcome": "no_booking",
+        "business_outcome_matches": false,
+        "reference": null,
+        "validity": "invalid",
+        "outcome": "unresolved",
+        "execution_error": null,
+        "conversation_end": "counterpart_finish",
+        "termination_confirmed": true,
+        "provider_end_reason": "participant_disconnected",
+        "duration_seconds": 69,
+        "report_received": true,
+        "report_text": "Could not make the reservation because the only available dining package exceeds the budget limit of INR 10,500 (offered at INR 11,900).",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "not_met",
+          "booking_identity": "uncertain",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "uncertain"
+        },
+        "deterministic_solved": false,
+        "luna": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "not_met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "not_met",
+          "question_relevance": "not_met",
+          "context_retention": "not_met",
+          "conversation_progress": "not_met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.37,
+          "constraint_behavior": 0.36,
+          "consent_alignment": 0.61,
+          "user_report_accuracy": 0.32,
+          "target_role_fidelity": 0.32,
+          "question_relevance": 0.45,
+          "context_retention": 0.45,
+          "conversation_progress": 0.33
+        },
+        "luna_jev_agreement": "1/8",
+        "ttfs_ms": {
+          "mean": 2818.666666666667,
+          "n": 2,
+          "p50": 2218.6666666666665,
+          "p90": 3418.666666666667,
+          "p95": 3418.666666666667,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 2,
+          "no_observed_reply": 1
+        },
+        "ttft_ms": {
+          "n": 2,
+          "mean": 1092.3999999761581,
+          "p50": 568.5,
+          "p90": 1616.2999999523163,
+          "p95": 1616.2999999523163,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 1820.6666666666647,
+          "n": 2,
+          "p50": 1273.3333333333344,
+          "p90": 2367.999999999995,
+          "p95": 2367.999999999995,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 8,
+          "mean": 292.82429814338684,
+          "p50": 318.14050674438477,
+          "p90": 349.4257926940918,
+          "p95": 349.4257926940918,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 5,
+          "text": 2,
+          "tool_call_without_text": 1
+        },
+        "max_completion": 359,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 3,
+          "errors": 16,
+          "hypothesis_words": 72,
+          "insertions": 1,
+          "reference_words": 74,
+          "substitutions": 12,
+          "wer": 0.21621621621621623
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "f50b65b8-d2c5-4ac0-8780-ba392ecac6af",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/f50b65b8-d2c5-4ac0-8780-ba392ecac6af/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/f50b65b8-d2c5-4ac0-8780-ba392ecac6af/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/f50b65b8-d2c5-4ac0-8780-ba392ecac6af/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/f50b65b8-d2c5-4ac0-8780-ba392ecac6af"
+        },
+        "folder": "conversations/mulberry-1-6/06-priya-nair"
+      },
+      {
+        "case_id": "restaurant_natural_v2_07",
+        "name": "Devika Rao",
+        "expected": "book",
+        "actual_business_outcome": "book",
+        "business_outcome_matches": true,
+        "reference": "SIM-673238",
+        "validity": "invalid",
+        "outcome": "unresolved",
+        "execution_error": null,
+        "conversation_end": "target_hangup",
+        "termination_confirmed": true,
+        "provider_end_reason": "agent_ended",
+        "duration_seconds": 141,
+        "report_received": true,
+        "report_text": "Booked: 8 Oct 2026 19:30, Devika Rao, 8 persons, indoor regular table, total INR 12400, includes starter, main, rice/bread each, reference SIM-673238.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "met",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "met"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "not_met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_met",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "not_met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "met",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.22,
+          "constraint_behavior": 0.26,
+          "consent_alignment": 0.64,
+          "user_report_accuracy": 0.61,
+          "target_role_fidelity": 0.25,
+          "question_relevance": 0.19,
+          "context_retention": 0.28,
+          "conversation_progress": 0.26
+        },
+        "luna_jev_agreement": "5/8",
+        "ttfs_ms": {
+          "mean": 3279.9999999999955,
+          "n": 5,
+          "p50": 3063.9999999999927,
+          "p90": 4423.999999999993,
+          "p95": 4423.999999999993,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 5,
+          "no_observed_reply": 2
+        },
+        "ttft_ms": {
+          "n": 5,
+          "mean": 1232.0,
+          "p50": 1017.6999999880791,
+          "p90": 2508.7999999523163,
+          "p95": 2508.7999999523163,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 2202.133333333331,
+          "n": 5,
+          "p50": 1973.3333333333292,
+          "p90": 3305.333333333323,
+          "p95": 3305.333333333323,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 25,
+          "mean": 268.9790153503418,
+          "p50": 318.71533393859863,
+          "p90": 363.7349605560303,
+          "p95": 364.60161209106445,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 15,
+          "text": 5,
+          "completed_without_text": 2,
+          "tool_call_without_text": 3
+        },
+        "max_completion": 400,
+        "turns_at_400": 2,
+        "wer": {
+          "deletions": 12,
+          "errors": 29,
+          "hypothesis_words": 137,
+          "insertions": 0,
+          "reference_words": 149,
+          "substitutions": 17,
+          "wer": 0.19463087248322147
+        },
+        "silence_followups": 2,
+        "idle_timeout": false,
+        "run_id": "60aeb46c-929c-45c5-9420-b9bc6a342def",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/8c9f849c-c24c-416c-8b41-8d8a4cddd92e/full-report-v2/60aeb46c-929c-45c5-9420-b9bc6a342def/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/8c9f849c-c24c-416c-8b41-8d8a4cddd92e/full-report-v2/60aeb46c-929c-45c5-9420-b9bc6a342def/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/8c9f849c-c24c-416c-8b41-8d8a4cddd92e/full-report-v2/60aeb46c-929c-45c5-9420-b9bc6a342def/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/8c9f849c-c24c-416c-8b41-8d8a4cddd92e/60aeb46c-929c-45c5-9420-b9bc6a342def"
+        },
+        "folder": "conversations/mulberry-1-6/07-devika-rao"
+      },
+      {
+        "case_id": "restaurant_natural_v2_08",
+        "name": "Arjun Menon",
+        "expected": "no_booking",
+        "actual_business_outcome": "no_booking",
+        "business_outcome_matches": true,
+        "reference": null,
+        "validity": "valid",
+        "outcome": "passed",
+        "execution_error": null,
+        "conversation_end": "target_hangup",
+        "termination_confirmed": true,
+        "provider_end_reason": "agent_ended",
+        "duration_seconds": 58,
+        "report_received": true,
+        "report_text": "No reservation could be made because the only available times (6:00 pm or 8:15 pm) fall outside the allowed window of 19:00‑19:30.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "not_applicable",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "uncertain"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.38,
+          "constraint_behavior": 0.41,
+          "consent_alignment": 0.64,
+          "user_report_accuracy": 0.74,
+          "target_role_fidelity": 0.28,
+          "question_relevance": 0.35,
+          "context_retention": 0.34,
+          "conversation_progress": 0.39
+        },
+        "luna_jev_agreement": "8/8",
+        "ttfs_ms": {
+          "mean": 2834.666666666665,
+          "n": 2,
+          "p50": 2054.666666666666,
+          "p90": 3614.6666666666647,
+          "p95": 3614.6666666666647,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 2,
+          "no_observed_reply": 1
+        },
+        "ttft_ms": {
+          "n": 2,
+          "mean": 1573.25,
+          "p50": 479.60000002384186,
+          "p90": 2666.899999976158,
+          "p95": 2666.899999976158,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 1868.6666666666679,
+          "n": 2,
+          "p50": 1172.0000000000007,
+          "p90": 2565.333333333335,
+          "p95": 2565.333333333335,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 9,
+          "mean": 377.521726820204,
+          "p50": 338.51146697998047,
+          "p90": 631.6962242126465,
+          "p95": 631.6962242126465,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 4,
+          "text": 2,
+          "completed_without_text": 1,
+          "tool_call_without_text": 2
+        },
+        "max_completion": 400,
+        "turns_at_400": 1,
+        "wer": {
+          "deletions": 4,
+          "errors": 14,
+          "hypothesis_words": 63,
+          "insertions": 0,
+          "reference_words": 67,
+          "substitutions": 10,
+          "wer": 0.208955223880597
+        },
+        "silence_followups": 1,
+        "idle_timeout": false,
+        "run_id": "3d3775be-057d-4f30-8b65-99c8d755f712",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/3d3775be-057d-4f30-8b65-99c8d755f712/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/3d3775be-057d-4f30-8b65-99c8d755f712/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/3d3775be-057d-4f30-8b65-99c8d755f712/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/3d3775be-057d-4f30-8b65-99c8d755f712"
+        },
+        "folder": "conversations/mulberry-1-6/08-arjun-menon"
+      },
+      {
+        "case_id": "restaurant_natural_v2_09",
+        "name": "Sana Khan",
+        "expected": "no_booking",
+        "actual_business_outcome": "no_booking",
+        "business_outcome_matches": true,
+        "reference": null,
+        "validity": "valid",
+        "outcome": "passed",
+        "execution_error": null,
+        "conversation_end": "target_hangup",
+        "termination_confirmed": true,
+        "provider_end_reason": "agent_ended",
+        "duration_seconds": 55,
+        "report_received": true,
+        "report_text": "Cannot book because the total charge of INR 9,600 exceeds the allowed limit of INR 9,000.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "not_applicable",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "uncertain"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.25,
+          "constraint_behavior": 0.42,
+          "consent_alignment": 0.62,
+          "user_report_accuracy": 0.76,
+          "target_role_fidelity": 0.23,
+          "question_relevance": 0.24,
+          "context_retention": 0.36,
+          "conversation_progress": 0.37
+        },
+        "luna_jev_agreement": "8/8",
+        "ttfs_ms": {
+          "mean": 4763.333333333334,
+          "n": 2,
+          "p50": 4093.333333333334,
+          "p90": 5433.333333333334,
+          "p95": 5433.333333333334,
+          "quantile_method": "nearest_rank"
+        },
+        "ttfs_counts": {
+          "answered": 2
+        },
+        "ttft_ms": {
+          "n": 2,
+          "mean": 3016.050000011921,
+          "p50": 2242.800000011921,
+          "p90": 3789.300000011921,
+          "p95": 3789.300000011921,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": {
+          "mean": 3755.999999999999,
+          "n": 2,
+          "p50": 3039.999999999999,
+          "p90": 4471.999999999999,
+          "p95": 4471.999999999999,
+          "quantile_method": "nearest_rank"
+        },
+        "provider_llm_ttfb_ms": {
+          "n": 6,
+          "mean": 357.4475447336833,
+          "p50": 327.8846740722656,
+          "p90": 444.71168518066406,
+          "p95": 444.71168518066406,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 2,
+          "text": 2,
+          "tool_call_without_text": 2
+        },
+        "max_completion": 301,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 2,
+          "errors": 11,
+          "hypothesis_words": 52,
+          "insertions": 3,
+          "reference_words": 51,
+          "substitutions": 6,
+          "wer": 0.21568627450980393
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "8344b3ec-4ed9-406f-9d64-01f835647c11",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/8344b3ec-4ed9-406f-9d64-01f835647c11/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/8344b3ec-4ed9-406f-9d64-01f835647c11/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/full-report-v2/8344b3ec-4ed9-406f-9d64-01f835647c11/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/ed8bb1e2-4d90-49c2-b581-491987cb498f/8344b3ec-4ed9-406f-9d64-01f835647c11"
+        },
+        "folder": "conversations/mulberry-1-6/09-sana-khan"
+      },
+      {
+        "case_id": "restaurant_natural_v2_10",
+        "name": "Rohan Desai",
+        "expected": "no_booking",
+        "actual_business_outcome": "no_booking",
+        "business_outcome_matches": true,
+        "reference": null,
+        "validity": "valid",
+        "outcome": "failed",
+        "execution_error": null,
+        "conversation_end": "target_hangup",
+        "termination_confirmed": true,
+        "provider_end_reason": "agent_ended",
+        "duration_seconds": 60,
+        "report_received": true,
+        "report_text": "Reservation not booked because onion‑garlic free meals are not available.",
+        "deterministic": {
+          "task_delivery": "met",
+          "task_state": "met",
+          "booking_identity": "not_applicable",
+          "reservation_history": "met",
+          "policy_actions": "met",
+          "duplicate_effects": "met",
+          "counterpart_actions": "met",
+          "user_report_presence": "met",
+          "user_report_references": "uncertain"
+        },
+        "deterministic_solved": true,
+        "luna": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "not_met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev": {
+          "counterpart_validity": "met",
+          "constraint_behavior": "met",
+          "consent_alignment": "not_applicable",
+          "user_report_accuracy": "met",
+          "target_role_fidelity": "met",
+          "question_relevance": "met",
+          "context_retention": "met",
+          "conversation_progress": "met"
+        },
+        "jev_confidence": {
+          "counterpart_validity": 0.75,
+          "constraint_behavior": 0.75,
+          "consent_alignment": 0.67,
+          "user_report_accuracy": 0.73,
+          "target_role_fidelity": 0.62,
+          "question_relevance": 0.71,
+          "context_retention": 0.68,
+          "conversation_progress": 0.74
+        },
+        "luna_jev_agreement": "7/8",
+        "ttfs_ms": null,
+        "ttfs_counts": null,
+        "ttft_ms": {
+          "n": 3,
+          "mean": 1075.366666674614,
+          "p50": 807.6000000238419,
+          "p90": 1944.5,
+          "p95": 1944.5,
+          "quantile_method": "nearest_rank"
+        },
+        "ttft_item_ms": null,
+        "provider_llm_ttfb_ms": {
+          "n": 11,
+          "mean": 386.56800443475896,
+          "p50": 339.280366897583,
+          "p90": 367.36059188842773,
+          "p95": 1371.1156845092773,
+          "quantile_method": "nearest_rank"
+        },
+        "generation_counts": {
+          "interrupted_before_text": 6,
+          "text": 3,
+          "tool_call_without_text": 2
+        },
+        "max_completion": 215,
+        "turns_at_400": 0,
+        "wer": {
+          "deletions": 1,
+          "errors": 6,
+          "hypothesis_words": 68,
+          "insertions": 0,
+          "reference_words": 69,
+          "substitutions": 5,
+          "wer": 0.08695652173913043
+        },
+        "silence_followups": 0,
+        "idle_timeout": false,
+        "run_id": "1fb8bc73-81f2-4404-be31-d5fe9095d13c",
+        "links": {
+          "evaluation": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/8c9f849c-c24c-416c-8b41-8d8a4cddd92e/full-report-v2/1fb8bc73-81f2-4404-be31-d5fe9095d13c/README.md",
+          "audio": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/8c9f849c-c24c-416c-8b41-8d8a4cddd92e/full-report-v2/1fb8bc73-81f2-4404-be31-d5fe9095d13c/conversation.wav",
+          "transcript": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/8c9f849c-c24c-416c-8b41-8d8a4cddd92e/full-report-v2/1fb8bc73-81f2-4404-be31-d5fe9095d13c/transcript.md",
+          "raw": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/8c9f849c-c24c-416c-8b41-8d8a4cddd92e/1fb8bc73-81f2-4404-be31-d5fe9095d13c"
+        },
+        "folder": "conversations/mulberry-1-6/10-rohan-desai"
+      }
+    ]
+  }
+}

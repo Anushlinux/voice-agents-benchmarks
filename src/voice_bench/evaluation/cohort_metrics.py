@@ -59,6 +59,23 @@ def word_errors(reference, hypothesis):
     }
 
 
+def first_token_times(events):
+    """Audio-clock times of Rumik's first text packet per generation, in order.
+
+    These are the `bot-llm-text` lifecycle packets Rumik publishes into the room,
+    stamped by the browser with the same audio clock as the recordings. They are
+    observations of arrival at the browser, not internal generation timestamps.
+    """
+    from voice_bench.evaluation.target_timing import generation_windows
+
+    times = []
+    for row in generation_windows(events):
+        first = row.get("first_text")
+        if first and first.get("audio_context_seconds") is not None:
+            times.append(first["audio_context_seconds"])
+    return sorted(times)
+
+
 def response_opportunities(events, activity):
     """One opportunity per played employee item, rather than per acoustic pause.
 
@@ -84,9 +101,19 @@ def response_opportunities(events, activity):
     capture_start, capture_end = activity["coverage_seconds"]
     target = activity["speaker_activity"]["target"]
     employee = activity["speaker_activity"]["counterpart"]
+    first_tokens = first_token_times(events)
     for index, (item_id, (start, end)) in enumerate(ordered):
         item = items.get(item_id)
-        row = {"item_id": item_id, "playback_start_seconds": start, "playback_end_seconds": end}
+        row = {
+            "item_id": item_id,
+            "playback_start_seconds": start,
+            "playback_end_seconds": end,
+            "turn_index": index + 1,
+            "clock_id": "chromium-audio-context",
+            "target_first_token_seconds": None,
+            "ttft_ms": None,
+            "ttft_status": "no_first_text_packet_observed",
+        }
         rows.append(row)
         if not item or start < capture_start or end > capture_end:
             row["status"] = "incomplete_evidence"
@@ -106,10 +133,19 @@ def response_opportunities(events, activity):
             row["status"] = "no_detected_employee_speech"
             continue
         speech_start, speech_end = speech[0][0], speech[-1][1]
+        row["speech_start_seconds"] = speech_start
         row["speech_end_seconds"] = speech_end
         limit = min(
             capture_end, ordered[index + 1][1][0] if index + 1 < len(ordered) else capture_end
         )
+        # First text token Rumik published after this item, on the shared audio clock.
+        token = next((t for t in first_tokens if speech_end <= t < limit), None)
+        if token is not None:
+            row.update(
+                target_first_token_seconds=token,
+                ttft_ms=(token - speech_end) * 1000,
+                ttft_status="measured_first_text_packet_after_rendered_speech",
+            )
         if any(a < speech_end and b > speech_start for a, b in target):
             row["status"] = "overlap"
             continue
@@ -117,8 +153,13 @@ def response_opportunities(events, activity):
         if onset is None:
             row.update(status="no_observed_reply", observed_wait_ms=(limit - speech_end) * 1000)
         else:
-            row.update(status="answered", ttfs_ms=(onset - speech_end) * 1000)
+            row.update(
+                status="answered",
+                target_speech_start_seconds=onset,
+                ttfs_ms=(onset - speech_end) * 1000,
+            )
     samples = [r["ttfs_ms"] for r in rows if r["status"] == "answered"]
+    token_samples = [r["ttft_ms"] for r in rows if r.get("ttft_ms") is not None]
     return {
         "status": "measured",
         "clock": "chromium-audio-context",
@@ -129,6 +170,8 @@ def response_opportunities(events, activity):
         "counts": dict(Counter(r["status"] for r in rows)),
         "opportunities": rows,
         "ttfs_ms": distribution(samples),
+        "ttft_ms": distribution(token_samples),
+        "ttft_boundary": "last_employee_speech_rendered_to_first_target_text_packet_received",
         "aat_response_ms": distribution(samples)["mean"],
         "limitations": "Item boundaries and energy-based speech are estimates. No-reply items "
         "include closings. Overlap is not automatically an endpointing error. "
@@ -169,11 +212,42 @@ def measure_attempt(directory):
         "hypothesis_text": hypothesis,
         "counts": word_errors(reference, hypothesis) if reference and entries else None,
     }
+    from voice_bench.evaluation.target_timing import measure as target_timing
+
     return {
-        "version": "full-cohort-metrics-v2",
+        "version": "full-cohort-metrics-v4-ttft",
+        "call_timestamps": {
+            "worker_observations": [
+                {
+                    "kind": e["kind"],
+                    "utc": e["observed_at"],
+                    "clock_id": e["clock_id"],
+                    "monotonic_ns": e["observed_monotonic_ns"],
+                    "event_sequence": e["sequence"],
+                }
+                for e in events
+                if e["kind"]
+                in {
+                    "registration_requested",
+                    "registered",
+                    "browser_start_requested",
+                    "connected",
+                    "target_report_received",
+                    "counterpart_hangup_requested",
+                    "target_hangup_after_report",
+                    "conversation_idle_timeout",
+                    "finalized",
+                }
+            ],
+            "provider_observations": {
+                name: provider.get(name) for name in ("createdAt", "startedAt", "endedAt")
+            },
+            "limitations": "Worker and provider UTC timestamps are separate observations. "
+            "Turn latency uses browser sample time only, not their difference.",
+        },
         "response_timing": response_opportunities(events, activity),
         "wer": wer,
-        "ttft": {"status": "unavailable", "reason": "No hosted first-token generation event"},
+        "ttft": target_timing(events),
         "endpointing_accuracy": {
             "status": "unavailable",
             "reason": "No hosted endpoint decisions or reviewed semantic end-of-turn labels",

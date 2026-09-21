@@ -37,7 +37,45 @@ def test_item_boundaries_do_not_count_pauses_as_turns_or_censor_long_reply():
     )
     result = response_opportunities(events, activity)
     assert len(result["opportunities"]) == 1
+    row = result["opportunities"][0]
+    assert row["speech_end_seconds"] == 4.9
+    assert row["target_speech_start_seconds"] == 20
+    assert row["ttft_ms"] is None
+    assert row["ttft_status"] == "no_first_text_packet_observed"
     assert result["ttfs_ms"]["mean"] == pytest.approx(15100)
+    assert result["ttft_ms"]["n"] == 0
+    # Rumik's first text packet after the rendered speech gives TTFT on the audio clock.
+    events.append(
+        dict(
+            kind="target_text_observation",
+            sequence=5,
+            payload=dict(
+                kind="data_packet",
+                remote_audio_participant=True,
+                performance_ms=1000,
+                audio_context_seconds=4.0,
+                text='{"label": "rtvi-ai", "type": "bot-llm-started"}',
+            ),
+        )
+    )
+    events.append(
+        dict(
+            kind="target_text_observation",
+            sequence=6,
+            payload=dict(
+                kind="data_packet",
+                remote_audio_participant=True,
+                performance_ms=6500,
+                audio_context_seconds=5.5,
+                text='{"label": "rtvi-ai", "type": "bot-llm-text", "data": {"text": "Ji"}}',
+            ),
+        )
+    )
+    tokenized = response_opportunities(events, activity)["opportunities"][0]
+    assert tokenized["target_first_token_seconds"] == 5.5
+    assert tokenized["ttft_ms"] == pytest.approx(600)
+    assert tokenized["ttft_status"] == "measured_first_text_packet_after_rendered_speech"
+    events[-2:] = []
     items[0]["interrupted_by_target"] = True
     assert response_opportunities(events, activity)["counts"] == {"answered": 1}
     items[0]["played_ms"] = 3000

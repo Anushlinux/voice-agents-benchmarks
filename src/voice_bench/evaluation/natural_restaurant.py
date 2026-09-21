@@ -3,7 +3,7 @@
 import json
 import unicodedata
 
-from voice_bench.business.reservations import consent_anchors, reservation_reference
+from voice_bench.business.reservations import consent_anchors, issued_reference
 from voice_bench.models import MetricResult
 
 
@@ -14,7 +14,10 @@ def normalized_name(value):
 def consent_boundary(case, offer, events):
     """Reconstruct the quoted terms from evidence, not a claimed earlier cutoff."""
     prepared = offer["prepared_after_sequence"]
-    if case.get("workflow_version") != "5" or "terms_available_after_sequence" not in offer:
+    if (
+        case.get("workflow_version") not in {"5", "6"}
+        or "terms_available_after_sequence" not in offer
+    ):
         return prepared
     terms = offer["terms"]
     if terms.get("without_onion_garlic_guests") != 0:
@@ -122,7 +125,9 @@ def natural_metrics(directory, case, refs, final, audit):
         history_ok = history_ok and (
             action.get("actor") == "counterpart"
             and booking.get("reference")
-            == reservation_reference(directory.name, action["operation_id"])
+            == issued_reference(
+                case.get("workflow_version"), directory.name, action["operation_id"]
+            )
             and booking.get("operation_id") == action["operation_id"]
             and bool(commits)
             and cutoff < commits[0]["sequence"]

@@ -1,0 +1,1 @@
+Could not make the reservation because the only available dining package exceeds the budget limit of INR 10,500 (offered at INR 11,900).

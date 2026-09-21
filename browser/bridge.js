@@ -1,12 +1,16 @@
 import {Room, RoomEvent, Track, LocalAudioTrack} from 'livekit-client';
 import {EventQueue} from './event-queue.js';
 import {TransportDiagnostics} from './transport-diagnostics.js';
+import {observeTargetText} from './target-text-observer.js';
 
 const room = new Room({adaptiveStream: false, dynacast: false});
-const context = new AudioContext({sampleRate: 48000});
+// Render against Chromium's silent clock, not the desktop's physical audio
+// device. A muted gain alone still depends on that device starting correctly.
+const context = new AudioContext({sampleRate: 48000, sinkId: {type: 'none'}});
 let microphone;
 let delivered = {};
 let pendingSamples = 0;
+let playbackGeneration = 0;
 const events = new EventQueue(event => window.benchEvent(event), reason => {
   void window.benchEvent({type: 'bridge_error', reason});
   void room.disconnect();
@@ -14,6 +18,8 @@ const events = new EventQueue(event => window.benchEvent(event), reason => {
 const clears = new Map();
 const captureElements = [];
 const audioParticipants = new Set();
+const nativeCaptures = [];
+observeTargetText(room, RoomEvent, context, emit, audioParticipants);
 
 function emit(event) {
   events.emit(event);
@@ -48,8 +54,38 @@ microphone.port.onmessage = ({data}) => {
     emit(data);
   } else emit(data);
 };
-const destination = context.createMediaStreamDestination();
+// The worklet's mono output does not change MediaStreamDestination's default
+// stereo format. Keep the actual track and LiveKit publication explicitly mono.
+const destination = new MediaStreamAudioDestinationNode(context,
+  {channelCount: 1, channelCountMode: 'explicit'});
 microphone.connect(destination);
+// A MediaStream destination alone can leave Chromium's graph at time zero
+// despite context.state === 'running', until a consumer attaches. Publication
+// needs the rendered track format first, so keep the graph pulled by a silent
+// device-output branch. The published microphone still has only one audio path.
+const microphoneClock = context.createGain();
+microphoneClock.gain.value = 0;
+microphone.connect(microphoneClock).connect(context.destination);
+
+async function prepareMicrophone() {
+  if (context.sinkId?.type !== 'none')
+    throw new Error('Chromium silent audio output is required');
+  await context.resume();
+  // Chromium initially reports the destination's default stereo track even
+  // after requesting mono. Its settings update when the graph first renders.
+  // Wait before LiveKit reads the format and creates the publication.
+  const deadline = performance.now() + 1000;
+  while (destination.stream.getAudioTracks()[0].getSettings().channelCount !== 1 ||
+      context.currentTime === 0) {
+    if (performance.now() >= deadline) {
+      diagnostics.event('microphone_not_ready', {
+        channels: destination.stream.getAudioTracks()[0].getSettings().channelCount,
+        silent_sink: context.sinkId?.type === 'none'});
+      throw new Error('Synthetic microphone clock or format not ready');
+    }
+    await new Promise(resolve => setTimeout(resolve, 10));
+  }
+}
 
 async function captureStream(stream) {
   for (const track of stream.getAudioTracks()) {
@@ -66,6 +102,36 @@ async function captureStream(stream) {
   captureElements.push(element);
   try { await element.play(); }
   catch { emit({type: 'bridge_error', reason: 'capture_playback_failed'}); return; }
+  // Independently retain the received track before Web Audio processing. This
+  // does not feed the simulator and has its own recorder/clock boundary.
+  if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+    const captureId = nativeCaptures.length;
+    const recorder = new MediaRecorder(stream, {mimeType: 'audio/webm;codecs=opus'});
+    let writes = Promise.resolve();
+    let sequence = 0;
+    const stopped = new Promise(resolve => {
+      recorder.ondataavailable = event => {
+        writes = writes.then(async () => {
+          const bytes = new Uint8Array(await event.data.arrayBuffer());
+          if (!bytes.length) return;
+          let binary = '';
+          for (let i = 0; i < bytes.length; i += 8192)
+            binary += String.fromCharCode(...bytes.subarray(i, i + 8192));
+          emit({type: 'native_audio', capture_id: captureId, sequence: sequence++,
+            data: btoa(binary), bytes: bytes.length});
+        });
+      };
+      recorder.onstop = () => writes.then(resolve, () => {
+        diagnostics.event('native_capture_error', {capture_id: captureId});
+        resolve();
+      });
+      recorder.onerror = () => diagnostics.event('native_capture_error', {capture_id: captureId});
+    });
+    nativeCaptures.push({recorder, stopped});
+    diagnostics.event('native_capture_started', {capture_id: captureId,
+      boundary: 'received_media_stream_before_web_audio'});
+    recorder.start(1000);
+  } else diagnostics.event('native_capture_unavailable');
   const source = context.createMediaStreamSource(stream);
   const capture = new AudioWorkletNode(context, 'benchmark-audio', {
     processorOptions: {mode: 'capture'}, outputChannelCount: [1]});
@@ -92,27 +158,43 @@ room.on(RoomEvent.Disconnected, reason => {
 });
 
 window.bridge = {
-  async join(call) {
+  async prepare() {
     diagnostics.start();
-    await context.resume();
+    await prepareMicrophone();
+    diagnostics.event('microphone_ready', {
+      channels: destination.stream.getAudioTracks()[0].getSettings().channelCount,
+      silent_sink: context.sinkId?.type === 'none'});
+  },
+  async join(call) {
+    await prepareMicrophone();
     await room.connect(call.host, call.token);
     const track = new LocalAudioTrack(destination.stream.getAudioTracks()[0]);
     const publication = await room.localParticipant.publishTrack(track,
-      {source: Track.Source.Microphone});
+      {source: Track.Source.Microphone, forceStereo: false, dtx: true});
+    const settings = track.mediaStreamTrack.getSettings();
+    diagnostics.event('outgoing_audio_format', {channels: settings.channelCount,
+      sample_rate_hz: settings.sampleRate, force_stereo: false, dtx: true});
     diagnostics.add(publication.trackSid, track, 'outgoing');
   },
-  push(pcm, item) {
+  push(pcm, item, generation = 0) {
+    if (generation !== playbackGeneration) return 'cancelled';
     const binary = atob(pcm);
-    if (pendingSamples + binary.length / 2 > 48000 * 5)
-      throw new Error('Browser playback queue overflow');
+    if (binary.length / 2 > 48000 * 5)
+      throw new Error('Browser playback frame exceeds limit');
+    // The audio device owns pacing. Keep a bounded lookahead instead of sleeping
+    // for each chunk in Python and adding bridge latency to every spoken chunk.
+    if (pendingSamples > 48000 || pendingSamples + binary.length / 2 > 48000 * 5)
+      return 'full';
     const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
     const view = new DataView(bytes.buffer);
     const samples = new Float32Array(bytes.length / 2);
     for (let i = 0; i < samples.length; i++) samples[i] = view.getInt16(i * 2, true) / 32768;
     pendingSamples += samples.length;
     microphone.port.postMessage({type: 'push', samples, item});
+    return 'queued';
   },
   async clear() {
+    playbackGeneration++;
     const id = crypto.randomUUID();
     await new Promise(resolve => {
       clears.set(id, resolve);
@@ -129,7 +211,13 @@ window.bridge = {
     diagnostics.event('cleanup_started');
     try { await this.clear(); }
     finally {
-      try { await room.disconnect(); }
+      try {
+        for (const capture of nativeCaptures) {
+          if (capture.recorder.state !== 'inactive') capture.recorder.stop();
+          await capture.stopped;
+        }
+        await room.disconnect();
+      }
       finally {
         for (const element of captureElements) {
           element.pause(); element.srcObject = null; element.remove();
@@ -142,7 +230,10 @@ window.bridge = {
     }
   },
   // Local validation bypasses room signaling but uses the real browser audio worklet.
-  async testStart() { diagnostics.start(); await context.resume(); microphone.connect(context.destination); },
+  microphoneSettings() { return destination.stream.getAudioTracks()[0].getSettings(); },
+  async testStart() {
+    await this.prepare();
+  },
   testObserveTrack(id, track, direction) { diagnostics.add(id, track, direction); },
   testCaptureStream(stream) { captureStream(stream); },
   testInput() {

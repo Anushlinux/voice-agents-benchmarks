@@ -14,12 +14,12 @@ def validate_live(config, cases):
 
     for case in cases:
         case.require_supported_execution()
-        if case.workflow == "mock_restaurant_natural" and case.workflow_version == "5":
+        if case.workflow == "mock_restaurant_natural" and case.workflow_version in {"5", "6"}:
             turn = config.counterpart.turn_detection
             if turn.get("type") != "semantic_vad" or turn.get("eagerness") != "low":
                 raise ValueError(
-                    "Natural restaurant workflow 5 requires semantic_vad with low eagerness "
-                    "to avoid replying to pauses inside a caller's turn"
+                    "Natural restaurant workflow 5 and later requires semantic_vad with low "
+                    "eagerness to avoid replying to pauses inside a caller's turn"
                 )
             if {"threshold", "prefix_padding_ms", "silence_duration_ms"}.intersection(turn):
                 raise ValueError("Remove server_vad-only settings from semantic_vad configuration")
@@ -27,11 +27,10 @@ def validate_live(config, cases):
             config.counterpart.max_output_tokens < 2048
             or config.counterpart.interrupt_after_ms is not None
             or config.channels != ("browser",)
-            or config.counterpart.max_silence_recovery_prompts != 0
         ):
             raise ValueError(
                 "Natural restaurant qualification requires browser audio, at least 2048 "
-                "output tokens, no unsolicited silence prompts and no timed interruption"
+                "output tokens and no timed interruption"
             )
         if config.purpose == "benchmark" and (case.harness_fixture or not case.evaluation_rubric):
             raise ValueError(

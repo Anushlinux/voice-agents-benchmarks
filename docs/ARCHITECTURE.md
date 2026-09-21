@@ -22,7 +22,7 @@ Workflow implementations provide tool descriptions, parameter schemas and busine
 ## Single-call execution
 
 1. Create independent state and persist the user's task, canonical target identity and role-specific tool grants.
-2. Reserve funded limits and correlate the provider call ID with the attempt.
+2. Reserve funded limits. For browser calls, prepare Chromium and verify its local audio clock and mono microphone before registering or starting a hosted call; then correlate the provider call ID with the attempt.
 3. Connect Chromium/LiveKit or the existing Plivo route.
 4. The hosted agent invokes the authenticated before-call endpoint. It verifies the provider/run/agent mapping and returns the user's task. The controller waits for that response to be served within the setup deadline.
 5. Start the OpenAI counterpart with its own brief and role-permitted tool definitions. Speech perception uses received audio only.
@@ -84,3 +84,66 @@ Develop and inspect locally. Reported calls should run on a qualified fixed Indi
 Long conversations fit the current single-call lifecycle within explicit time/spend limits. Completing a user task across calls, approvals, transfers between independently modeled participants, and app actions needs a task coordinator and additional adapters. They are not provided by retry or batch support. Recovery finalizes abandoned attempts; it never resumes a conversation or chooses the next business to call.
 
 Live Rumik task consumption, counterpart audio/tools and the telephone path still require qualification. `/healthz` reports process health; `/readyz` remains 503. See [running instructions](RUNNING.md) and [implementation status](IMPLEMENTATION.md).
+
+
+## Persistence and report revisions
+
+The browser audio clock owns playback pacing. Python fills a bounded lookahead
+queue instead of sleeping for each audio chunk. Cancellation changes a generation
+number so an old in-flight push cannot restart cancelled speech.
+
+The synthetic microphone destination and LiveKit publication are explicitly mono.
+A mono AudioWorklet does not make its MediaStream destination mono: Chromium's
+default destination is stereo, and LiveKit infers stereo publication from that
+track. Local Chromium validation checks the actual media-track settings. This
+format correction still requires live qualification; it does not establish that
+the earlier stereo format caused the observed silent turns. The unsuccessful
+DTX-off diagnostic was removed, restoring normal silence suppression.
+
+Browser audio and observations enter a bounded persistence queue. Disk writes do
+not block live hearing or microphone scheduling. The queue flushes before business
+mutations inspect speech evidence and before recordings are sealed. Overflow or
+write failure invalidates the harness attempt; it cannot become a target failure.
+Queued observations retain their original worker receipt times and browser sample
+positions. A process crash can lose observations still in memory, so recovery must
+remain incomplete rather than pretending the queue was durable. Finalized runs
+require successful flushing and checksummed evidence.
+
+The incoming media track also has a native WebM recording independent of Web
+Audio. It is a diagnostic observation at the received-track boundary, not a copy
+of hosted synthesis output. Agreement between the recordings cannot identify an
+upstream failure owner.
+
+New cases explicitly choose `revisable_until_close` for their private report. The
+endpoint retains every accepted revision, every rejected request, and the latest
+accepted report. Historical `final_once` cases retain their original behavior.
+Revisions cannot mutate business state or cross an attempt boundary. A missing
+report is retained as an empty request ledger. Local conversation timeouts are
+reported as `ConversationTimeout`, without claiming a network failure.
+
+Conversational judgments now include bounded quotations with speaker identities.
+The evaluator checks these against the separate recording transcriptions. An
+unsupported or wrong-speaker claim makes the affected metric uncertain; the raw
+judge answer remains available. This cannot prove transcription accuracy or replace
+human listening.
+
+Each report exports `turn-timestamps.csv`: playback start/end, employee speech
+end, first captured target speech, response duration and missing/overlap status.
+Call lifecycle observations also retain worker UTC, monotonic timestamps and
+provider timestamps separately. Target TTFT remains unavailable without an
+exposed first-token event. Audio response latency is never relabeled as TTFT.
+
+The browser uses Chromium's silent audio-output device for graph timing instead
+of depending on the desktop's physical output device. A running context label is
+insufficient: readiness requires clock advancement and the actual mono track
+format. A failed local preparation occurs before provider actions. Its live
+adapter can confirm that no call was requested; an uncertain registration remains
+unresolved. This change passed local tests but still needs connected live proof.
+
+Natural restaurant counterpart responses narrow their advertised business tools
+to the current workflow prerequisites. Booking is offered only when an active
+offer has complete employee playback followed by caller speech after its terms
+boundary. This is structural evidence, not semantic consent. The model must still
+hear agreement, the executor rechecks every action, and rejected attempts remain
+in evidence. Neither private user constraints nor grading answers enter this
+projection. The original session grants remain the maximum authority.

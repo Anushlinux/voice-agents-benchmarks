@@ -1,5 +1,122 @@
 # Repairing the conversation benchmark
 
+## September 22: full ten-case cohorts on Mulberry 1.5 and 1.6 with prompt v8
+
+Both Mulberry agents ran all ten natural restaurant cases once under prompt
+`natural-caller-v8`, workflow 6 and the compact numeric reference. Nineteen of twenty
+conversations completed with a private report; the pre-repair Mulberry batches managed
+three of eleven. Formal outcomes under the frozen `natural-restaurant-full-v3` rubric:
+1.5 passed 2, failed 4, unresolved 4 (2 invalid simulations); 1.6 passed 4, failed 2,
+unresolved 4 (4 invalid simulations). The single inactivity timeout carried the old
+signature, a first-turn generation of 400 tokens with 397 reasoning. Invalid simulations
+now come mostly from `gpt-realtime` employee slips; Rumik's own failures are content
+errors such as an ignored branch preference or an omitted term in the report.
+
+Measurements now include time to first token, computed from the `rtvi-ai` lifecycle
+packets Rumik publishes into the room and the browser stamps with its own clocks
+(`evaluation/target_timing.py`, `full-cohort-metrics-v4-ttft`). Two views are reported:
+per employee turn on the audio clock, directly comparable with TTFS, and per Rumik
+generation from its own end-of-speech decision. Both include network transit. Per-attempt
+reports were regenerated as `full-report-v2` without changing any grade. TTFS p50 was
+2.2 s (1.5) and 2.4 s (1.6); TTFT per employee turn p50 1.6 s and 1.4 s; provider LLM
+first byte 0.32 s on both.
+
+The 1.6 cohort stopped itself after eight calls when Rumik's dashboard created an empty
+draft identical to the active version; the worker treats any snapshot change as drift.
+The two skipped cases ran as a supplementary batch under identical settings. Both agents,
+both callback tools and their descriptions were restored and verified; temporary services
+were stopped. The comparison, per-case tables, judge and Jev answers, findings and
+evidence pointers are in `reports/p0-cohort-mulberry-20260922/README.md`.
+
+## September 22: shrinking what Rumik must process per turn
+
+Rumik publishes its own usage telemetry into the call room after every generation.
+Across the eleven connected attempts that captured it, 9 of 30 generations stopped at
+exactly 400 completion tokens; no generation ever exceeded 400. Seven of those nine had
+3 or 4 visible tokens after 396 or 397 reasoning tokens, and each was followed by a
+silent target turn. Every inactivity-timeout call whose capture did not overflow ended
+on such a generation, including two that stalled on Rumik's first substantive turn.
+Turns with up to 265 reasoning tokens always produced speech. The connected Mulberry
+call flipped from four spoken turns (101–165 reasoning tokens) to three silent ones
+(396–397) at the moment the phonetically spelled reference arrived as eight fragments
+and the report had to be planned. The cap itself is hosted configuration that the
+public agent schema does not expose; the harness can only reduce what each turn asks
+the model to reason about. This is a mitigation, not a repair of the hosted limit.
+
+Changes in this working tree:
+
+- Workflow version `6` issues a six-digit reference (`SIM-482913`) derived from the
+  same attempt/operation identity, and `natural-reference-v3` asks the employee to say
+  it once in one short sentence as digit pairs. No phonetic alphabet, no per-character
+  pauses. Versions 1–5 and all saved evidence keep their references and contracts.
+  Evaluation reconstructs the reference by workflow version.
+- Newly prepared cases are version `10` on workflow 6. A zero dietary count is no
+  longer rendered as a constraint; nonzero counts are unchanged.
+- The target prompt candidate `natural-caller-v7` is about 1,700 characters instead of
+  3,000: one role block, five rules, six flow steps. The report step and the report tool
+  ask for one or two sentences. Bindings, acknowledgement-before-report ordering,
+  `report_saved` and `{{end_call}}` are unchanged. It is undeployed; deploying it means
+  a new hosted version, an updated `target.prompt_sha256`, and updating the deployed
+  report tool's descriptions to match `setup_plan`.
+- The counterpart playbook states the reference once in one sentence and avoids lists,
+  because the target's endpointer treats pauses of roughly a quarter second as turn ends.
+- The interruption check tolerates the 1 ms resampling shortfall, so a fully played
+  item is no longer labelled interrupted or truncated when Rumik speaks next.
+- Generation diagnostics report the highest completion count seen and how many samples
+  sat at it, so a live rerun can show whether any turn touched the ceiling.
+
+None of this changes grades or historical results. In parallel, ask Rumik to raise the
+completion limit or lower reasoning effort for this agent; that is the actual fix.
+
+### Live result, one authorized call
+
+The original Aditi Shah case ran once under this configuration with prompt
+`natural-caller-v7` deployed temporarily (batch `a69330e8-6b2d-473a-9f29-08e19e92e912`).
+Rumik stated the request, agreed to the offered terms, heard the reference spoken once,
+filed the private report with the exact reference `SIM-441311`, said goodbye and hung up
+itself; the harness confirmed termination. Duration 66 seconds, zero silence follow-ups.
+Rumik's five generations used 342, 211, 211, 134 and 12 completion tokens; none reached
+400 and none was reasoning-dominated. The employee turn carrying the reference lasted 7.9
+seconds and became three target turns, against 19.5 seconds and eight turns before.
+
+The automated grade is valid / failed for one reason: `user_report_accuracy`, because the
+two-sentence report omitted date, time, name, party size and terms. That is a direct
+consequence of the v7 wording. `natural-caller-v8` keeps the short shape but names the
+booked terms; it is undeployed. The reference-clause grammar is now v2 so a report of the
+form "reference SIM-441311" resolves. One call is not reliability proof; the ten-case set
+has not been rerun. Details, counts, comparison and cleanup proof are in
+`reports/p0-turn-budget-live-20260922/README.md`. Original version, callbacks and tool
+descriptions were restored and verified; temporary services were stopped.
+
+## September 22: Mulberry silence investigation
+
+The saved ten-attempt Mulberry batch had seven inactivity timeouts, one browser
+queue failure, one cancellation and one normal no-booking conclusion. Four calls
+saved bookings, but only one delivered a private report. Three captured hosted
+generations reported 400 completion tokens with 397 reasoning tokens before
+silence. That suggests output-budget exhaustion, but the actual hosted limit and
+finish reason are unavailable. Five calls exhausted the old diagnostic capture
+budget. These observations do not establish a single cause for every call.
+
+The counterpart now receives a structured, role-scoped playbook with explicit
+lookup, offer, agreement, booking, acknowledgement and finish steps. The target
+setup candidate `natural-caller-v6` makes acknowledgement, private reporting and
+hangup explicit. It remains undeployed. Restaurant validation now permits the
+existing bounded silence-recovery mechanism; the example enables one ten-second
+follow-up. Exhausting recovery still fails to complete the conversation.
+
+Target generation events have a separate bounded diagnostic allowance so partial
+transcripts cannot hide final token usage. New diagnostics report the observed
+reasoning-heavy signature without changing grades or claiming a confirmed cause.
+Chromium tests also exposed a mono-track initialization race: publication now
+waits for the requested mono format to become observable after rendering begins.
+
+Validation: 335 Python tests passed with isolated PostgreSQL and real Chromium;
+12 JavaScript tests passed. No new hosted call or paid evaluation was run. The
+saved evidence audit, full prompt candidates and proposed one-call acceptance
+gate are in `reports/p0-conversation-repair-20260922/README.md`. The P0 remains
+open until a funded, explicitly authorized live conversation completes correctly.
+
 ## Latest investigation: transport evidence, not another prompt patch
 
 Browser calls now record connection state, track lifecycle, audio-context state
@@ -424,3 +541,21 @@ between two machine transcripts, not a human-reviewed recognition score. True Ru
 time to first token and endpointing accuracy remain unavailable without provider
 token/endpoint events and reference turn labels. Employee-side turn events cannot
 stand in for the target's events. No hosted reliability repair is claimed.
+
+## One-case Mulberry verification, 2026-09-22
+
+The new harness and counterpart prompt did not pass the authorized one-case live
+verification. A correct synthetic booking was recorded, but Rumik did not acknowledge
+the reference or return its private report. One silence follow-up received no reply,
+and the call ended on inactivity. Local playback completeness passed; it does not
+prove remote hearing. The deployed target prompt was unchanged.
+
+The counterpart also attempted booking before fresh confirmation; the business tool
+rejected it. Consequently the formal result is invalid simulation and unresolved
+outcome, not a clean target-only failure. All three evaluation stages completed.
+Generation telemetry captured three unanswered-period samples with 400 completion
+tokens and 396–397 reasoning tokens. This supports the output-budget hypothesis,
+but does not expose the configured limit or generation finish reason. The P0 remains
+unresolved. See `reports/p0-mulberry-verification-20260922-live/README.md` for the
+recording, transcript, exact counts and evidence. Call termination, restored callback
+settings and stopped temporary services were verified; no automatic live retry ran.

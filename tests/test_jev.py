@@ -330,3 +330,31 @@ def test_jev_cli_refuses_live_without_switch_before_opening_database(tmp_path, c
         == 2
     )
     assert "--live" in capsys.readouterr().err
+
+
+def test_two_decimal_choice_rounding_retains_raw_probabilities():
+    from copy import deepcopy
+
+    questions = {
+        "behavior": {"type": "choice", "criteria": {"met": "", "not_met": "", "uncertain": ""}}
+    }
+    body = {
+        "model": "typesafe/jev-1.13",
+        "answers": {
+            "behavior": {
+                "type": "choice",
+                "choice": "met",
+                "confidence": 0.34,
+                "probabilities": {"met": 0.56, "not_met": 0.23, "uncertain": 0.20},
+            }
+        },
+    }
+    original = deepcopy(body)
+    assert validate_response(body, questions) == body["answers"]
+    assert body == original
+    body["answers"]["behavior"]["probabilities"]["met"] = 0.50
+    with pytest.raises(ValueError, match="sum to one"):
+        validate_response(body, questions)
+    body["answers"]["behavior"]["probabilities"]["met"] = 0.56789
+    with pytest.raises(ValueError, match="sum to one"):
+        validate_response(body, questions)

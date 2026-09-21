@@ -103,6 +103,9 @@ async def test_controller_always_closes_seals_and_releases(store, tmp_path, mode
     assert result.termination_confirmed
     assert result.failure_stage == (None if mode == "ok" else "conversation")
     assert (tmp_path / str(plan.batch_id) / str(result.run_id) / "manifest.json").exists()
+    assert (
+        tmp_path / str(plan.batch_id) / str(result.run_id) / "target/report-requests.json"
+    ).read_text() == "[]"
 
 
 @pytest.mark.asyncio
@@ -278,7 +281,7 @@ async def test_report_does_not_cut_off_live_audio_and_requires_hangup(
         )
         await pending
         assert tail_completed.is_set() and producer_stopped.is_set()
-        assert result.error == (None if native_hangup else "TransportFailure")
+        assert result.error == (None if native_hangup else "ConversationTimeout")
         assert result.termination_confirmed
         path = tmp_path / str(plan.batch_id) / str(result.run_id) / "events.jsonl"
         events = [json.loads(line) for line in path.read_text().splitlines()]
@@ -349,7 +352,7 @@ async def test_silence_deadline_remains_active_after_employee_finishes(
             .read_text()
             .splitlines()
         ]
-        assert result.error == (None if target_speaks else "TransportFailure")
+        assert result.error == (None if target_speaks else "ConversationTimeout")
         assert result.termination_confirmed
         assert any(e["kind"] == "target_report_idle_timeout" for e in events) != target_speaks
     finally:
@@ -411,7 +414,7 @@ async def test_post_report_deadline_measures_silence_not_time_since_receipt(
             plan, case, "test"
         )
         await pending
-        assert result.error == ("TransportFailure" if speaker == "silent_frames" else None)
+        assert result.error == ("ConversationTimeout" if speaker == "silent_frames" else None)
         assert result.termination_confirmed
     finally:
         pending.cancel()
