@@ -1,0 +1,133 @@
+{
+  "purpose": "User-authorized public sharing of the ten synthetic benchmark conversations and complete readable evaluations",
+  "provider_calls": 0,
+  "audio_conversion": "Stereo WAV to 128 kbit/s MP3; no trimming or resampling requested",
+  "cases": [
+    {
+      "case": "01-aditi",
+      "source_audio_sha256": "ed1cb9b92a653a6178ac2995efd4ad989a41332e31913818a7adf4e439cbfd25",
+      "shared_audio_sha256": "237b6cc7c771a710f8bca5e741faa02683211bd8226c073fb0e2d4c9f19cd798",
+      "source_transcript_sha256": "824ff31f92a249528c8f85696ae6ae526d87b7cb5dfc38f4f0774a3dd8cbe63c",
+      "shared_transcript_sha256": "824ff31f92a249528c8f85696ae6ae526d87b7cb5dfc38f4f0774a3dd8cbe63c",
+      "source_audio_unchanged": true
+    },
+    {
+      "case": "02-kabir",
+      "source_audio_sha256": "9b0f40b405e268692001ab4c2c99fb94b736ed4133d4f2700b8f87f42840f3d8",
+      "shared_audio_sha256": "0622766aa1f519e071536c4da3a6616e8ed06c45e73809d98127a20616b9bdd2",
+      "source_transcript_sha256": "b78eff651ad4949e73201e2f895dcd6bfdc745ae61c83ee96c84f0c213023edd",
+      "shared_transcript_sha256": "b78eff651ad4949e73201e2f895dcd6bfdc745ae61c83ee96c84f0c213023edd",
+      "source_audio_unchanged": true
+    },
+    {
+      "case": "03-meera",
+      "source_audio_sha256": "724465fc9ab05f3c86a2898f0439911fb71f0c29f316bde204cdbb8fc3b2a67e",
+      "shared_audio_sha256": "109c5617ff5bdb07cd60e627f11ff22e1ff357090c203fea2d0ed10d24f4a3cf",
+      "source_transcript_sha256": "fbe53297e2c83aa87842503cbeacdfceb742fa341244909df06d58741f1b25d9",
+      "shared_transcript_sha256": "fbe53297e2c83aa87842503cbeacdfceb742fa341244909df06d58741f1b25d9",
+      "source_audio_unchanged": true
+    },
+    {
+      "case": "04-nisha",
+      "source_audio_sha256": "5f2b81c9a70eacb9156cc37b3193f12472b6bc5dbb0ead6add368710ca6c24fd",
+      "shared_audio_sha256": "f8ed068165fc9b023531b21573af36eb3bc72f724f9c9c3424fea4e127e1808b",
+      "source_transcript_sha256": "38bc404890a426f56ac94f056113b6f99ce71b731664117c21b2893179d08406",
+      "shared_transcript_sha256": "38bc404890a426f56ac94f056113b6f99ce71b731664117c21b2893179d08406",
+      "source_audio_unchanged": true
+    },
+    {
+      "case": "05-farhan",
+      "source_audio_sha256": "a5d06d8d4e0ed311440a8450e732c9ffd4cd1c8144882b071c874cec3a241965",
+      "shared_audio_sha256": "1230b51a7ec430b678853f7b9224c42b2d1db0728d75c68340eeeb5411746cf2",
+      "source_transcript_sha256": "cced2d7f26548595d6916c4c0af4156dcf432ac512d1615a7e6f8e870bc2d5e5",
+      "shared_transcript_sha256": "cced2d7f26548595d6916c4c0af4156dcf432ac512d1615a7e6f8e870bc2d5e5",
+      "source_audio_unchanged": true
+    },
+    {
+      "case": "06-priya",
+      "source_audio_sha256": "cd332f6bb5c36ac7ddcbbbe65498e1cb5201beb84933c9f6e400341c875a47af",
+      "shared_audio_sha256": "d1b973f737a9fe358726101df6433116bd139499af29455aee9022c1478aa7d4",
+      "source_transcript_sha256": "6aeefbb8e719bc53e96f0eb97886bc6c2f8056b5b3507c93eeaac726beb72ed8",
+      "shared_transcript_sha256": "6aeefbb8e719bc53e96f0eb97886bc6c2f8056b5b3507c93eeaac726beb72ed8",
+      "source_audio_unchanged": true
+    },
+    {
+      "case": "07-devika",
+      "source_audio_sha256": "4183930e35a79bf0331323044ed36046fd4b61bb8630187f8825c7f9360968f5",
+      "shared_audio_sha256": "f0fd71c3dbc36463ea1cb8cf8af95cd043cbc430a9cd2b700fa2a26c2790aa84",
+      "source_transcript_sha256": "936a1d205bc979f40fd1bb2635f86cc00127eff474677a0acd6e95d8d31f6bf2",
+      "shared_transcript_sha256": "936a1d205bc979f40fd1bb2635f86cc00127eff474677a0acd6e95d8d31f6bf2",
+      "source_audio_unchanged": true
+    },
+    {
+      "case": "08-arjun",
+      "source_audio_sha256": "084d3531406d328065c8b8fdea581bdd8b04e803f13e1036f9b307d218b4facd",
+      "shared_audio_sha256": "d55d15ef7889d08052f415aa67998f752f09256c7efbabdbab0167dd051b4978",
+      "source_transcript_sha256": "2214e399a491a058802b6502f8c6afcf473cec5049556ffa8e5dc9de69d29045",
+      "shared_transcript_sha256": "2214e399a491a058802b6502f8c6afcf473cec5049556ffa8e5dc9de69d29045",
+      "source_audio_unchanged": true
+    },
+    {
+      "case": "09-sana",
+      "source_audio_sha256": "81aa47f9561dee4e134ac77b4fb9100738101a01ab76e2467275c0e3bd391ef2",
+      "shared_audio_sha256": "b67394d4b153a8708a36ee9535c8dc537afe7aaa58f1097fa074831f933000c6",
+      "source_transcript_sha256": "2f9c9d4eb13e8042acebd9f60236adaa99277ab1ce12cee2553484de73730646",
+      "shared_transcript_sha256": "2f9c9d4eb13e8042acebd9f60236adaa99277ab1ce12cee2553484de73730646",
+      "source_audio_unchanged": true
+    },
+    {
+      "case": "10-rohan",
+      "source_audio_sha256": "8d94aa3e343d3111f7c912de6028c72850b4cd4e0866f13da2cd775719a1f40a",
+      "shared_audio_sha256": "e65fdc2822da0bd0ce3edeaedd7ee8765e1c2bb1176a994741c267e94d6efa78",
+      "source_transcript_sha256": "59972e80a96a4f80a2d2c8f46b16c44e2dbf26b64366cae883d3c798714211ac",
+      "shared_transcript_sha256": "59972e80a96a4f80a2d2c8f46b16c44e2dbf26b64366cae883d3c798714211ac",
+      "source_audio_unchanged": true
+    }
+  ],
+  "gpt_opinions": 97,
+  "jev_answers": 80,
+  "accepted_checks": 196,
+  "files": {
+    "README.md": "8c6c30cb9aec37cc8abdf29b532b68177017440ea56b83040347d3130be47819",
+    "cases/01-aditi.md": "f6e038353729c5a92242de6dc43d44333b7ee36c73af29afd69cf7c9ba84a4e2",
+    "cases/02-kabir.md": "d961f15941eb36cf7a4b7a0ff9b9722aceb68a819fa8fd39e500af6317f5d239",
+    "cases/03-meera.md": "d9e24f548b02c611c208dfcd3280ddb84194677c8b792e689b2096a51d01a2e3",
+    "cases/04-nisha.md": "77d625f0a73e6bc1c0a1ce98c9fff2eca4343069ee892cf319cf5a2f72d3a8d8",
+    "cases/05-farhan.md": "41f8226e3a3f340492effadd503f73b4564f19aa24396be7572420a825e4d7a9",
+    "cases/06-priya.md": "2a67b799431abc619b40a86707292639211bcd2c4056bf1af644e1858adf3ae0",
+    "cases/07-devika.md": "7fcd15c927e17c5d5eec7ab42b29042327505e5fb3c6b3ddb39eba27d8ae47aa",
+    "cases/08-arjun.md": "b7b014df18ef66840190d4fc42944b163d9c091b4a77faf5c66f275387357015",
+    "cases/09-sana.md": "f611b1c11b05af7357f00cee2495ff6b45e92f1b63c0c42576340921b567f0fa",
+    "cases/10-rohan.md": "885b3b82e55d1b7387039e0353bf4c0fb2030f8ad4a7bfb2ce37aa0087296dc3",
+    "conversations/01-aditi/README.md": "46042397c9188490c1c18884bb7f3cf270ee79f7354da96bbd1612476cdbc8a7",
+    "conversations/01-aditi/conversation.mp3": "237b6cc7c771a710f8bca5e741faa02683211bd8226c073fb0e2d4c9f19cd798",
+    "conversations/01-aditi/transcript.md": "824ff31f92a249528c8f85696ae6ae526d87b7cb5dfc38f4f0774a3dd8cbe63c",
+    "conversations/02-kabir/README.md": "89b439611f39b39144390d636bad1134377a1fb5d50790045257bf0ae7356ae0",
+    "conversations/02-kabir/conversation.mp3": "0622766aa1f519e071536c4da3a6616e8ed06c45e73809d98127a20616b9bdd2",
+    "conversations/02-kabir/transcript.md": "b78eff651ad4949e73201e2f895dcd6bfdc745ae61c83ee96c84f0c213023edd",
+    "conversations/03-meera/README.md": "67d4ad31bbe37bf564ba1b1fd731bc57fd7ca2a25a75f87198bb7f5ac170356b",
+    "conversations/03-meera/conversation.mp3": "109c5617ff5bdb07cd60e627f11ff22e1ff357090c203fea2d0ed10d24f4a3cf",
+    "conversations/03-meera/transcript.md": "fbe53297e2c83aa87842503cbeacdfceb742fa341244909df06d58741f1b25d9",
+    "conversations/04-nisha/README.md": "d80906be64b69f63f5d26d50f8cd129691624d9ca9f7a1e91374ae44d7bb3a34",
+    "conversations/04-nisha/conversation.mp3": "f8ed068165fc9b023531b21573af36eb3bc72f724f9c9c3424fea4e127e1808b",
+    "conversations/04-nisha/transcript.md": "38bc404890a426f56ac94f056113b6f99ce71b731664117c21b2893179d08406",
+    "conversations/05-farhan/README.md": "a54c3690c8b4c01ec3d2ddacd908e3a3b057565ee722793f7320f2fd21521314",
+    "conversations/05-farhan/conversation.mp3": "1230b51a7ec430b678853f7b9224c42b2d1db0728d75c68340eeeb5411746cf2",
+    "conversations/05-farhan/transcript.md": "cced2d7f26548595d6916c4c0af4156dcf432ac512d1615a7e6f8e870bc2d5e5",
+    "conversations/06-priya/README.md": "70bd8f41ac014c729d83fc267e337c26e062f0abdf288c680946478bf191bded",
+    "conversations/06-priya/conversation.mp3": "d1b973f737a9fe358726101df6433116bd139499af29455aee9022c1478aa7d4",
+    "conversations/06-priya/transcript.md": "6aeefbb8e719bc53e96f0eb97886bc6c2f8056b5b3507c93eeaac726beb72ed8",
+    "conversations/07-devika/README.md": "45ae4df618fd3d5754a80dae565339df1e7246c4276a8815f06b2bade9941542",
+    "conversations/07-devika/conversation.mp3": "f0fd71c3dbc36463ea1cb8cf8af95cd043cbc430a9cd2b700fa2a26c2790aa84",
+    "conversations/07-devika/transcript.md": "936a1d205bc979f40fd1bb2635f86cc00127eff474677a0acd6e95d8d31f6bf2",
+    "conversations/08-arjun/README.md": "64b3ae033be739312eef91b3746ba431098a7f6f309d066df9f81edfcaac8537",
+    "conversations/08-arjun/conversation.mp3": "d55d15ef7889d08052f415aa67998f752f09256c7efbabdbab0167dd051b4978",
+    "conversations/08-arjun/transcript.md": "2214e399a491a058802b6502f8c6afcf473cec5049556ffa8e5dc9de69d29045",
+    "conversations/09-sana/README.md": "0976f2c58d38ee4c803083ba1bb8a514f08cbefa6e21491252023dfa409b20a8",
+    "conversations/09-sana/conversation.mp3": "b67394d4b153a8708a36ee9535c8dc537afe7aaa58f1097fa074831f933000c6",
+    "conversations/09-sana/transcript.md": "2f9c9d4eb13e8042acebd9f60236adaa99277ab1ce12cee2553484de73730646",
+    "conversations/10-rohan/README.md": "7095ebcf5e633ce7d9afba8c32d7809884d417efc07fa568fffaee2f32fd274f",
+    "conversations/10-rohan/conversation.mp3": "e65fdc2822da0bd0ce3edeaedd7ee8765e1c2bb1176a994741c267e94d6efa78",
+    "conversations/10-rohan/transcript.md": "59972e80a96a4f80a2d2c8f46b16c44e2dbf26b64366cae883d3c798714211ac"
+  }
+}

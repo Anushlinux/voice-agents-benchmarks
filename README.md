@@ -1,5 +1,7 @@
 # Rumik personal-assistant benchmark
 
+**Full 10-case results:** [Read the complete plain-English report, evaluations, conversation audio and transcripts](reports/full-dataset-preflight-20260921/simple-report/README.md). All ten cases ran; the saved overall grades are 0 passed, 2 failed and 8 unresolved. The report explains the observed failures and grading limits.
+
 **Latest diagnostic qualification:** the browser now records audio transport and
 connection observations, and full reports separate observed task completion from
 failure attribution. One unchanged Priya call stalled after the greeting despite
