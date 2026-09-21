@@ -10,6 +10,22 @@ def evaluation_progress(case, metrics, *, reviewed=False, reviewed_checks=()):
         else case["criteria"].get("required_metrics", [])
     )
     human = {d["name"] for d in definitions if d["method"] == "human" and d["applies"]}
+    inactive = {
+        d["name"]
+        for d in definitions
+        if d.get("not_applicable_when") == "report_absent"
+        and by_name.get("user_report_presence", {}).get("status") == "not_met"
+    }
+    required = [name for name in required if name not in inactive]
+    human -= inactive
+    diagnostic_review = [
+        d["name"]
+        for d in definitions
+        if d["method"] == "human"
+        and d["applies"]
+        and d["role"] == "diagnostic"
+        and (not reviewed or d["name"] not in reviewed_checks)
+    ]
     if case.get("workflow") == "mock_restaurant_reservation":
         from voice_bench.restaurant_hard_cases import human_checks
 
@@ -29,4 +45,5 @@ def evaluation_progress(case, metrics, *, reviewed=False, reviewed_checks=()):
         "pending_metrics": pending,
         "pending_review_metrics": review_pending,
         "human_review_imported": reviewed,
+        "pending_diagnostic_review_metrics": diagnostic_review,
     }

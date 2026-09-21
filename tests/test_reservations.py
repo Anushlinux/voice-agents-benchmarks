@@ -556,6 +556,10 @@ async def test_realtime_worker_supplies_observed_anchors_to_booking(tmp_path, in
                 await socket.incoming.put(
                     {"type": "input_audio_buffer.speech_" + phase, "item_id": "acceptance"}
                 )
+            await socket.incoming.put(
+                {"type": "input_audio_buffer.committed", "item_id": "acceptance"}
+            )
+            assert (await socket.sent.get())["type"] == "response.create"
             await socket.incoming.put({"type": "response.created"})
             await socket.incoming.put(
                 {

@@ -21,6 +21,8 @@ def no_provider_network(monkeypatch):
         "PLIVO_AUTH_ID",
         "PLIVO_AUTH_TOKEN",
         "TYPESAFE_API_KEY",
+        "OPENROUTER_API_KEY",
+        "JEV_API_KEY",
     ):
         monkeypatch.delenv(key, raising=False)
 

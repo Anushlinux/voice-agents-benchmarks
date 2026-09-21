@@ -1,6 +1,7 @@
 from typing import Protocol
 
 from voice_bench.channels.interfaces import AudioSession
+from voice_bench.contracts import CounterpartFinished
 from voice_bench.evidence.interfaces import EvidenceSink
 from voice_bench.models import CounterpartBrief, RunContext
 
@@ -17,4 +18,4 @@ class CounterpartSimulator(Protocol):
         *,
         conversation_events: tuple = (),
         scenario_policy=None,
-    ) -> None: ...
+    ) -> CounterpartFinished | None: ...

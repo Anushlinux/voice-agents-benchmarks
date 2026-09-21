@@ -47,7 +47,9 @@ class ExecutionCase(Contract):
     user_task: UserTask
     counterpart: CounterpartBrief
     target_tools: tuple[str, ...] = ()
-    completion: Literal["counterpart", "target_report_then_hangup"] = "counterpart"
+    completion: Literal[
+        "counterpart", "target_report_then_hangup", "target_report_then_conversation_end"
+    ] = "counterpart"
     counterpart_tools: tuple[str, ...] = ()
     task_scope: Literal["single_call", "multi_call"]
     call_initiation: Literal["harness_connected", "rumik_outbound"]
@@ -63,10 +65,7 @@ class ExecutionCase(Contract):
     def validate_tool_names(self):
         import re
 
-        if (
-            self.completion == "target_report_then_hangup"
-            and "submit_user_report" not in self.target_tools
-        ):
+        if self.completion != "counterpart" and "submit_user_report" not in self.target_tools:
             raise ValueError("Report completion requires the explicit target reporting tool")
 
         for names in (self.target_tools, self.counterpart_tools):
@@ -92,6 +91,12 @@ class ExecutionCase(Contract):
         return self
 
     def require_supported_execution(self):
+        if self.conversation_events:
+            raise ValueError(
+                "Legacy tool-count speech challenges are retired from live execution: "
+                "they do not establish previously heard or agreed terms. Use a natural "
+                "case without injected speech; historical evidence remains reviewable."
+            )
         if self.task_scope != "single_call":
             raise ValueError(
                 "Multi-call tasks need a task coordinator; execution is not implemented"
@@ -121,10 +126,17 @@ class AttemptResult(Contract):
     attribution: FailureAttribution = FailureAttribution.UNKNOWN
     outcome: Literal["passed", "failed", "unresolved"] = "unresolved"
     termination_confirmed: bool = False
+    conversation_end: Literal["target_hangup", "counterpart_finish"] | None = None
     error: str | None = None
     failure_stage: (
         Literal["preparation", "connection", "task_delivery", "conversation", "shutdown"] | None
     ) = None
+
+
+class CounterpartFinished(Contract):
+    """Explicit employee hangup intent, returned only after closing playback drains."""
+
+    tool_call_id: str = Field(min_length=1)
 
 
 class CounterpartConfig(Contract):
@@ -134,7 +146,11 @@ class CounterpartConfig(Contract):
     turn_detection: dict[str, Any] = Field(default_factory=dict)
     # An explicit counterpart behavior, independent of the target's interruption behavior.
     interrupt_after_ms: int | None = Field(default=None, gt=0)
-    max_output_tokens: int = Field(default=512, gt=0)
+    max_output_tokens: int = Field(default=2048, gt=0)
+    # Diagnostic stop, never a target failure or an invented continuation.
+    conversation_idle_seconds: float = Field(default=45, gt=0)
+    silence_recovery_seconds: float = Field(default=0, ge=0)
+    max_silence_recovery_prompts: int = Field(default=0, ge=0, le=2)
 
 
 class JudgeConfig(Contract):
@@ -154,6 +170,9 @@ class RuntimeConfig(Contract):
     setup_timeout_seconds: int = Field(default=45, gt=0)
     finalize_timeout_seconds: int = Field(default=30, gt=0)
     media_timeout_seconds: int = Field(default=15, gt=0)
+    post_report_hangup_seconds: float = Field(default=30, gt=0)
+    # Let trailing received speech clear after an explicit employee finish.
+    conversation_end_quiet_seconds: float = Field(default=1, gt=0)
     # Operator-supplied conservative maximums, not current provider prices.
     cost_ceiling_inr_per_attempt: Decimal = Field(default=Decimal(0), ge=0, allow_inf_nan=False)
     cost_components_inr_per_attempt: dict[str, Decimal] = Field(default_factory=dict)

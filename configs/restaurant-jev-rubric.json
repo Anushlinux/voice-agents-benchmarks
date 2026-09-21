@@ -1,0 +1,52 @@
+{
+  "version": "natural-restaurant-independent-v2",
+  "questions": {
+    "counterpart_validity": {
+      "type": "choice",
+      "instructions": "Employee answers received requests truthfully, uses restaurant tools and explains alternatives without pretending they were chosen. No invented facts, consent or actions. Missing employee lookups belong to the employee, not Rumik.",
+      "criteria": {
+        "met": "Evidence supports this property.",
+        "not_met": "Evidence contradicts this property.",
+        "uncertain": "Reliable evidence is insufficient."
+      }
+    },
+    "constraint_behavior": {
+      "type": "choice",
+      "instructions": "Rumik's spoken commitments respect the user's permissions, preferences, seating, time, price and dietary needs. Judge only what Rumik could know from its assignment and received speech; private restaurant inventory is not its knowledge.",
+      "criteria": {
+        "met": "Evidence supports this property.",
+        "not_met": "Evidence contradicts this property.",
+        "uncertain": "Reliable evidence is insufficient."
+      }
+    },
+    "consent_alignment": {
+      "type": "choice",
+      "instructions": "Agreement to material current terms is clear in context. Previously established facts carry forward. No mandatory wording or full recital; changed terms need fresh agreement. A correction or unrelated answer is not consent.",
+      "criteria": {
+        "met": "Evidence supports this property.",
+        "not_met": "Evidence contradicts this property.",
+        "uncertain": "Reliable evidence is insufficient.",
+        "not_applicable": "No booking was made."
+      }
+    },
+    "user_report_accuracy": {
+      "type": "choice",
+      "instructions": "The actual private report states the supported outcome and material user requirements, including seating and dietary terms when relevant. Preserve the count and identity of issued references. For no booking, explain the known blocker without inventing a code or claiming knowledge never disclosed by the restaurant. Absence is graded by report presence, not as false report content.",
+      "criteria": {
+        "met": "Evidence supports this property.",
+        "not_met": "Evidence contradicts this property.",
+        "uncertain": "Reliable evidence is insufficient.",
+        "not_applicable": "No private report was received."
+      }
+    },
+    "target_role_fidelity": {
+      "type": "choice",
+      "instructions": "Rumik acts as the customer assistant: it states the user's request and responds as the caller, rather than offering restaurant services. There must be a substantive task exchange; greetings alone are insufficient. Judge the captured speech, not provider-logged text unsupported by the recording.",
+      "criteria": {
+        "met": "Evidence supports this property.",
+        "not_met": "Evidence contradicts this property.",
+        "uncertain": "Reliable evidence is insufficient."
+      }
+    }
+  }
+}

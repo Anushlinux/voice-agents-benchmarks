@@ -1,5 +1,9 @@
 # Reusable profiles, bounded scenarios and explicit grading
 
+**September 21 repair:** tool-count speech challenges described below are now
+audit-only and rejected by live execution. Use the [natural conversation repair](CONVERSATION_REPAIR.md)
+for new calls. Historical definitions and evidence are preserved.
+
 This is the first implementation of the design improvements discussed from the
 provided Cekura screenshots. It extends the existing restaurant workflow; it does
 not copy Cekura datasets, infer undocumented scoring scales, or add live results.

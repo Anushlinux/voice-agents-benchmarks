@@ -16,6 +16,7 @@ from voice_bench.models import Channel, Contract
 class TargetConfig(Contract):
     agent_ref: str = ""
     deployed_version: str = ""
+    prompt_sha256: str = Field(default="", pattern=r"^(|[0-9a-f]{64})$")
     task_variable: str = Field(
         default="benchmark_user_task", pattern=r"^[A-Za-z][A-Za-z0-9_]{0,63}$"
     )

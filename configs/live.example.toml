@@ -23,7 +23,8 @@ max_spend_inr = "0"
 model = ""
 voice = ""
 instructions = "Play the assigned person speaking with Rumik, which acts for a user. Preserve assigned facts and respond to received audio and permitted tool results."
-max_output_tokens = 512
+max_output_tokens = 2048
+conversation_idle_seconds = 45
 [counterpart.turn_detection]
 type = "server_vad"
 threshold = 0.5

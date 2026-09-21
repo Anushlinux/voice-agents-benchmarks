@@ -206,6 +206,53 @@ async def test_paid_shadow_preserves_evidence_and_cannot_be_reviewed_as_grade(
 
 
 @pytest.mark.asyncio
+async def test_openrouter_uses_only_selected_provider_and_preserves_route(
+    bundle, rubric, monkeypatch
+):
+    cfg = config()
+    cfg = cfg.model_copy(
+        update={
+            "jev": cfg.jev.model_copy(
+                update={"provider": "openrouter", "model": "typesafe/jev-1.13"}
+            )
+        }
+    )
+    monkeypatch.setenv("TYPESAFE_API_KEY", "wrong-provider-secret")
+    store = BudgetStore()
+    with pytest.raises(ValueError, match="OPENROUTER_API_KEY"):
+        await evaluate(bundle, "source", rubric, cfg, "router", store, live=True)
+    assert "reservations" not in store.batch
+    monkeypatch.setenv("OPENROUTER_API_KEY", "router-secret")
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        assert str(request.url) == "https://openrouter.ai/api/alpha/decisions"
+        assert request.headers["authorization"] == "Bearer router-secret"
+        assert json.loads(request.content)["model"] == "typesafe/jev-1.13"
+        return httpx.Response(429, json={"error": "limited"})
+
+    with pytest.raises(ValueError, match="budget retained"):
+        await evaluate(
+            bundle,
+            "source",
+            rubric,
+            cfg,
+            "router",
+            store,
+            live=True,
+            transport=httpx.MockTransport(handler),
+        )
+    assert len(calls) == 1
+    result = json.loads((bundle / "evaluation/router/result.json").read_bytes())
+    assert result["config"]["provider"] == "openrouter"
+    assert result["endpoint"] == "https://openrouter.ai/api/alpha/decisions"
+    assert result["status"] == "error"
+    assert next(iter(store.batch["reservations"].values()))["provider"] == "openrouter"
+    assert "router-secret" not in json.dumps(result)
+
+
+@pytest.mark.asyncio
 @pytest.mark.parametrize("failure", ["timeout", "rate_limit", "bad_json", "bad_answer"])
 async def test_jev_failures_are_saved_and_never_retried(bundle, rubric, monkeypatch, failure):
     directory = bundle

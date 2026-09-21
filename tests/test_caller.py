@@ -7,7 +7,7 @@ import pytest
 
 from voice_bench.caller.openai_realtime import OpenAICounterpart
 from voice_bench.channels.media import MediaSession
-from voice_bench.contracts import CounterpartConfig
+from voice_bench.contracts import CounterpartConfig, CounterpartFinished
 from voice_bench.errors import CallerFailure, TransportFailure
 from voice_bench.evidence.local import LocalEvidence
 from voice_bench.models import CounterpartBrief
@@ -99,6 +99,8 @@ async def test_realtime_counterpart_receives_audio_and_truncates_unplayed_speech
             # Incoming audio continues after cancellation of caller playback.
             await session.receive(b"\x03\x00" * 480)
             assert (await socket.sent.get())["type"] == "input_audio_buffer.append"
+            await socket.incoming.put({"type": "input_audio_buffer.speech_stopped"})
+            await socket.incoming.put({"type": "input_audio_buffer.committed"})
             await socket.incoming.put(
                 {
                     "type": "response.function_call_arguments.done",
@@ -110,7 +112,7 @@ async def test_realtime_counterpart_receives_audio_and_truncates_unplayed_speech
             await socket.incoming.put(
                 {"type": "response.done", "response": {"id": "closing", "status": "completed"}}
             )
-            await task
+            assert await task == CounterpartFinished(tool_call_id="finish")
     finally:
         task.cancel()
         await asyncio.gather(task, return_exceptions=True)
@@ -217,6 +219,16 @@ async def test_counterpart_tools_require_completed_response_and_do_not_block_aud
             await socket.incoming.put(
                 {"type": "response.done", "response": {"id": "business-response", "status": status}}
             )
+            if status == "incomplete":
+                with pytest.raises(CallerFailure, match="incomplete"):
+                    await task
+                assert not business.actions and not business.requests
+                events = [
+                    json.loads(line)
+                    for line in (evidence.directory / "events.jsonl").read_text().splitlines()
+                ]
+                assert any(e["kind"] == "counterpart_incomplete" for e in events)
+                return
             if status == "completed":
                 assert await asyncio.to_thread(entered.wait, 2)
                 # Real reception continues while the business transaction is waiting.
@@ -252,6 +264,106 @@ async def test_counterpart_tools_require_completed_response_and_do_not_block_aud
                 assert not business.actions and not business.requests
     finally:
         release.set()
+        task.cancel()
+        await asyncio.gather(task, return_exceptions=True)
+        await session.close("test")
+
+
+@pytest.mark.asyncio
+async def test_idle_after_completed_playback_is_unattributed_not_a_target_failure(tmp_path):
+    evidence = LocalEvidence(tmp_path, uuid4(), uuid4())
+    session, socket = Session(evidence, 24000), Socket()
+    simulator = caller(socket)
+    simulator.config = simulator.config.model_copy(update={"conversation_idle_seconds": 0.1})
+    task = asyncio.create_task(
+        simulator.converse(
+            None, CounterpartBrief(role="Employee", goal="Test", known_facts={}), session, evidence
+        )
+    )
+    try:
+        await socket.sent.get()
+        await socket.incoming.put({"type": "session.updated", "session": {"id": "fake"}})
+        await socket.incoming.put({"type": "response.created"})
+        await socket.incoming.put(
+            {
+                "type": "response.output_audio.delta",
+                "item_id": "speech",
+                "delta": base64.b64encode(b"\x01\x00" * 2400).decode(),
+            }
+        )
+        await socket.incoming.put(
+            {"type": "response.done", "response": {"id": "one", "status": "completed"}}
+        )
+        await asyncio.sleep(0.2)
+        assert not task.done(), "Queued speech must finish playing before idle timeout"
+        session.played["speech"] = 100
+        with pytest.raises(TransportFailure, match="cause not established"):
+            await asyncio.wait_for(task, 1)
+        events = [
+            json.loads(line)
+            for line in (evidence.directory / "events.jsonl").read_text().splitlines()
+        ]
+        timeout = next(e for e in events if e["kind"] == "conversation_idle_timeout")
+        assert timeout["payload"]["attribution"] == "unknown"
+    finally:
+        task.cancel()
+        await asyncio.gather(task, return_exceptions=True)
+        await session.close("test")
+
+
+@pytest.mark.asyncio
+async def test_silence_recovery_waits_for_playback_and_is_bounded(tmp_path):
+    evidence = LocalEvidence(tmp_path, uuid4(), uuid4())
+    session, socket = Session(evidence, 24000), Socket()
+    simulator = caller(socket)
+    simulator.config = simulator.config.model_copy(
+        update={
+            "conversation_idle_seconds": 0.2,
+            "silence_recovery_seconds": 0.05,
+            "max_silence_recovery_prompts": 1,
+        }
+    )
+    task = asyncio.create_task(
+        simulator.converse(
+            None, CounterpartBrief(role="Employee", goal="Test", known_facts={}), session, evidence
+        )
+    )
+    try:
+        await socket.sent.get()
+        await socket.incoming.put({"type": "session.updated", "session": {"id": "fake"}})
+        await socket.incoming.put({"type": "response.created"})
+        await socket.incoming.put(
+            {
+                "type": "response.output_audio.delta",
+                "item_id": "speech",
+                "delta": base64.b64encode(b"\x01\x00" * 2400).decode(),
+            }
+        )
+        await socket.incoming.put(
+            {"type": "response.done", "response": {"id": "one", "status": "completed"}}
+        )
+        await asyncio.sleep(0.15)
+        assert socket.sent.empty(), "Never nudge over speech still queued for playback"
+        session.played["speech"] = 100
+        request = await asyncio.wait_for(socket.sent.get(), 1)
+        assert request["type"] == "response.create"
+        assert request["response"]["tool_choice"] == "none"
+        assert "Employee" in request["response"]["instructions"]
+        assert "Do not invent" in request["response"]["instructions"]
+        await asyncio.sleep(0.15)
+        assert socket.sent.empty(), "Do not request a second response while one is pending"
+        await socket.incoming.put(
+            {"type": "response.done", "response": {"id": "recovery", "status": "completed"}}
+        )
+        with pytest.raises(TransportFailure):
+            await asyncio.wait_for(task, 1)
+        assert socket.sent.empty(), "Exhausted recovery must not produce an endless prompt loop"
+        events = [
+            json.loads(line)
+            for line in (evidence.directory / "events.jsonl").read_text().splitlines()
+        ]
+        assert sum(e["kind"] == "silence_recovery_requested" for e in events) == 1
+    finally:
         task.cancel()
         await asyncio.gather(task, return_exceptions=True)
         await session.close("test")

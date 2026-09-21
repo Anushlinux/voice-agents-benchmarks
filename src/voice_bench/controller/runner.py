@@ -1,11 +1,12 @@
 """Attempt lifecycle. Cleanup and evidence sealing also run on cancellation."""
 
 import asyncio
+import audioop
 import time
 from uuid import uuid4
 
 from voice_bench.business.environment import WORKFLOWS, BusinessService
-from voice_bench.contracts import AttemptResult
+from voice_bench.contracts import AttemptResult, CounterpartFinished
 from voice_bench.controller.budget import release, reserve
 from voice_bench.errors import CallerFailure, HarnessFailure, TransportFailure
 from voice_bench.evidence.local import LocalEvidence
@@ -24,11 +25,13 @@ class Controller:
         *,
         target_agent_id=None,
         target_agent_aliases=(),
+        full_evaluation=False,
     ):
         self.store, self.config = store, config
         self.target_agent_id = target_agent_id or config.target.agent_ref
         self.target_agent_aliases = tuple(target_agent_aliases)
         self.channel, self.counterpart, self.target = channel, counterpart, target
+        self.full_evaluation = full_evaluation
 
     async def execute(self, plan, case, config_digest, *, run_id=None):
         case.require_supported_execution()
@@ -89,7 +92,14 @@ class Controller:
                 await evidence.json("config/frozen-batch.json", batch["frozen"])
             await evidence.json("business/initial.json", case.initial_state)
             await evidence.emit("controller", "prepared")
-            await asyncio.to_thread(reserve, self.store, plan.batch_id, run_id, self.config)
+            await asyncio.to_thread(
+                reserve,
+                self.store,
+                plan.batch_id,
+                run_id,
+                self.config,
+                full_evaluation=self.full_evaluation,
+            )
             await asyncio.to_thread(self.store.update_run, run_id, phase="connecting")
 
             async def maintain_lease():
@@ -138,12 +148,24 @@ class Controller:
                 conversation_options["scenario_policy"] = case.scenario_policy
 
             async def complete_conversation():
+                nonlocal result
                 speaking = asyncio.create_task(
                     self.counterpart.converse(
                         context, counterpart_brief, session, evidence, **conversation_options
                     )
                 )
                 report_wait = None
+                draining = None
+                tail_activity_at = None
+                counterpart_finished = None
+
+                async def capture_tail():
+                    nonlocal tail_activity_at
+                    tail_activity_at = time.monotonic()
+                    async for frame in session.received_audio():
+                        if audioop.rms(frame.pcm_s16le, 2) >= 500:
+                            tail_activity_at = time.monotonic()
+
                 try:
                     if case.completion == "counterpart":
                         return await speaking
@@ -153,12 +175,20 @@ class Controller:
                             saved = await asyncio.to_thread(self.store.run, run_id)
                             if saved.get("target_user_report"):
                                 await evidence.emit("controller", "target_report_received")
+                                return
+                            if draining is not None and draining.done():
+                                draining.result()
+                            if (
+                                tail_activity_at is not None
+                                and time.monotonic() - tail_activity_at
+                                >= self.config.counterpart.conversation_idle_seconds
+                            ):
                                 await evidence.emit(
                                     "controller",
-                                    "end_call_requested",
-                                    {"reason": "final_report_received", "owner": "harness"},
+                                    "target_report_idle_timeout",
+                                    {"seconds": self.config.counterpart.conversation_idle_seconds},
                                 )
-                                return
+                                raise TransportFailure("Target silent after employee finished")
                             if session.closed.is_set():
                                 raise TransportFailure("Target ended without a final report")
                             session.check_health()
@@ -170,31 +200,78 @@ class Controller:
                     )
                     if speaking in done:
                         try:
-                            speaking.result()
+                            counterpart_finished = speaking.result()
                         except TransportFailure:
                             saved = await asyncio.to_thread(self.store.run, run_id)
                             if session.error or not saved.get("target_user_report"):
                                 raise
+                        if not session.closed.is_set():
+                            draining = asyncio.create_task(capture_tail())
                     await report_wait
-                    # The user's delivered final output is the completion trigger.
-                    # Do not wait for a second, optional provider hangup signal.
-                    speaking.cancel()
-                    await asyncio.gather(speaking, return_exceptions=True)
-                    if not session.closed.is_set():
-                        try:
-                            async with asyncio.timeout(
-                                min(2, self.config.runtime.finalize_timeout_seconds / 2)
+                    # Report receipt alone never ends audio. An explicit employee
+                    # finish may end ordinary conversations, but not target-hangup tests.
+                    await evidence.emit("controller", "awaiting_target_hangup_after_report")
+                    last_activity = time.monotonic()
+                    played = dict(session.played)
+                    end_quiet_seconds = self.config.runtime.conversation_end_quiet_seconds
+                    try:
+                        while not session.closed.is_set():
+                            session.check_health()
+                            if speaking.done():
+                                counterpart_finished = speaking.result()
+                                if draining is None:
+                                    draining = asyncio.create_task(capture_tail())
+                                    # Start the grace after observing the finish, even
+                                    # if the preceding speech ended a while ago.
+                                    last_activity = time.monotonic()
+                            if draining is not None and draining.done():
+                                draining.result()
+                            if session.played != played:
+                                played = dict(session.played)
+                                last_activity = time.monotonic()
+                            last_activity = max(last_activity, session.last_received_speech_at or 0)
+                            if (
+                                case.completion == "target_report_then_conversation_end"
+                                and isinstance(counterpart_finished, CounterpartFinished)
+                                and time.monotonic() - last_activity >= end_quiet_seconds
                             ):
-                                await session.drain()
-                        except Exception as exc:
-                            await evidence.emit(
-                                "controller",
-                                "playback_drain_incomplete",
-                                {"type": type(exc).__name__},
-                            )
-                    await evidence.emit("controller", "ending_after_target_report")
+                                await evidence.emit(
+                                    "controller",
+                                    "counterpart_hangup_requested",
+                                    {
+                                        "tool_call_id": counterpart_finished.tool_call_id,
+                                        "report_received": True,
+                                        "closing_playback_drained": True,
+                                        "quiet_seconds": end_quiet_seconds,
+                                    },
+                                )
+                                result = result.model_copy(
+                                    update={"conversation_end": "counterpart_finish"}
+                                )
+                                # The common finalizer closes the channel and verifies
+                                # provider termination; this is not a target hangup.
+                                return
+                            if (
+                                time.monotonic() - last_activity
+                                >= self.config.runtime.post_report_hangup_seconds
+                            ):
+                                raise TimeoutError("Silence after report")
+                            await asyncio.sleep(0.05)
+                    except TimeoutError as exc:
+                        await evidence.emit(
+                            "controller",
+                            "target_hangup_missing_after_report",
+                            {"boundary": "mutual_silence_after_report"},
+                        )
+                        raise TransportFailure("Report received but call did not finish") from exc
+                    if session.error:
+                        session.check_health()
+                    await evidence.emit("controller", "target_hangup_after_report")
+                    result = result.model_copy(update={"conversation_end": "target_hangup"})
                 finally:
                     tasks = [speaking] + ([report_wait] if report_wait else [])
+                    if draining is not None:
+                        tasks.append(draining)
                     for task in tasks:
                         task.cancel()
                     await asyncio.gather(*tasks, return_exceptions=True)

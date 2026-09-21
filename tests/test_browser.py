@@ -13,16 +13,21 @@ from voice_bench.models import AudioFrame
 
 @pytest.mark.asyncio
 @pytest.mark.skipif(os.environ.get("RUN_BROWSER_TESTS") != "1", reason="Opt-in local Chromium test")
-async def test_final_report_closes_real_browser_without_native_hangup(store, tmp_path):
+@pytest.mark.parametrize("end_actor", ["target", "counterpart"])
+async def test_final_report_preserves_browser_audio_until_hangup(store, tmp_path, end_actor):
     from test_controller import batch, configured
 
     from voice_bench.business.environment import BusinessService
+    from voice_bench.contracts import CounterpartFinished
     from voice_bench.controller.runner import Controller
 
     config = configured(tmp_path)
     config = config.model_copy(
         update={
-            "limits": config.limits.model_copy(update={"max_call_seconds": 5}),
+            # Leave room for cold Chromium audio startup while still requiring all
+            # three seconds of speech after report receipt. The old two-second
+            # shutdown path still fails the exact playback assertion below.
+            "limits": config.limits.model_copy(update={"max_call_seconds": 10}),
             "runtime": config.runtime.model_copy(
                 update={"setup_timeout_seconds": 10, "finalize_timeout_seconds": 5}
             ),
@@ -30,7 +35,12 @@ async def test_final_report_closes_real_browser_without_native_hangup(store, tmp
     )
     plan, case = batch(store, config)
     case = case.model_copy(
-        update={"completion": "target_report_then_hangup", "target_tools": ("submit_user_report",)}
+        update={
+            "completion": "target_report_then_hangup"
+            if end_actor == "target"
+            else "target_report_then_conversation_end",
+            "target_tools": ("submit_user_report",),
+        }
     )
     started = asyncio.Event()
 
@@ -53,7 +63,7 @@ async def test_final_report_closes_real_browser_without_native_hangup(store, tmp
         async def converse(self, run, brief, session, evidence):
             await session.send_audio(
                 AudioFrame(
-                    pcm_s16le=struct.pack("<h", 2000) * 2400,
+                    pcm_s16le=struct.pack("<h", 2000) * 72000,
                     sample_rate_hz=24000,
                     sample_offset=0,
                     clock_id="test",
@@ -62,20 +72,31 @@ async def test_final_report_closes_real_browser_without_native_hangup(store, tmp
                 )
             )
             started.set()
+            if end_actor == "counterpart":
+                await session.drain()
+                return CounterpartFinished(tool_call_id="finish-after-real-playback")
             await asyncio.sleep(30)
 
     async def submit_report():
         await started.wait()
         run = store.runs(plan.batch_id)[0]
-        return BusinessService(store).submit_user_report(
+        receipt = BusinessService(store).submit_user_report(
             str(run["run_id"]), "test", "The task could not be completed."
         )
+        await channel.session.drain()
+        assert channel.session.played["closing"] >= 2999
+        if end_actor == "target":
+            await channel.session.event(None, {"type": "target_left"})
+        return receipt
 
     channel = LocalChannel()
     pending = asyncio.create_task(submit_report())
     try:
         result = await Controller(store, config, channel, Counterpart()).execute(plan, case, "x")
         assert result.error is None and result.termination_confirmed
+        assert result.conversation_end == (
+            "target_hangup" if end_actor == "target" else "counterpart_finish"
+        )
         assert (await pending)["ok"]
         assert channel.session.browser is None and channel.session.page is None
         saved = store.run(result.run_id)
@@ -157,15 +178,23 @@ async def test_remote_webrtc_audio_contains_real_pcm(tmp_path):
     session = BrowserSession(evidence)
     try:
         await session.start({}, test=True)
-        await session.page.evaluate("""async () => {
+        await session.page.evaluate(r"""async () => {
     const audio = new AudioContext({sampleRate:48000}); await audio.resume();
     const source = audio.createOscillator(); const dest = audio.createMediaStreamDestination();
     source.connect(dest); source.start();
     const a = new RTCPeerConnection(); const b = new RTCPeerConnection();
     window.localPeers = [a,b];
-    a.onicecandidate=e=>{if(e.candidate)b.addIceCandidate(e.candidate)};
-    b.onicecandidate=e=>{if(e.candidate)a.addIceCandidate(e.candidate)};
-    b.ontrack=e=>{ window.remoteStream=e.streams[0]; bridge.testCaptureStream(e.streams[0]); };
+    // Both endpoints are local. Avoid relying on VPN/LAN/mDNS reachability.
+    const loopback = c => ({...c.toJSON(), candidate:
+      c.candidate.replace(/(candidate:\S+ \d+ udp \d+ )\S+/i, '$1127.0.0.1')});
+    a.onicecandidate=e=>{if(e.candidate)b.addIceCandidate(loopback(e.candidate))};
+    b.onicecandidate=e=>{if(e.candidate)a.addIceCandidate(loopback(e.candidate))};
+    b.ontrack=e=>{
+      window.remoteStream=e.streams[0]; bridge.testCaptureStream(e.streams[0]);
+      bridge.testObserveTrack('loopback-in', {
+        getRTCStatsReport: () => e.receiver.getStats(), mediaStreamTrack: e.track,
+      }, 'incoming');
+    };
     a.addTrack(dest.stream.getAudioTracks()[0],dest.stream);
     await a.setLocalDescription(await a.createOffer());
     await b.setRemoteDescription(a.localDescription);
@@ -178,6 +207,79 @@ async def test_remote_webrtc_audio_contains_real_pcm(tmp_path):
                 if any(frame.pcm_s16le):
                     break
         assert frame.sample_rate_hz == 48000
+        assert await session.page.evaluate(
+            "localPeers.every(p => p.connectionState === 'connected')"
+        )
+        async with asyncio.timeout(4):
+            while True:
+                observed = await evidence.event_snapshot()
+                stats = [
+                    e["payload"]
+                    for e in observed
+                    if e["kind"] == "transport_observation"
+                    and e["payload"].get("name") == "audio_transport_stats"
+                ]
+                if any(r.get("packetsReceived", 0) > 0 for s in stats for r in s.get("rows", [])):
+                    break
+                await asyncio.sleep(0.05)
     finally:
         await session.close("webrtc regression")
+    await evidence.finalize(evidence.run_id)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(os.environ.get("RUN_BROWSER_TESTS") != "1", reason="Opt-in local Chromium test")
+async def test_full_duplex_under_slow_evidence_sink_preserves_playback(tmp_path, monkeypatch):
+    import json
+
+    evidence = LocalEvidence(tmp_path, uuid4(), uuid4())
+    original = evidence.emit_many
+
+    async def slower(observations):
+        # Six milliseconds per binding would overload the former ~475 events/sec stream.
+        await asyncio.sleep(0.006)
+        return await original(observations)
+
+    monkeypatch.setattr(evidence, "emit_many", slower)
+    session = BrowserSession(evidence)
+    consumer = None
+    captured = []
+
+    async def receive():
+        async for frame in session.received_audio():
+            captured.append(frame.sample_offset)
+
+    try:
+        await session.start({}, test=True)
+        await session.page.evaluate("bridge.testInput()")
+        consumer = asyncio.create_task(receive())
+        # Pace each second of speech; the bounded audio queue remains meaningful.
+        for second in range(10):
+            await session.send_audio(
+                AudioFrame(
+                    pcm_s16le=struct.pack("<h", 2000) * 24000,
+                    sample_rate_hz=24000,
+                    sample_offset=second * 24000,
+                    clock_id="synthetic",
+                    observed_monotonic_ns=0,
+                    item_id="long-readback",
+                )
+            )
+            await asyncio.sleep(1)
+            session.check_health()
+        await asyncio.wait_for(session.drain(), 5)
+        assert session.played["long-readback"] >= 9999
+        assert len(captured) >= 400 and captured == sorted(set(captured))
+    finally:
+        if consumer:
+            consumer.cancel()
+            await asyncio.gather(consumer, return_exceptions=True)
+        await session.close("slow sink regression")
+    events = [
+        json.loads(line) for line in (evidence.directory / "events.jsonl").read_text().splitlines()
+    ]
+    assert not any(e["kind"] == "bridge_error" for e in events)
+    progress = [e for e in events if e["kind"] == "playback_progress"]
+    assert 400 < len(progress) < 600
+    assert sum(e["payload"]["samples"] for e in progress) >= 479950
     await evidence.finalize(evidence.run_id)

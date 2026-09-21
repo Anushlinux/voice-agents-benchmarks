@@ -1,0 +1,38 @@
+# Offline preparation only. Set an approved budget, deployment and rate card before running.
+name = "restaurant-natural-repair"
+purpose = "benchmark"
+channels = ["browser"]
+artifact_root = "../artifacts"
+
+[target]
+agent_ref = ""
+deployed_version = ""
+task_variable = "benchmark_user_task"
+prompt_sha256 = "" # SHA-256 of the reviewed, deployed system instruction.
+
+[limits]
+max_call_seconds = 300
+max_concurrent_calls = 1
+max_attempts_per_case = 1
+max_total_call_minutes = 0
+max_spend_inr = "0"
+
+[counterpart]
+model = ""
+voice = ""
+instructions = "Act as the assigned employee. Respond to received speech and permitted tool results. Answer the caller's question, state relevant alternatives, and clarify only what is still unclear."
+max_output_tokens = 2048
+conversation_idle_seconds = 45
+silence_recovery_seconds = 0
+max_silence_recovery_prompts = 0
+[counterpart.turn_detection]
+type = "semantic_vad"
+eagerness = "low"
+
+[runtime]
+public_base_url = ""
+cost_ceiling_inr_per_attempt = "0"
+rate_card_version = ""
+[runtime.cost_components_inr_per_attempt]
+counterpart = "0"
+target = "0"

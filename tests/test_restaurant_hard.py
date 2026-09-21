@@ -567,9 +567,25 @@ async def test_worker_triggers_event_with_real_workflow_and_keeps_receiving_audi
             await socket.incoming.put(
                 {"type": "input_audio_buffer.speech_started", "item_id": "target"}
             )
+            assert await socket.sent.get() == {
+                "type": "response.cancel",
+                "response_id": "challenge-audio",
+            }
             assert (await socket.sent.get())["type"] == "conversation.item.truncate"
             await session.receive(b"\x00\x10" * 480)
             assert (await socket.sent.get())["type"] == "input_audio_buffer.append"
+            await socket.incoming.put(
+                {
+                    "type": "response.done",
+                    "response": {"id": "challenge-audio", "status": "cancelled"},
+                }
+            )
+            await socket.incoming.put(
+                {"type": "input_audio_buffer.speech_stopped", "item_id": "target"}
+            )
+            await socket.incoming.put({"type": "input_audio_buffer.committed", "item_id": "target"})
+            assert (await socket.sent.get())["type"] == "response.create"
+            await socket.incoming.put({"type": "response.created", "response": {"id": "closing"}})
             await socket.incoming.put(
                 {
                     "type": "response.function_call_arguments.done",

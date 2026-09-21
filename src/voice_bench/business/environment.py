@@ -4,6 +4,13 @@ from copy import deepcopy
 from typing import Protocol
 
 from voice_bench.business.dining import DiningWorkflow
+from voice_bench.business.natural_restaurant import (
+    NaturalRestaurantWorkflow,
+    NaturalRestaurantWorkflowV2,
+    NaturalRestaurantWorkflowV3,
+    NaturalRestaurantWorkflowV4,
+    NaturalRestaurantWorkflowV5,
+)
 from voice_bench.business.reservations import ReservationWorkflow, consent_anchors
 from voice_bench.evidence.local import canonical, digest
 from voice_bench.storage import audit_entry
@@ -196,6 +203,14 @@ class BusinessService:
                         "operation_id": request_id,
                         "actor": actor,
                         "consent_anchors": anchors,
+                        "tool_result_sequences": {
+                            e["payload"]["operation_id"]: e["sequence"]
+                            for e in observations
+                            if trusted
+                            and e.get("kind") == "business_tool_result"
+                            and e.get("payload", {}).get("actor") == "counterpart"
+                            and e["payload"].get("result", {}).get("ok")
+                        },
                         "observed_through_sequence": observations[-1]["sequence"]
                         if trusted
                         else None,
@@ -249,5 +264,15 @@ class BusinessService:
 
 
 WORKFLOWS = {
-    (w.name, w.version): w for w in (FixtureWorkflow(), ReservationWorkflow(), DiningWorkflow())
+    (w.name, w.version): w
+    for w in (
+        FixtureWorkflow(),
+        ReservationWorkflow(),
+        DiningWorkflow(),
+        NaturalRestaurantWorkflow(),
+        NaturalRestaurantWorkflowV2(),
+        NaturalRestaurantWorkflowV3(),
+        NaturalRestaurantWorkflowV4(),
+        NaturalRestaurantWorkflowV5(),
+    )
 }

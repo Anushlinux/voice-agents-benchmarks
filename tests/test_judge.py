@@ -184,3 +184,59 @@ async def test_report_false_positive_is_rejected_with_retained_diagnostic(tmp_pa
     assert json.loads((audit / "error.json").read_text())["code"] == "reference_contradiction"
     assert json.loads((audit / "judge-response.json").read_text())["incorrect_approval"]
     assert not (audit / "result.json").exists()
+
+
+@pytest.mark.asyncio
+async def test_missing_report_does_not_discard_other_judgments(tmp_path):
+    evidence = LocalEvidence(tmp_path, uuid4(), uuid4())
+    case = fixture_case().model_dump(mode="json")
+    case["criteria"]["rubrics"] = {"user_report_accuracy": "Judge actual report content."}
+    for path, value in {
+        "config/case.json": case,
+        "business/final.json": {},
+        "business/audit.json": [],
+        "result.json": {"termination_confirmed": True},
+        "target/report-requests.json": [],
+    }.items():
+        await evidence.json(path, value)
+    buffer = io.BytesIO()
+    with wave.open(buffer, "wb") as audio:
+        audio.setparams((1, 2, 8000, 0, "NONE", "none"))
+        audio.writeframes(b"\x00\x00" * 8000)
+    for path in ("audio/received.wav", "audio/played.wav"):
+        await evidence.store_artifact(evidence.run_id, path, buffer.getvalue())
+    await evidence.finalize(evidence.run_id)
+
+    async def parse(**args):
+        parsed = args["text_format"].model_validate(
+            {
+                "metrics": [
+                    {
+                        "name": "counterpart_validity",
+                        "status": "uncertain",
+                        "explanation": "Needs listening",
+                        "evidence": [],
+                    },
+                    {
+                        "name": "user_report_accuracy",
+                        "status": "not_met",
+                        "explanation": "No report",
+                        "evidence": ["result.json"],
+                    },
+                ]
+            }
+        )
+        return SimpleNamespace(
+            output_parsed=parsed, id="mock", usage=None, model_dump_json=lambda **_: '{"id":"mock"}'
+        )
+
+    client = SimpleNamespace(responses=SimpleNamespace(parse=parse))
+    metrics, _ = await judge(
+        evidence.directory,
+        JudgeConfig(model="mock", transcription_model="mock", rubric_version="1"),
+        client=client,
+    )
+    assert {m.name: m.status for m in metrics} == {
+        "counterpart_validity": "uncertain",
+        "user_report_accuracy": "not_applicable",
+    }

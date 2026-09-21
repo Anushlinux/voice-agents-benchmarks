@@ -51,6 +51,23 @@ def reference_delivery(reference):
     }
 
 
+def natural_reference_delivery(reference):
+    """Preserve natural dialogue while making identifier pronunciation unambiguous."""
+    delivery = reference_delivery(reference)
+    return {
+        **delivery,
+        "version": "natural-reference-v2",
+        "instruction": (
+            "Give this single issued reference. Spell its characters in the supplied order, "
+            "using the letter examples and individual digits so letters are not swallowed "
+            "when pronounced as a word. Do not invent, shorten or replace the code. "
+            "Do not demand a readback. If the caller voluntarily repeats it incorrectly, "
+            "identify and spell the missing or different characters before saying goodbye; "
+            "merely repeating the same ambiguous pronunciation is not a correction."
+        ),
+    }
+
+
 def consent_anchors(events):
     """Find observed speech ordering, not semantic consent. Browser pilot only.
 

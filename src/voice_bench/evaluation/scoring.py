@@ -202,6 +202,11 @@ def deterministic(directory):
         from voice_bench.evaluation.reservations import reservation_metrics
 
         metrics.extend(reservation_metrics(directory, case, refs, final, audit))
+    if case.get("workflow") == "mock_restaurant_natural":
+        from voice_bench.evaluation.natural_restaurant import natural_metrics
+
+        metrics = [m for m in metrics if m.name != "task_state"]
+        metrics.extend(natural_metrics(directory, case, refs, final, audit))
     return metrics
 
 
@@ -342,6 +347,17 @@ def review_template(directory, evaluation_version):
             ]
     if case.get("evaluation_rubric"):
         template["explanation"] = "Review against the frozen rubric in config/case.json."
+        if case.get("workflow") == "mock_restaurant_natural":
+            template["checks"] = [
+                {
+                    "name": d["name"],
+                    "status": "uncertain",
+                    "explanation": "Awaiting evidence-based review",
+                    "evidence": [],
+                }
+                for d in case["evaluation_rubric"]["metrics"]
+                if d["applies"] and (d["method"] == "human" or d["name"] == "booking_identity")
+            ]
     return template
 
 
@@ -360,6 +376,25 @@ def import_review(directory, version, data):
         raise ValueError("Invalid or unresolved tests cannot pass or fail the target")
     value = review.model_dump(mode="json")
     case = json.loads((directory / "config/case.json").read_text())
+    execution = json.loads((directory / "result.json").read_text())
+    if execution.get("validity") == "invalid" and review.validity != "invalid":
+        raise ValueError("Recorded invalid execution cannot become a target result")
+    if case.get("workflow") == "mock_restaurant_natural":
+        from voice_bench.restaurant_natural import HUMAN_RULES
+
+        names = [metric.name for metric in review.checks]
+        if len(names) != len(set(names)) or not set(names).issubset(
+            set(HUMAN_RULES) | {"booking_identity"}
+        ):
+            raise ValueError(
+                "Natural restaurant reviews may resolve human checks and name identity only"
+            )
+        if any(m.name == "user_report_accuracy" and m.status == "met" for m in review.checks):
+            if any(
+                m.name == "user_report_references" and m.status == "not_met"
+                for m in deterministic(directory)
+            ):
+                raise ValueError("Report accuracy contradicts explicit reference assertions")
     if case.get("workflow") == "mock_restaurant_reservation":
         from voice_bench.evaluation.reservations import (
             dimension_summary,

@@ -1,10 +1,43 @@
 # Rumik personal-assistant benchmark
 
-**Benchmark outputs: [RESULTS.md](RESULTS.md).** The latest run is the 20 September
-2026 restaurant baseline: one completed browser conversation, a booking that did
-not meet the task requirements, and a formal verdict awaiting human review.
-The results page lists what each evaluator found, which evaluators did not run,
-and links to the saved recording and structured outputs.
+**Latest diagnostic qualification:** the browser now records audio transport and
+connection observations, and full reports separate observed task completion from
+failure attribution. One unchanged Priya call stalled after the greeting despite
+complete employee playback and continuing received packets. All evaluations
+completed; conversation reliability is **not qualified**. The investigation stopped
+after one call, with INR 155 reserved from the INR 465 ceiling. See
+`reports/conversation-foundation-20260921/README.md` and the
+[repair guide](docs/CONVERSATION_REPAIR.md). Older results below remain historical.
+
+**Latest Aditi Shah rerun:** the reservation succeeded and the charge/cutoff defects did not recur, but the overall test failed because the reported reference lost a letter. Shared fixes and the separate, locally tested pronunciation follow-up are documented in [the repair guide](docs/CONVERSATION_REPAIR.md). Local evidence: `reports/harness-repair-rerun-20260921/README.md`.
+
+The latest functional test deployed hosted version 5 and ran the Aditi Shah case
+once with a 15-second silence limit. Rumik responded and submitted a report, but no
+booking was made. The run exposed an overly broad zero-spending instruction and a
+post-report timer that cut off active speech. Both judges completed. Local corrections
+passed 75 checks but have not been rerun live. See
+`reports/functional-run-20260921/README.md` for the recording and exact outcome.
+
+**Current status: caller-role and full-evaluation repairs are implemented, but the
+single September 21 qualification call did not pass conversation acceptance.**
+Both Luna and Jev completed. Rumik stated the customer request, then stalled;
+the employee also attempted a premature booking. No booking or private report
+was produced. The local diagnostic report is
+`reports/repair-implementation-20260921T103008Z/README.md`. Read the
+[repair and verification guide](docs/CONVERSATION_REPAIR.md). The local audit is in
+`reports/conversation-root-cause-audit-20260921/README.md`; repair artifacts and
+validation are in `reports/restaurant-repair-20260921/`. Historical grades are
+preserved and should be read with the audit's attribution and evidence limits.
+
+The follow-up stall diagnosis and local fixes are in
+`reports/dietary-stall-debug-20260921/README.md`. The optional dietary-field contract
+and revised side-question guidance have passed local tests; no second call or
+deployment has been made.
+
+The full evaluation mode is `batch run --live --with-evaluation --jev-rubric
+configs/restaurant-jev-rubric.json`, alongside the required `--config` and `--cases`.
+It reserves all stages before calling, then saves rules, Luna, independent Jev,
+recordings and the final report together. Human listening status stays separate.
 
 Benchmark a **hosted Rumik assistant acting on a user's behalf**. Rumik receives the user's assignment and speaks with a simulated restaurant employee, delivery agent, driver, or support representative. OpenAI Realtime plays that other person. Only Rumik is the target being evaluated; this is not a Rumik-versus-OpenAI comparison.
 
@@ -12,7 +45,12 @@ This follows the Rumik team direction relayed by the user on 2026-09-20. It supe
 
 Dataset instructions may be written in English. Explicitly instruct Rumik to speak Hinglish during the call; do not translate the dataset into Hinglish merely to set the speaking language.
 
-**Status: one current-code browser baseline completed and model-evaluated; human review pending.** The harness delivers a private user task through its authenticated before-call callback, gives the counterpart separately scoped business tools, records audio/actions, and grades final state. The latest run ended cleanly with complete evidence, but its booking did not satisfy the task. Alongside the infrastructure fixture, a mock restaurant reservation workflow supports [one explicitly selected Taskmaster-derived browser pilot](docs/RESTAURANT_PILOT.md). Its source and reconstructed dataset files remain local. [Three harder Hinglish variants](docs/RESTAURANT_HARD_CASES.md) add negotiation, dietary accommodation and observable correction opportunities while preserving that baseline. Those variants have no live results yet; telephone qualification is also pending.
+The new restaurant workflow separates availability lookup, a current offer and
+an evidenced booking. Ten natural cases are prepared offline, including useful
+no-booking outcomes. Old tool-count speech challenges are retired from live
+execution because their mistakes were not grounded in previously heard terms.
+The old baseline, challenge definitions and evidence remain available for audit.
+Telephone qualification and the repaired hosted behavior remain unproven.
 
 ```mermaid
 flowchart LR
@@ -41,7 +79,7 @@ remain unsupported. No new live qualification is claimed.
 [Reusable benchmark design](docs/BENCHMARK_DESIGN.md) adds opt-in counterpart
 behavior profiles, bounded scenario policies and explicit restaurant metric rubrics.
 `voice-bench design prepare` produces a new case version offline while preserving
-the source task and business state. Existing cases and saved results retain their semantics.
+the source task and business state. Saved results retain their semantics. Event-bearing cases are now audit-only.
 
 ## Local dataset review
 

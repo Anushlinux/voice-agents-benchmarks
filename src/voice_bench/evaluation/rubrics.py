@@ -10,13 +10,14 @@ from voice_bench.models import Contract
 class MetricDefinition(Contract):
     name: str = Field(min_length=1)
     description: str = Field(min_length=1)
-    method: Literal["code", "human"]
+    method: Literal["code", "human", "model"]
     role: Literal["requirement", "validity", "prerequisite", "diagnostic"]
     applies: bool = True
     applicability_reason: str = Field(min_length=1)
     required_evidence: tuple[str, ...] = Field(min_length=1)
     pass_rule: str = Field(min_length=1)
     missing_evidence: Literal["uncertain"] = "uncertain"
+    not_applicable_when: Literal["never", "report_absent"] = "never"
 
     @model_validator(mode="after")
     def safe_evidence_names(self):
@@ -52,7 +53,14 @@ def apply_rubric(rubric, metrics, validity, *, reviewed=False):
     for definition in rubric.metrics:
         metric = by_name.get(definition.name)
         status, reason = "uncertain", "Required measurement is missing"
-        if not definition.applies:
+        absence = by_name.get("user_report_presence")
+        if (
+            definition.not_applicable_when == "report_absent"
+            and absence
+            and absence.status == "not_met"
+        ):
+            status, reason = "not_applicable", "No report content; presence is graded separately"
+        elif not definition.applies:
             status, reason = "not_applicable", definition.applicability_reason
         elif metric is not None:
             status, reason = metric.status, metric.explanation

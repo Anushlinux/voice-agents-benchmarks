@@ -223,10 +223,11 @@ async def test_transport_failure_during_task_wait_is_reported_immediately(store,
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("drain_mode", ["ok", "stall", "error"])
-async def test_report_completion_ends_on_output_even_without_native_hangup(
-    store, tmp_path, drain_mode
+@pytest.mark.parametrize("native_hangup", [True, False])
+async def test_report_does_not_cut_off_live_audio_and_requires_hangup(
+    store, tmp_path, native_hangup
 ):
+    import json
     from uuid import uuid4
 
     from voice_bench.business.environment import BusinessService
@@ -234,14 +235,17 @@ async def test_report_completion_ends_on_output_even_without_native_hangup(
     from voice_bench.evidence.local import LocalEvidence
 
     config = configured(tmp_path)
+    config = config.model_copy(
+        update={"runtime": config.runtime.model_copy(update={"post_report_hangup_seconds": 0.3})}
+    )
     plan, case = batch(store, config)
     case = case.model_copy(
         update={"completion": "target_report_then_hangup", "target_tools": ("submit_user_report",)}
     )
     channel = Channel(store=store)
     channel.session = MediaSession(LocalEvidence(tmp_path / "media", uuid4(), uuid4()), 24000)
-    submitted = []
     producer_stopped = asyncio.Event()
+    tail_completed = asyncio.Event()
 
     class StillSpeaking:
         async def converse(self, *args):
@@ -250,43 +254,165 @@ async def test_report_completion_ends_on_output_even_without_native_hangup(
             finally:
                 producer_stopped.set()
 
-    async def drain():
-        assert producer_stopped.is_set()
-        if drain_mode == "stall":
-            await asyncio.sleep(30)
-        elif drain_mode == "error":
-            raise RuntimeError("Playback already disconnected")
-
-    channel.session.drain = drain
-
-    async def later_report():
+    async def report_then_finish_turn():
         while not store.runs(plan.batch_id) or not store.runs(plan.batch_id)[0].get(
             "user_task_served"
         ):
             await asyncio.sleep(0.01)
         run = store.runs(plan.batch_id)[0]
-        await asyncio.sleep(0.1)
-        result = BusinessService(store).submit_user_report(
+        receipt = BusinessService(store).submit_user_report(
             str(run["run_id"]), "test", "Accurate failure report."
         )
-        submitted.append(result)
+        assert receipt["ok"]
+        await asyncio.sleep(0.15)
+        assert not producer_stopped.is_set(), "A report must not cancel live speech"
+        assert not channel.session.closed.is_set()
+        tail_completed.set()
+        if native_hangup:
+            channel.session.closed.set()
 
-    pending = asyncio.create_task(later_report())
+    pending = asyncio.create_task(report_then_finish_turn())
     try:
         result = await Controller(store, config, channel, StillSpeaking()).execute(
             plan, case, "digest"
         )
-        assert result.error is None and submitted[0]["ok"]
-        assert (
-            tmp_path / str(plan.batch_id) / str(result.run_id) / "target/user-report.json"
-        ).exists()
+        await pending
+        assert tail_completed.is_set() and producer_stopped.is_set()
+        assert result.error == (None if native_hangup else "TransportFailure")
         assert result.termination_confirmed
-        import json
-
         path = tmp_path / str(plan.batch_id) / str(result.run_id) / "events.jsonl"
         events = [json.loads(line) for line in path.read_text().splitlines()]
-        assert sum(e["kind"] == "end_call_requested" for e in events) == 1
-        assert any(e["kind"] == "playback_drain_incomplete" for e in events) == (drain_mode != "ok")
+        assert not any(e["kind"] == "end_call_requested" for e in events)
+        assert any(e["kind"] == "target_hangup_after_report" for e in events) == native_hangup
+        assert (
+            any(e["kind"] == "target_hangup_missing_after_report" for e in events) != native_hangup
+        )
+    finally:
+        pending.cancel()
+        await asyncio.gather(pending, return_exceptions=True)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("target_speaks", [False, True])
+async def test_silence_deadline_remains_active_after_employee_finishes(
+    store, tmp_path, target_speaks
+):
+    import json
+    import struct
+    from uuid import uuid4
+
+    from voice_bench.business.environment import BusinessService
+    from voice_bench.channels.media import MediaSession
+    from voice_bench.evidence.local import LocalEvidence
+
+    config = configured(tmp_path)
+    config = config.model_copy(
+        update={
+            "limits": config.limits.model_copy(update={"max_call_seconds": 2}),
+            "counterpart": config.counterpart.model_copy(
+                update={"conversation_idle_seconds": 0.15}
+            ),
+        }
+    )
+    plan, case = batch(store, config)
+    case = case.model_copy(
+        update={"completion": "target_report_then_hangup", "target_tools": ("submit_user_report",)}
+    )
+    channel = Channel(store=store)
+    channel.session = MediaSession(LocalEvidence(tmp_path / "media", uuid4(), uuid4()), 24000)
+
+    async def reply():
+        while not store.runs(plan.batch_id) or not store.runs(plan.batch_id)[0].get(
+            "user_task_served"
+        ):
+            await asyncio.sleep(0.01)
+        # Incoming silent frames must not keep a dead conversation alive. Actual
+        # received speech may continue beyond the response-start deadline.
+        for _ in range(12):
+            if channel.session.closed.is_set():
+                return
+            await channel.session.receive(struct.pack("<h", 2000 if target_speaks else 0) * 720)
+            await asyncio.sleep(0.03)
+        if target_speaks:
+            run = store.runs(plan.batch_id)[0]
+            BusinessService(store).submit_user_report(
+                str(run["run_id"]), "test", "The requested task was not completed."
+            )
+            channel.session.closed.set()
+
+    pending = asyncio.create_task(reply())
+    try:
+        result = await Controller(store, config, channel, Caller()).execute(plan, case, "test")
+        events = [
+            json.loads(line)
+            for line in (tmp_path / str(plan.batch_id) / str(result.run_id) / "events.jsonl")
+            .read_text()
+            .splitlines()
+        ]
+        assert result.error == (None if target_speaks else "TransportFailure")
+        assert result.termination_confirmed
+        assert any(e["kind"] == "target_report_idle_timeout" for e in events) != target_speaks
+    finally:
+        pending.cancel()
+        await asyncio.gather(pending, return_exceptions=True)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("speaker", ["target", "employee", "silent_frames"])
+async def test_post_report_deadline_measures_silence_not_time_since_receipt(
+    store, tmp_path, speaker
+):
+    import struct
+    from uuid import uuid4
+
+    from voice_bench.business.environment import BusinessService
+    from voice_bench.channels.media import MediaSession
+    from voice_bench.evidence.local import LocalEvidence
+
+    config = configured(tmp_path)
+    config = config.model_copy(
+        update={
+            "limits": config.limits.model_copy(update={"max_call_seconds": 2}),
+            "runtime": config.runtime.model_copy(update={"post_report_hangup_seconds": 0.15}),
+        }
+    )
+    plan, case = batch(store, config)
+    case = case.model_copy(
+        update={"completion": "target_report_then_hangup", "target_tools": ("submit_user_report",)}
+    )
+    channel = Channel(store=store)
+    channel.session = MediaSession(LocalEvidence(tmp_path / "media", uuid4(), uuid4()), 24000)
+
+    async def finish_exchange():
+        while not store.runs(plan.batch_id) or not store.runs(plan.batch_id)[0].get(
+            "user_task_served"
+        ):
+            await asyncio.sleep(0.01)
+        run = store.runs(plan.batch_id)[0]
+        BusinessService(store).submit_user_report(
+            str(run["run_id"]), "test", "No booking was made."
+        )
+        for i in range(10):
+            if speaker == "silent_frames" and channel.session.closed.is_set():
+                return
+            assert not channel.session.closed.is_set(), "Report receipt must not cut off speech"
+            if speaker == "target":
+                await channel.session.receive(struct.pack("<h", 2000) * 960)
+            elif speaker == "silent_frames":
+                await channel.session.receive(b"\x00\x00" * 960)
+            else:
+                channel.session.played["closing"] = (i + 1) * 40
+            await asyncio.sleep(0.04)
+        channel.session.closed.set()
+
+    pending = asyncio.create_task(finish_exchange())
+    try:
+        result = await Controller(store, config, channel, Caller("timeout")).execute(
+            plan, case, "test"
+        )
+        await pending
+        assert result.error == ("TransportFailure" if speaker == "silent_frames" else None)
+        assert result.termination_confirmed
     finally:
         pending.cancel()
         await asyncio.gather(pending, return_exceptions=True)

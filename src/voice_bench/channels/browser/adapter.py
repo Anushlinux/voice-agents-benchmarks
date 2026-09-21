@@ -24,6 +24,22 @@ class BrowserSession(MediaSession):
         self.http_server = self.http_thread = None
 
     async def event(self, source, event):
+        if event["type"] != "batch":
+            return await self._event(event)
+        observations = []
+        for item in event["events"]:
+            if item["type"] not in {"received", "rendered_audio"}:
+                # Keep disconnect and cancellation boundaries after preceding audio.
+                if observations:
+                    await self.evidence.emit_many(observations)
+                    observations.clear()
+                await self._event(item)
+            else:
+                await self._event(item, observations)
+        if observations:
+            await self.evidence.emit_many(observations)
+
+    async def _event(self, event, batch=None):
         kind = event["type"]
         if kind in {"received", "rendered_audio"}:
             pcm = struct.pack(
@@ -46,18 +62,43 @@ class BrowserSession(MediaSession):
                 )
                 self.rendered_samples += len(pcm) // 2
             event_kind = "received_block" if kind == "received" else "rendered_block"
-            await self.evidence.emit(
-                "channel",
-                event_kind,
+            observations = [
                 {
-                    "sample": event["sample"],
-                    "samples": len(event["samples"]),
-                    "rate": event["rate"],
-                    "recording_offset": offset,
-                    "bridge_delay_ms": event.get("bridge_delay_ms"),
-                },
-                clock_id="chromium-audio-context",
-            )
+                    "source": "channel",
+                    "kind": event_kind,
+                    "payload": {
+                        "sample": event["sample"],
+                        "samples": len(event["samples"]),
+                        "rate": event["rate"],
+                        "recording_offset": offset,
+                        "bridge_delay_ms": event.get("bridge_delay_ms"),
+                    },
+                    "clock_id": "chromium-audio-context",
+                }
+            ]
+            for progress in event.get("progress", []):
+                item = progress["item"]
+                self.rendered[item] = self.rendered.get(item, 0) + progress["samples"]
+                self.played[item] = self.rendered[item] * 1000 // progress["rate"]
+                observations.append(
+                    {
+                        "source": "channel",
+                        "kind": "playback_progress",
+                        "clock_id": "chromium-audio-context",
+                        "payload": {
+                            "item_id": item,
+                            "played_ms": self.played[item],
+                            "sample": progress["sample"],
+                            "samples": progress["samples"],
+                            "rate": progress["rate"],
+                            "boundary": "browser_render",
+                        },
+                    }
+                )
+            if batch is None:
+                await self.evidence.emit_many(observations)
+            else:
+                batch.extend(observations)
         elif kind == "played":
             item = event["item"]
             self.rendered[item] = self.rendered.get(item, 0) + event["samples"]
@@ -75,11 +116,26 @@ class BrowserSession(MediaSession):
                 },
                 clock_id="chromium-audio-context",
             )
+        elif kind == "target_left":
+            await self.evidence.emit("channel", "remote_audio_participant_left")
+            self.closed.set()
         elif kind == "disconnected":
+            await self.evidence.emit("channel", "room_disconnected")
             self.closed.set()
         elif kind == "bridge_error":
             self.fail(event["reason"])
             await self.evidence.emit("channel", "bridge_error", {"reason": event["reason"]})
+        elif kind == "transport_observation":
+            # Browser timestamps remain payload observations, not worker timestamps.
+            await self.evidence.emit(
+                "channel",
+                "transport_observation",
+                event
+                | {
+                    "performance_clock": "browser-performance",
+                    "audio_clock": "chromium-audio-context",
+                },
+            )
 
     async def start(self, call, *, test=False):
         from playwright.async_api import async_playwright
@@ -115,7 +171,8 @@ class BrowserSession(MediaSession):
             args=[
                 "--autoplay-policy=no-user-gesture-required",
                 "--disable-background-timer-throttling",
-            ],
+            ]
+            + (["--allow-loopback-in-peer-connection"] if test else []),
         )
         self.page = await self.browser.new_page()
         await self.page.expose_binding("benchEvent", self.event)

@@ -1,5 +1,9 @@
 # Four restaurant cases: baseline plus three challenges
 
+**September 21 repair:** tool-count speech challenges described below are now
+audit-only and rejected by live execution. Use the [natural conversation repair](CONVERSATION_REPAIR.md)
+for new calls. Historical definitions and evidence are preserved.
+
 The original reconstructed booking case is unchanged. Three authored variants add
 negotiation, dietary requirements and opportunities for Rumik to correct the
 restaurant while it is speaking. Rumik represents Riya; OpenAI plays the restaurant

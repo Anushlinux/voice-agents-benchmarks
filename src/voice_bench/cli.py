@@ -66,6 +66,10 @@ def parser():
     hard.add_argument("--baseline", type=Path, required=True)
     hard.add_argument("--variants", type=Path, required=True)
     hard.add_argument("--output", type=Path, required=True)
+    natural = restaurant_commands.add_parser("prepare-natural")
+    natural.add_argument("--catalog", type=Path, required=True)
+    natural.add_argument("--output", type=Path, required=True)
+    natural.add_argument("--automated-rubric", action="store_true")
     preflight = restaurant_commands.add_parser("preflight")
     preflight.add_argument("--config", type=Path, required=True)
     preflight.add_argument("--cases", type=Path, required=True)
@@ -123,6 +127,12 @@ def add_execution_args(sub):
     sub.add_argument("--live", action="store_true")
     sub.add_argument("--port", type=int, default=8000)
     sub.add_argument("--resume", type=UUID)
+    sub.add_argument(
+        "--with-evaluation",
+        action="store_true",
+        help="Reserve and run rules, OpenAI, Jev and a consolidated report",
+    )
+    sub.add_argument("--jev-rubric", type=Path)
 
 
 async def evaluate(args):
@@ -258,6 +268,10 @@ def dispatch(args):
         )
         return {"evaluation": str(path), "mode": "shadow", "benchmark_verdict_changed": False}
     if args.command == "restaurant":
+        if args.action == "prepare-natural":
+            from voice_bench.restaurant_natural import prepare as prepare_natural
+
+            return prepare_natural(args.catalog, args.output, automated=args.automated_rubric)
         from voice_bench.batches import load_cases
         from voice_bench.restaurant_case import pilot_blockers, prepare
         from voice_bench.restaurant_hard_cases import HARD_IDS, hard_blockers, prepare_hard
@@ -267,6 +281,10 @@ def dispatch(args):
         if args.action == "prepare-hard":
             return prepare_hard(args.baseline, args.variants, args.output)
         cases = load_cases(args.cases)
+        if any(case.workflow == "mock_restaurant_natural" for case in cases):
+            from voice_bench.restaurant_natural import preflight
+
+            return preflight(load_config(args.config), cases)
         preflight = hard_blockers if any(c.case_id in HARD_IDS for c in cases) else pilot_blockers
         return preflight(load_config(args.config), cases)
     if args.command in {"status", "plan"}:
@@ -358,6 +376,16 @@ def dispatch(args):
         raise ValueError("Execution requires the explicit --live switch")
     from voice_bench.runtime import execute_batch
 
+    jev_rubric = None
+    if args.with_evaluation:
+        from voice_bench.evaluation.jev import JevRubric
+
+        if not args.jev_rubric:
+            raise ValueError("Full evaluation requires --jev-rubric")
+        jev_rubric = JevRubric.model_validate_json(args.jev_rubric.read_bytes())
+    elif args.jev_rubric:
+        raise ValueError("--jev-rubric requires --with-evaluation")
+
     return asyncio.run(
         execute_batch(
             config,
@@ -366,6 +394,7 @@ def dispatch(args):
             seed=seed,
             port=args.port,
             resume_batch=args.resume,
+            evaluation_rubric=jev_rubric,
         )
     )
 

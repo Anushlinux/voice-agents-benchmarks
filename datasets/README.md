@@ -4,9 +4,18 @@ The executable collection is **one baseline and three restaurant challenge
 variants**, all within one task family. It is a useful integration and regression
 set, but it is not yet a difficult Indian personal-assistant benchmark.
 
-Start with the [review](REVIEW.md) and the
-[eight proposed Indian assistant tasks](proposed/indian-assistant-v2.md).
-The proposals are authored specifications, not executable cases or live results.
+For the new conversation design, start with the
+[restaurant v2 guide](proposed/restaurant-natural-v2.md) and its
+[authoritative design catalog](proposed/restaurant-natural-v2.json): **ten proposed
+synthetic cases, zero newly executable cases, zero live attempts, human conversation
+review pending**. The balance is four everyday bookings, three trade-offs and
+three situations where not booking is correct. These are design specifications,
+not execution inputs or saved conversations.
+
+The [review](REVIEW.md) explains the existing dataset's limitations. The
+[eight earlier Indian assistant task proposals](proposed/indian-assistant-v2.md)
+remain a separate cross-domain design workstream; they have not been implemented
+by this restaurant-only revision.
 
 ## Where to work
 
@@ -17,19 +26,24 @@ The proposals are authored specifications, not executable cases or live results.
 | `generated/restaurant-baseline.json` | One existing execution input | No; regenerate |
 | `generated/restaurant-challenges.json` | Three existing execution inputs | No; regenerate |
 | `sources/taskmaster1/` | Original source record, source documentation and attribution | Preserve |
-| `proposed/indian-assistant-v2.md` | New tasks, business rules, decisions and grading requirements | Yes; design work |
+| `proposed/restaurant-natural-v2.json` | Authoritative ten-case natural restaurant design; not runnable | Yes; design work |
+| `proposed/restaurant-natural-v2.md` | Case map, review rules and implementation dependencies | Yes; keep aligned with catalog |
+| `proposed/indian-assistant-v2.md` | Earlier cross-domain task and grading proposals | Yes; separate design work |
 | `archive/2026-09-20/` | All 59 original files, including profiles, plans and historical validation | Preserve |
 
-There are **five JSON files outside the archive**: two authored inputs, two
-generated inputs and one source record. Read the two authored files to understand
-the executable cases. The three counterpart styles are variations of those same
+There are **six JSON files outside the archive**: two authored inputs, two
+generated inputs, one source record and the new proposed design catalog. Read
+the two authored files to understand the four existing executable cases. The
+three counterpart styles are variations of those same
 tasks; they are not extra task coverage. Generate a style only when selecting an
 experiment instead of keeping every expansion in the working set.
 
 The existing executable files retain their original bytes, case IDs, versions,
 permissions, expected outcomes and rubrics. Their classification here as baseline
-and challenges does not change an old score. The more demanding v2 designs must
-receive new identities and implemented business rules before execution.
+and challenges does not change an old score. The restaurant v2 catalog has new
+case identities but still needs preparation, business-policy, conversation and
+grading support before execution. Its naturalness and difficulty have not been
+measured. Do not pass the proposed catalog to the commands below.
 
 ## Regenerate and compare offline
 
@@ -81,7 +95,9 @@ historical references; use the paths above for current work. Saved run evidence
 under `artifacts/`, saved results under `reports/`, and `report.md` were not moved
 or rescored. No provider calls were made for this review.
 
-Dataset files remain local and were not staged or published. The existing user
-edit removing `datasets/` from `.gitignore` was left unchanged; consequently Git
-currently shows this directory as untracked, rather than ignored. This does not
-change the repository rule against committing datasets and evidence.
+This revision remains local and was not staged, committed or published. Inspection
+on 21 September 2026 found that existing dataset files were already tracked in
+Git; the earlier statement that the entire directory was untracked is no longer
+current. Existing tracking and `.gitignore` were left unchanged. The new catalog
+and guide must remain outside Git publication, consistent with the repository
+rule against committing datasets and evidence.

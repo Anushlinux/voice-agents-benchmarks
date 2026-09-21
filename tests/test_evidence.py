@@ -71,3 +71,37 @@ def test_second_writer_cannot_take_an_active_bundle(tmp_path):
     first.close_writer()
     second = LocalEvidence(tmp_path, batch_id, run_id)
     second.close_writer()
+
+
+@pytest.mark.asyncio
+async def test_batched_playback_evidence_is_durable_ordered_and_preserves_zero_clock(
+    tmp_path, monkeypatch
+):
+    writes = []
+    original = LocalEvidence._append_bytes
+
+    def write(self, data):
+        writes.append(data)
+        return original(self, data)
+
+    monkeypatch.setattr(LocalEvidence, "_append_bytes", write)
+    sink = LocalEvidence(tmp_path, uuid4(), uuid4())
+    await sink.emit_many(
+        [
+            {"source": "channel", "kind": "rendered_block", "observed_ns": 0},
+            {"source": "channel", "kind": "playback_progress", "observed_ns": 1},
+        ]
+    )
+    assert len(writes) == 1
+    events = [
+        json.loads(line) for line in (sink.directory / "events.jsonl").read_text().splitlines()
+    ]
+    assert [e["sequence"] for e in events] == [0, 1]
+    assert [e["observed_monotonic_ns"] for e in events] == [0, 1]
+    with pytest.raises(ValueError):
+        await sink.emit_many(
+            [{"source": "channel", "kind": "good"}, {"source": "invalid", "kind": "bad"}]
+        )
+    assert len(writes) == 1 and sink.sequence == 2
+    await sink.finalize(sink.run_id)
+    verify_bundle(sink.directory)

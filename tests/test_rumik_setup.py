@@ -164,3 +164,35 @@ def test_ordinary_evaluate_cli_still_routes_to_offline_evaluator(tmp_path, capsy
     # The new Jev branch must not shadow the ordinary evaluate() function.
     assert main(["evaluate", str(tmp_path), "--version", "v1"]) == 2
     assert "FileNotFoundError" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("damage", [None, "prompt", "missing", "identity", "secret", "output"])
+def test_natural_setup_requires_private_report_contract_and_repaired_prompt(damage):
+    from voice_bench.target.rumik.setup import natural_setup_issues
+
+    config, snapshot = configured()
+    report = setup_plan(config)["report_tool"]
+    from voice_bench.evidence.local import digest
+
+    config = config.model_copy(
+        update={
+            "target": config.target.model_copy(
+                update={"prompt_sha256": digest(snapshot["agent"]["systemInstruction"].encode())}
+            )
+        }
+    )
+    report["config"]["auth"]["hasSecret"] = True
+    snapshot["tools"]["items"].append(report)
+    if damage == "prompt":
+        snapshot["agent"]["systemInstruction"] += " Recite a script."
+    elif damage == "missing":
+        snapshot["tools"]["items"].pop()
+    elif damage == "identity":
+        report["config"]["llmParams"].append(
+            {"name": "call_id", "type": "string", "required": True}
+        )
+    elif damage == "secret":
+        report["config"]["auth"]["hasSecret"] = False
+    elif damage == "output":
+        report["config"]["outputs"] = []
+    assert bool(natural_setup_issues(snapshot, config)) == bool(damage)

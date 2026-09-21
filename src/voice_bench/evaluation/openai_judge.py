@@ -101,7 +101,7 @@ async def judge(directory, config, *, client=None, audit_directory=None):
             else case.get("counterpart", case.get("caller"))
         )
         prompt = {
-            "judge_input_version": "typed-evidence-timeline-v4",
+            "judge_input_version": "actor-aware-evidence-v5",
             "rubrics": case["criteria"].get("rubrics", {}),
             "expected_reservation": case["criteria"].get("reservation_expected"),
             "metric_definitions": case.get("evaluation_rubric"),
@@ -116,6 +116,7 @@ async def judge(directory, config, *, client=None, audit_directory=None):
                 "sent_or_played_audio": "Simulator",
             },
             "user_task": case.get("user_task"),
+            "outcome_criteria": case["criteria"],
             "counterpart_brief": counterpart_brief,
             "declared_conversation_events": case.get("conversation_events", []),
             "tool_access": {
@@ -187,6 +188,22 @@ async def judge(directory, config, *, client=None, audit_directory=None):
             "business/final.json. The harness resolves these IDs to their exact sealed "
             "artifact paths and hashes. Cite only evidence supporting your explanation. "
             "Return uncertain when evidence is insufficient. "
+            "For a resolved metric, cite every required_evidence artifact in its supplied "
+            "definition as well as the relevant speech-window IDs; do not cite a missing "
+            "artifact or fill a missing observation with assumptions. "
+            "Attribute each action to its owner: an employee's omitted lookup is not a target "
+            "action. Rumik knows its assignment and heard speech, not hidden inventory. "
+            "A report faithfully repeating an employee's false statement is not automatically "
+            "target fabrication. Inspect conversation_event_requested and linked audio events: "
+            "a declared event without a request was not injected, and a requested event is not "
+            "an undeclared mistake. Generated challenge text alone is not proof it was heard. "
+            "Judge consent semantically across the exchange, not by a required recital or "
+            "magic yes phrase; changed material terms still need agreement. Equivalent names "
+            "in different scripts are not automatically different people. Distinguish constraint "
+            "communication from business fulfillment, and budget protection from bargaining. "
+            "A useful authorized refusal can be success; never require a reference for no booking. "
+            "If target_user_report is absent, report content accuracy is not_applicable; its "
+            "absence is a separate deterministic presence check. Never cite a nonexistent file. "
             "sent.wav is submitted audio and may include unplayed speech; do not assume it was "
             "heard. Do not score audio quality from text. Do not override deterministic state "
             "or policy checks. Simulator validity requires adherence to its assigned role, "
@@ -251,6 +268,23 @@ async def judge(directory, config, *, client=None, audit_directory=None):
             )
         metrics = []
         for metric in response.output_parsed.metrics:
+            if metric.name == "user_report_accuracy" and prompt["target_user_report"] is None:
+                # Preserve the raw judge response, but do not reject the entire evaluation
+                # because a report that was never received cannot be cited.
+                metrics.append(
+                    MetricResult(
+                        name=metric.name,
+                        status="not_applicable",
+                        explanation="No target report content is available. Presence is checked "
+                        "separately; absent content cannot be assessed as true or false.",
+                        evidence=tuple(
+                            refs[n]
+                            for n in ("result.json", "target/report-requests.json")
+                            if n in refs
+                        ),
+                    )
+                )
+                continue
             if any(name not in citation_refs for name in metric.evidence):
                 raise JudgeValidationError(
                     "unknown_evidence_source",

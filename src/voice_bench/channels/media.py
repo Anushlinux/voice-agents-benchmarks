@@ -74,6 +74,7 @@ class MediaSession:
         self.received_samples = 0
         self.closed = asyncio.Event()
         self.last_received = time.monotonic()
+        self.last_received_speech_at = None
         self.error = None
         self.tasks = []
         self.converters = {}
@@ -94,6 +95,8 @@ class MediaSession:
         )
         self.received_samples += len(pcm) // 2
         self.last_received = time.monotonic()
+        if audioop.rms(pcm, 2) >= 500:
+            self.last_received_speech_at = self.last_received
         await self.recorder.write("received", frame)
         if self.startup_pending:
             if self.received_samples > self.startup_limit or len(self.startup_frames) >= 10000:

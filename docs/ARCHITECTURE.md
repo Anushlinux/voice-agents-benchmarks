@@ -37,9 +37,39 @@ Chromium joins the registered LiveKit room. Generated counterpart audio becomes 
 
 The OpenAI counterpart uses a server-side Realtime WebSocket. Business calls use a separate worker so audio reception continues while a tool runs. Arguments are executed only after their containing model response completes successfully; cancelled or incomplete responses cannot mutate records. Operation identities are scoped to the actor and attempt, so repeats replay safely and the two actors cannot collide.
 
+One response coordinator waits for committed caller input, including when a tool
+finishes during a pause. It rechecks that condition after asynchronous preparation.
+An interrupted response cannot send late audio or execute late proposed tools,
+even if its completion acknowledgement races with cancellation. New natural
+restaurant cases require semantic turn detection with low eagerness. This changes
+how the model decides a spoken turn is complete; simultaneous audio remains enabled.
+Browser events retain their individual sample clocks and ordering, but queued
+events share a bridge call and durable write to prevent evidence overhead from
+gradually delaying audio delivery. The queue remains bounded and fails explicitly.
+
+`target_report_then_conversation_end` requires the saved private report and either
+a remote hangup or explicit `finish_counterpart` after closing playback drains.
+The controller preserves trailing received speech and waits for one second of
+quiet before closing and verifying provider termination. A new caller turn during
+closing playback withdraws the finish action. Report receipt or an ordinary return
+from the counterpart cannot end the call. Tests of Rumik's own hangup retain the
+stricter `target_report_then_hangup` policy; employee termination is recorded
+separately and cannot count as a target hangup.
+
 The Plivo adapter currently dials into the Rumik-connected number. Authenticated callbacks, unique route reservations, 8 kHz mu-law audio, conversion and playback checkpoints remain in place. This is labeled `harness_connected`; it does not implement Rumik-originated dialing. Outbound and multi-call execution fail before dispatch, without a fallback.
 
 ## Evidence and grading
+
+Browser transport diagnostics are observations, not causal verdicts. Connection
+and track lifecycle events accompany one-second audio packet statistics where
+supported. Their browser clocks remain separate from worker receipt timestamps.
+Missing packets can reflect normal silence handling. Neither packet delivery nor
+local playback proves what the hosted model perceived. Versioned report diagnostics
+keep observed task completion separate from simulation validity and failure owner.
+
+New batches preserve a source-file checksum inventory and an archive of Python,
+browser source, executed browser bundles and dependency locks. This includes
+uncommitted source changes and excludes credentials, datasets and call evidence.
 
 Business mutations and audits commit together in PostgreSQL. Audits identify target, counterpart or local harness operations. A forbidden target action contributes to target policy failure. A forbidden counterpart action invalidates the simulation instead of failing Rumik. Conversational validity also requires model/human review: business permission alone does not prove that a concession or booking was justified by the conversation.
 

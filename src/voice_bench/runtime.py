@@ -14,6 +14,25 @@ def validate_live(config, cases):
 
     for case in cases:
         case.require_supported_execution()
+        if case.workflow == "mock_restaurant_natural" and case.workflow_version == "5":
+            turn = config.counterpart.turn_detection
+            if turn.get("type") != "semantic_vad" or turn.get("eagerness") != "low":
+                raise ValueError(
+                    "Natural restaurant workflow 5 requires semantic_vad with low eagerness "
+                    "to avoid replying to pauses inside a caller's turn"
+                )
+            if {"threshold", "prefix_padding_ms", "silence_duration_ms"}.intersection(turn):
+                raise ValueError("Remove server_vad-only settings from semantic_vad configuration")
+        if case.workflow == "mock_restaurant_natural" and (
+            config.counterpart.max_output_tokens < 2048
+            or config.counterpart.interrupt_after_ms is not None
+            or config.channels != ("browser",)
+            or config.counterpart.max_silence_recovery_prompts != 0
+        ):
+            raise ValueError(
+                "Natural restaurant qualification requires browser audio, at least 2048 "
+                "output tokens, no unsolicited silence prompts and no timed interruption"
+            )
         if config.purpose == "benchmark" and (case.harness_fixture or not case.evaluation_rubric):
             raise ValueError(
                 "Benchmark batches require non-fixture cases with explicit frozen rubrics"
@@ -56,6 +75,10 @@ def validate_live(config, cases):
         )
     if config.counterpart.turn_detection.get("type") not in {"server_vad", "semantic_vad"}:
         raise ValueError("Unsupported counterpart turn-detection mode")
+    recovery = config.counterpart.silence_recovery_seconds
+    prompts = config.counterpart.max_silence_recovery_prompts
+    if bool(recovery) != bool(prompts) or recovery >= config.counterpart.conversation_idle_seconds:
+        raise ValueError("Silence recovery needs a prompt allowance and must precede idle timeout")
     if not config.runtime.public_base_url.startswith("https://"):
         raise ValueError("A public HTTPS endpoint for authenticated business tools is required")
     for case in cases:
@@ -81,7 +104,9 @@ def validate_live(config, cases):
         raise ValueError("Missing runtime settings: " + ", ".join(missing))
 
 
-async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resume_batch=None):
+async def execute_batch(
+    config, cases, *, repetitions=1, seed=0, port=8000, resume_batch=None, evaluation_rubric=None
+):
     from voice_bench.restaurant_case import CASE_ID
     from voice_bench.restaurant_hard_cases import HARD_IDS
 
@@ -114,6 +139,12 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
             "at most 300 seconds and no injected interruption"
         )
     validate_live(config, cases)
+    if evaluation_rubric is not None:
+        from voice_bench.evaluation.pipeline import validate
+
+        if resume_batch:
+            raise ValueError("Full evaluation cannot redispatch a resumed batch")
+        validate(config, cases, evaluation_rubric, repetitions=repetitions)
     import uvicorn
 
     from voice_bench.api.app import create_app
@@ -152,6 +183,7 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
     )
     serving = asyncio.create_task(server.serve())
     results = []
+    evaluations = {}
     created = False
     stop_reason = None
     try:
@@ -165,6 +197,11 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
             config.target.agent_ref, sip_trunk_id=config.target.plivo_sip_trunk_id
         )
         qualify_snapshot(snapshot, config)
+        if any(case.workflow == "mock_restaurant_natural" for case in cases):
+            from voice_bench.target.rumik.setup import natural_setup_issues
+
+            if issues := natural_setup_issues(snapshot, config):
+                raise ValueError("; ".join(issues))
         if hub:
             hub.agent_id = snapshot["agent"]["id"]
         identity = snapshot_digest(snapshot)
@@ -174,10 +211,14 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
             path = Path(name)
             if path.exists():
                 dependencies[name] = digest(path.read_bytes())
+        from voice_bench.evidence.source import source_snapshot
+
+        source_files, source_archive = await asyncio.to_thread(source_snapshot)
         frozen = {
             "config": config.model_dump(mode="json"),
             "target": snapshot,
             "dependencies": dependencies,
+            "source_files": source_files,
             "seed": seed,
             "cases": [c.model_dump(mode="json") for c in cases],
             "source_digest": digest(
@@ -187,6 +228,9 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
                 )
             ),
             "tool_credential_digest": digest(os.environ["BENCH_TOOLS_SECRET"].encode()),
+            "evaluation_pipeline": evaluation_rubric.model_dump(mode="json")
+            if evaluation_rubric
+            else None,
         }
         config_digest = digest(canonical(frozen))
         if resume_batch:
@@ -214,10 +258,18 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
                 },
             )
             publish(config.artifact_root / str(batch_id) / "config.json", canonical(frozen))
+            publish(config.artifact_root / str(batch_id) / "source-snapshot.tar.gz", source_archive)
         created = True
         case_lookup = {c.case_id: c for c in cases}
         # Serial dispatch is the default; the reservation layer enforces account-wide limits.
         for plan in plans:
+            # Preserve room for a maximum-length recording and evidence finalization.
+            # Existing evidence is never removed to make another paid attempt fit.
+            import shutil
+
+            if shutil.disk_usage(config.artifact_root).free < 180 * 1024 * 1024:
+                stop_reason = "insufficient_disk_for_next_attempt"
+                break
             attempts = [
                 r
                 for r in await asyncio.to_thread(store.runs, batch_id)
@@ -252,9 +304,19 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
                 target_agent_aliases=[
                     value for value in (snapshot["agent"].get("handle"),) if value
                 ],
+                full_evaluation=evaluation_rubric is not None,
             )
             result = await controller.execute(plan, case_lookup[plan.case_id], config_digest)
             results.append(result.model_dump(mode="json"))
+            if evaluation_rubric is not None:
+                from voice_bench.evaluation.pipeline import evaluate_attempt
+
+                evaluations[str(result.run_id)] = await evaluate_attempt(
+                    store,
+                    config,
+                    config.artifact_root / str(batch_id) / str(result.run_id),
+                    evaluation_rubric,
+                )
             if not result.termination_confirmed:
                 stop_reason = "unresolved_call_termination"
                 break
@@ -286,4 +348,16 @@ async def execute_batch(config, cases, *, repetitions=1, seed=0, port=8000, resu
                 config.artifact_root / str(batch_id) / f"completion-{uuid4()}.json",
                 canonical(completion),
             )
-    return {"batch_id": str(batch_id), "attempts": results, "stop_reason": stop_reason}
+    full_report = None
+    if evaluation_rubric is not None:
+        from voice_bench.evaluation.pipeline import export_full_report
+
+        full_report = await asyncio.to_thread(
+            export_full_report, store, batch_id, config, evaluations
+        )
+    return {
+        "batch_id": str(batch_id),
+        "attempts": results,
+        "stop_reason": stop_reason,
+        "full_report": full_report,
+    }

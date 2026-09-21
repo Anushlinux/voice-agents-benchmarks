@@ -35,6 +35,7 @@ Add this section to an ignored local benchmark configuration:
 
 ```toml
 [jev]
+provider = "typesafe" # Or "openrouter"; credentials and routing never fall back.
 model = "" # Choose an explicit model; prefer a versioned ID for comparisons.
 cost_ceiling_inr = "0" # Set a funded conservative ceiling before live use.
 timeout_seconds = 30
@@ -43,6 +44,15 @@ max_request_bytes = 100000
 
 The byte cap is an operator limit, not a token estimate. Oversized requests fail
 locally without truncation. This version sends one request per attempt.
+
+For OpenRouter, set `provider = "openrouter"`, use an explicit OpenRouter model
+such as `typesafe/jev-1.13`, and export `OPENROUTER_API_KEY`. Requests go to
+`https://openrouter.ai/api/alpha/decisions`, not chat completions or TypeSafe's
+direct endpoint. A locally named `JEV_API_KEY` is not read automatically: an
+operator may explicitly map it to `OPENROUTER_API_KEY` in the process environment
+when that credential belongs to OpenRouter. Neither provider retries through the
+other. The selected route, requested model, raw response and resolved model are
+preserved in each result. See the [official Decisions API](https://openrouter.ai/docs/api/api-reference/alphadecisions/submit-a-decisions-questions-and-answers-request).
 
 Author an independent JSON rubric with `version` and a `questions` object. Each
 named question has `type` and `instructions`. `choice` requires a map of option

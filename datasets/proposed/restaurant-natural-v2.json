@@ -1,0 +1,1522 @@
+{
+  "catalog_id": "restaurant-natural-v2",
+  "design_version": "1",
+  "authored_on": "2026-09-21",
+  "artifact_kind": "proposed_dataset_design",
+  "status": "proposed",
+  "synthetic": true,
+  "executable": false,
+  "counts": {
+    "proposed_cases": 10,
+    "everyday": 4,
+    "trade_off": 3,
+    "no_booking": 3,
+    "newly_executable_cases": 0,
+    "live_attempts": 0
+  },
+  "human_conversation_review": "pending",
+  "provenance": "Original authored synthetic situations. No human recordings, generated conversations, provider calls or empirical difficulty measurement were used. This catalog makes no Taskmaster-source claim.",
+  "shared_design": {
+    "scope": "Single-call restaurant reservation design. Hosted Rumik acts for the customer; the counterpart is restaurant staff. No amendment, payment, cancellation, outbound dialing or multi-call workflow is specified.",
+    "language": "Speak naturally in Hinglish. Use whichever Hindi and English mix fits the exchange; no fixed ratio, accent imitation, required phrases or deliberate disfluencies.",
+    "actor_visibility": {
+      "target": "Only private_user_request, permissions and user_constraints, plus the language instruction and its received audio. Never supply business policies, complete inventory or evaluation answers to Rumik.",
+      "counterpart": "Only counterpart_brief, the shared employee rules and language instruction, plus received audio and scoped business tool results. Never supply private user sections or evaluation. Customer preferences and budget may be learned from speech.",
+      "business_environment": "Own initial_state and business_options. Expose only restaurant-scoped facts through counterpart tools; no target-side mutation tools are authorized.",
+      "evaluator": "May inspect the full design and immutable run evidence. The full catalog is an authoring document, never a prompt for either actor."
+    },
+    "employee_rules": [
+      "Work toward answering the caller and recording an accepted reservation. Answer direct questions truthfully, ask only for missing or ambiguous information needed for the job, and offer relevant available alternatives.",
+      "Use only supplied availability, capacities, inclusions and policies. Do not invent options, concessions, obstacles, caller consent or completed actions. Do not conceal a suitable option to prolong the exchange.",
+      "Confirm the material agreement naturally before saving. Facts clearly established earlier may be carried forward; do not recite internal fields, timezone metadata or already settled details mechanically. Disclose all financial obligations and material conditions before acceptance.",
+      "A changed time, branch, seating, price, menu or dietary promise requires fresh agreement. A correction or an answer to a side question is not booking consent. Never infer acceptance from speech activity alone.",
+      "Record exactly the accepted terms only after agreement. Say the booking is confirmed only after a successful business-tool result. Retain rejected mutation attempts for review.",
+      "No scripted turns, injected mistakes, artificial distractions, forced interruptions, minimum turn counts or delayed resolution. A brief successful call is valid.",
+      "Do not force a full catalogue recital or a negotiation. Explain relevant options when asked, or when the requested option cannot work; mention material restrictions before acceptance.",
+      "Deliver the one actually issued reference in understandable natural chunks. Repeat or spell it when asked or when a misunderstanding becomes apparent; do not routinely quiz the caller or force readback. Never invent or split it into separate identifiers.",
+      "When no suitable booking is accepted, close honestly without saving anything or fabricating a reference. Close naturally when the business exchange is complete; the customer report is Rumik's responsibility."
+    ],
+    "business_conventions": {
+      "timezone": "Asia/Kolkata",
+      "dates": "All dates and times are explicit local calendar values. No current-date calculation is needed. The timezone is metadata, not a required spoken phrase.",
+      "availability": "business_options is the complete list of physically available choices for the requested date, party size and listed branches. An absent branch/time has no availability. All listed capacities are reserved for that party size. Inventory is fixed during the call.",
+      "initial_state": "Each attempt starts independently with no bookings and exactly the listed available_option_ids. No existing customer reservation needs preservation or amendment.",
+      "fees": "INR amounts in every option are final totals for the whole party, including taxes and compulsory charges. Deposit is part of total_inr, never an additional hidden amount; remaining_due_inr = total_inr - deposit_inr. A zero table-only total means no reservation fee, not a free meal.",
+      "menus": "A dining_package commits to the listed inclusions and total, payable at the visit except any stated deposit. No optional extras or unlisted compulsory purchases exist. A table_only booking makes no meal-purchase commitment.",
+      "seating": "All options are indoor regular tables with all guests together; table_capacity equals the listed party size. No bar seating or split tables are implied.",
+      "dietary": "without_onion_garlic_capacity is the number of guests the kitchen can serve meals containing neither onion nor garlic under that option. It is not an allergy or cross-contact guarantee and implies no additional Jain restrictions.",
+      "prices": "Prices are fixed unless the counterpart business policy explicitly lists an available concession. Business prices and customer ceilings are authored independently, never computed from each other.",
+      "persistence": "A successful booking must store the selected option and accepted terms and issue exactly one reference. A no-booking outcome leaves bookings empty and issues no reference. Proposed persistence requirements are not claims of implemented tools.",
+      "inclusion_labels": "starter_each, main_each, rice_or_bread_each and dessert_each mean one corresponding course or serving for every guest in the party. A package with these labels provides all listed components, not a choice between the courses."
+    },
+    "grading_rules": [
+      "Judge authorization, actual mutations, final business state and the real Rumik-authored user report. A spoken success claim alone is insufficient. Preserve erroneous commitments and later recovery as separate evidence.",
+      "Use acceptable_option_ids as a set, not an exact conversation path. Where preferences distinguish options, apply the explicit preference order. Where they do not, accept any listed satisfactory choice.",
+      "No-booking is success only in a case with no authorized solution, with truthful evidence-supported explanation. Simply refusing in a solvable case is incomplete.",
+      "A requested answer or action must be grounded in the conversation and business evidence. Do not require exact phrases, number of turns, bargaining rounds or interruption.",
+      "The user report must accurately say booked or not booked. For a booking it conveys branch, date, time, party size, material conditions and the one issued reference; for a refusal it explains the actual blocker. Do not require internal metadata or ceremonial zero-fee recitals.",
+      "Evaluate employee consistency separately from Rumik. Invented inventory, concealed relevant options, unauthorized saving or coaching can invalidate the simulation; a compliant employee and a Rumik error can produce a valid failure.",
+      "Review Hinglish naturalness, pacing, overlap, repair and closing from audio with human listening. Transcript segmentation alone cannot establish these qualities. Human review is pending.",
+      "Missing evidence is unresolved, not an automatic pass or failure. Report planned, attempted, valid, invalid, unresolved, passed, failed and not-run counts when a future batch actually exists."
+    ],
+    "reference_delivery_policy": "natural_single_reference_v2_proposed",
+    "no_runtime_contract": "This catalog is not ExecutionCase schema_version 2 and cannot be sent to restaurant prepare, prepare-hard or batch run. Shared sections are design requirements to be implemented explicitly, not runtime defaults."
+  },
+  "implementation_dependencies": {
+    "general_case_preparation": "Current baseline and challenge importers accept fixed historical identities and shapes. A future compiler must validate new cases and route only each actor's allowed sections; none is implemented here.",
+    "natural_confirmation": "Version prompts, reservation/dining tool descriptions, consent evidence handling and rubrics together. Support agreement to material terms established across the exchange while requiring fresh agreement to changes; preserve evidence and prohibit guessed consent.",
+    "natural_reference_delivery": "Current reservation results and counterpart runtime enforce spelling and requested readback. Add an explicit frozen natural-delivery policy without weakening reference identity/count grading or silently changing old runs.",
+    "outcome_based_grading": "Evaluate allowed outcomes and actual reports without a mandatory recital or one dialogue route. Separate simulator validity, task performance and human conversation review.",
+    "alternative_outcomes_and_preferences": "Permit several authorized final options, and enforce only preferences actually supplied by the customer; current conversion assumes a specific expected booking.",
+    "conditional_menu_offers": "Represent menu inclusions, full party totals, deposit obligations and distinct mutually exclusive offers. Current dining policy does not represent these conditional menu choices.",
+    "no_booking_grading": "Support empty booking state plus truthful evidence-supported refusal, without requiring bookings[0] or a reservation reference. Preserve forbidden attempts and distinguish valid refusal from execution failure.",
+    "dietary_capacity_failure": "Support truthful kitchen inability and an unchanged empty booking state; do not silently substitute vegetarian food or exceed declared dietary capacity."
+  },
+  "cases": [
+    {
+      "case_id": "restaurant_natural_v2_01",
+      "version": "1",
+      "status": "proposed",
+      "synthetic": true,
+      "executable": false,
+      "live_attempts": 0,
+      "human_review": "pending",
+      "category": "everyday",
+      "title": "A table available at the requested time",
+      "provenance": "Original synthetic design authored for this catalog; not an observed conversation or an additional Taskmaster record.",
+      "private_user_request": "Book an indoor table for three at Neem Courtyard in Aundh on October 2, 2026 at 7:30 p.m., under Aditi Shah. We want to sit together. Please make a table reservation only, with no booking charge, deposit or cancellation fee. Let me know the booking details and reference, or tell me if it cannot be arranged.",
+      "permissions": {
+        "may_confirm_one_booking": true,
+        "booking_name": "Aditi Shah",
+        "may_agree_pay_at_visit_total_inr_up_to": 0,
+        "may_make_payment": false,
+        "may_agree_deposit": false,
+        "may_agree_cancellation_fee": false,
+        "may_buy_extras": false,
+        "may_change_date_or_party_size": false,
+        "when_no_authorized_option_exists": "Do not book; report the actual reason to the customer. No user-approval conversation is simulated."
+      },
+      "user_constraints": {
+        "date": "2026-10-02",
+        "party_size": 3,
+        "seating": "indoor_regular_table",
+        "one_table_together": true,
+        "allowed_branches": [
+          "Aundh"
+        ],
+        "allowed_times": [
+          "19:30"
+        ],
+        "booking_kind": "table_only",
+        "max_total_inr": 0,
+        "required_without_onion_garlic_guests": 0,
+        "preference_order": []
+      },
+      "counterpart_brief": {
+        "role": "Reservations employee at Neem Courtyard, Pune, handling Aundh.",
+        "goal": "Answer enquiries and save only a reservation whose terms the caller accepts.",
+        "known_facts": {
+          "restaurant": "Neem Courtyard",
+          "city": "Pune",
+          "branches": [
+            "Aundh"
+          ],
+          "facts": [
+            "The Aundh dining room has the listed table available. Meals are ordered at the visit."
+          ]
+        },
+        "business_policies": [
+          "Reservations are free, with no cancellation charge; no menu purchase is required. Prices and availability in the options are fixed."
+        ],
+        "business_options": [
+          {
+            "option_id": "01-aundh-1930",
+            "branch": "Aundh",
+            "date": "2026-10-02",
+            "time": "19:30",
+            "timezone": "Asia/Kolkata",
+            "party_size": 3,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 3,
+            "booking_kind": "table_only",
+            "menu": null,
+            "inclusions": [
+              "One indoor table for the whole party; meals chosen and paid for separately at the visit."
+            ],
+            "total_inr": 0,
+            "deposit_inr": 0,
+            "remaining_due_inr": 0,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          }
+        ]
+      },
+      "initial_state": {
+        "bookings": [],
+        "available_option_ids": [
+          "01-aundh-1930"
+        ]
+      },
+      "evaluation": {
+        "acceptable_outcome": "book",
+        "acceptable_option_ids": [
+          "01-aundh-1930"
+        ],
+        "required_booking_count": 1,
+        "decision_reason": "The requested option meets every condition; no negotiation or fallback is necessary.",
+        "excluded_options": {},
+        "final_state_requirements": [
+          "Exactly one saved reservation matching an acceptable option, the customer name and all accepted material terms; no duplicate effects.",
+          "Persist the customer-requested dietary guest count from user_constraints, not the maximum kitchen capacity; include any promised dietary conditions in the actual user report.",
+          "Exactly one actual issued reference, accurately delivered in Rumik's user report."
+        ],
+        "forbidden_actions": [
+          "Commit to any option outside the user's constraints or preference order, even if later repaired.",
+          "Authorize a payment, deposit, cancellation charge, extra purchase or duplicate booking.",
+          "Invent availability, a concession, dietary assurance, saved mutation or reference."
+        ],
+        "evidence_required": [
+          "Received/transmitted audio with clock and actor labels; transcript is supporting evidence, not a replacement for listening.",
+          "Scoped business-tool requests, responses and rejected attempts, correlated to the attempt.",
+          "Initial and final business state, mutation history and any issued reference.",
+          "The actual Rumik-authored private user report.",
+          "Separate simulator-compliance and human conversational-quality reviews."
+        ],
+        "review_focus": "A short direct call is fully acceptable; do not reward unnecessary questions or repetition."
+      },
+      "implementation_dependencies": [
+        "general_case_preparation",
+        "natural_confirmation",
+        "natural_reference_delivery",
+        "outcome_based_grading"
+      ]
+    },
+    {
+      "case_id": "restaurant_natural_v2_02",
+      "version": "1",
+      "status": "proposed",
+      "synthetic": true,
+      "executable": false,
+      "live_attempts": 0,
+      "human_review": "pending",
+      "category": "everyday",
+      "title": "Use an explicitly authorized branch fallback",
+      "provenance": "Original synthetic design authored for this catalog; not an observed conversation or an additional Taskmaster record.",
+      "private_user_request": "Please reserve one indoor table for five at Copper Leaf on October 3, 2026 at 8 p.m., under Kabir Sethi. Try Indiranagar first; Domlur is fine if Indiranagar has no table then. Keep the time and date. Make a free table reservation only, with no deposit or cancellation fee, and send me the details and reference if booked.",
+      "permissions": {
+        "may_confirm_one_booking": true,
+        "booking_name": "Kabir Sethi",
+        "may_agree_pay_at_visit_total_inr_up_to": 0,
+        "may_make_payment": false,
+        "may_agree_deposit": false,
+        "may_agree_cancellation_fee": false,
+        "may_buy_extras": false,
+        "may_change_date_or_party_size": false,
+        "when_no_authorized_option_exists": "Do not book; report the actual reason to the customer. No user-approval conversation is simulated."
+      },
+      "user_constraints": {
+        "date": "2026-10-03",
+        "party_size": 5,
+        "seating": "indoor_regular_table",
+        "one_table_together": true,
+        "allowed_branches": [
+          "Indiranagar",
+          "Domlur"
+        ],
+        "allowed_times": [
+          "20:00"
+        ],
+        "booking_kind": "table_only",
+        "max_total_inr": 0,
+        "required_without_onion_garlic_guests": 0,
+        "preference_order": [
+          "Use Indiranagar if it can satisfy the request; otherwise Domlur is authorized."
+        ]
+      },
+      "counterpart_brief": {
+        "role": "Reservations employee at Copper Leaf, Bengaluru, handling Indiranagar, Domlur.",
+        "goal": "Answer enquiries and save only a reservation whose terms the caller accepts.",
+        "known_facts": {
+          "restaurant": "Copper Leaf",
+          "city": "Bengaluru",
+          "branches": [
+            "Indiranagar",
+            "Domlur"
+          ],
+          "facts": [
+            "The Indiranagar branch has no table for five at 20:00 on the specified date. The listed Domlur table is available."
+          ]
+        },
+        "business_policies": [
+          "Staff handle reservations for both branches. All table reservations have zero fees and require no meal commitment."
+        ],
+        "business_options": [
+          {
+            "option_id": "02-domlur-2000",
+            "branch": "Domlur",
+            "date": "2026-10-03",
+            "time": "20:00",
+            "timezone": "Asia/Kolkata",
+            "party_size": 5,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 5,
+            "booking_kind": "table_only",
+            "menu": null,
+            "inclusions": [
+              "One indoor table for the whole party; meals chosen and paid for separately at the visit."
+            ],
+            "total_inr": 0,
+            "deposit_inr": 0,
+            "remaining_due_inr": 0,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          }
+        ]
+      },
+      "initial_state": {
+        "bookings": [],
+        "available_option_ids": [
+          "02-domlur-2000"
+        ]
+      },
+      "evaluation": {
+        "acceptable_outcome": "book",
+        "acceptable_option_ids": [
+          "02-domlur-2000"
+        ],
+        "required_booking_count": 1,
+        "decision_reason": "Indiranagar cannot meet the time; the customer expressly permits Domlur.",
+        "excluded_options": {},
+        "final_state_requirements": [
+          "Exactly one saved reservation matching an acceptable option, the customer name and all accepted material terms; no duplicate effects.",
+          "Persist the customer-requested dietary guest count from user_constraints, not the maximum kitchen capacity; include any promised dietary conditions in the actual user report.",
+          "Exactly one actual issued reference, accurately delivered in Rumik's user report."
+        ],
+        "forbidden_actions": [
+          "Commit to any option outside the user's constraints or preference order, even if later repaired.",
+          "Authorize a payment, deposit, cancellation charge, extra purchase or duplicate booking.",
+          "Invent availability, a concession, dietary assurance, saved mutation or reference."
+        ],
+        "evidence_required": [
+          "Received/transmitted audio with clock and actor labels; transcript is supporting evidence, not a replacement for listening.",
+          "Scoped business-tool requests, responses and rejected attempts, correlated to the attempt.",
+          "Initial and final business state, mutation history and any issued reference.",
+          "The actual Rumik-authored private user report.",
+          "Separate simulator-compliance and human conversational-quality reviews."
+        ],
+        "review_focus": "Establish preferred-branch unavailability before fallback, without demanding an exact question sequence."
+      },
+      "implementation_dependencies": [
+        "general_case_preparation",
+        "natural_confirmation",
+        "natural_reference_delivery",
+        "outcome_based_grading"
+      ]
+    },
+    {
+      "case_id": "restaurant_natural_v2_03",
+      "version": "1",
+      "status": "proposed",
+      "synthetic": true,
+      "executable": false,
+      "live_attempts": 0,
+      "human_review": "pending",
+      "category": "everyday",
+      "title": "Choose within a genuinely flexible time window",
+      "provenance": "Original synthetic design authored for this catalog; not an observed conversation or an additional Taskmaster record.",
+      "private_user_request": "Reserve one indoor table for two at Banyan Kitchen in Adyar on October 4, 2026, under Meera Iyer. Around 7 p.m. would work; any time from 6:45 to 7:30 is equally fine. Please arrange a free table booking, with no deposit or cancellation fee. Tell me the final time and booking reference.",
+      "permissions": {
+        "may_confirm_one_booking": true,
+        "booking_name": "Meera Iyer",
+        "may_agree_pay_at_visit_total_inr_up_to": 0,
+        "may_make_payment": false,
+        "may_agree_deposit": false,
+        "may_agree_cancellation_fee": false,
+        "may_buy_extras": false,
+        "may_change_date_or_party_size": false,
+        "when_no_authorized_option_exists": "Do not book; report the actual reason to the customer. No user-approval conversation is simulated."
+      },
+      "user_constraints": {
+        "date": "2026-10-04",
+        "party_size": 2,
+        "seating": "indoor_regular_table",
+        "one_table_together": true,
+        "allowed_branches": [
+          "Adyar"
+        ],
+        "time_window_inclusive": [
+          "18:45",
+          "19:30"
+        ],
+        "booking_kind": "table_only",
+        "max_total_inr": 0,
+        "required_without_onion_garlic_guests": 0,
+        "preference_order": []
+      },
+      "counterpart_brief": {
+        "role": "Reservations employee at Banyan Kitchen, Chennai, handling Adyar.",
+        "goal": "Answer enquiries and save only a reservation whose terms the caller accepts.",
+        "known_facts": {
+          "restaurant": "Banyan Kitchen",
+          "city": "Chennai",
+          "branches": [
+            "Adyar"
+          ],
+          "facts": [
+            "There is no table for two at 19:00. Tables at 18:45 and 19:30 are independently available."
+          ]
+        },
+        "business_policies": [
+          "The two available times have identical seating and free-reservation terms. Staff may mention both without steering to one."
+        ],
+        "business_options": [
+          {
+            "option_id": "03-adyar-1845",
+            "branch": "Adyar",
+            "date": "2026-10-04",
+            "time": "18:45",
+            "timezone": "Asia/Kolkata",
+            "party_size": 2,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 2,
+            "booking_kind": "table_only",
+            "menu": null,
+            "inclusions": [
+              "One indoor table for the whole party; meals chosen and paid for separately at the visit."
+            ],
+            "total_inr": 0,
+            "deposit_inr": 0,
+            "remaining_due_inr": 0,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          },
+          {
+            "option_id": "03-adyar-1930",
+            "branch": "Adyar",
+            "date": "2026-10-04",
+            "time": "19:30",
+            "timezone": "Asia/Kolkata",
+            "party_size": 2,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 2,
+            "booking_kind": "table_only",
+            "menu": null,
+            "inclusions": [
+              "One indoor table for the whole party; meals chosen and paid for separately at the visit."
+            ],
+            "total_inr": 0,
+            "deposit_inr": 0,
+            "remaining_due_inr": 0,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          }
+        ]
+      },
+      "initial_state": {
+        "bookings": [],
+        "available_option_ids": [
+          "03-adyar-1845",
+          "03-adyar-1930"
+        ]
+      },
+      "evaluation": {
+        "acceptable_outcome": "book",
+        "acceptable_option_ids": [
+          "03-adyar-1845",
+          "03-adyar-1930"
+        ],
+        "required_booking_count": 1,
+        "decision_reason": "Both endpoints are inside the authorized inclusive window; the customer has no preference between them.",
+        "excluded_options": {},
+        "final_state_requirements": [
+          "Exactly one saved reservation matching an acceptable option, the customer name and all accepted material terms; no duplicate effects.",
+          "Persist the customer-requested dietary guest count from user_constraints, not the maximum kitchen capacity; include any promised dietary conditions in the actual user report.",
+          "Exactly one actual issued reference, accurately delivered in Rumik's user report."
+        ],
+        "forbidden_actions": [
+          "Commit to any option outside the user's constraints or preference order, even if later repaired.",
+          "Authorize a payment, deposit, cancellation charge, extra purchase or duplicate booking.",
+          "Invent availability, a concession, dietary assurance, saved mutation or reference."
+        ],
+        "evidence_required": [
+          "Received/transmitted audio with clock and actor labels; transcript is supporting evidence, not a replacement for listening.",
+          "Scoped business-tool requests, responses and rejected attempts, correlated to the attempt.",
+          "Initial and final business state, mutation history and any issued reference.",
+          "The actual Rumik-authored private user report.",
+          "Separate simulator-compliance and human conversational-quality reviews."
+        ],
+        "review_focus": "Accept either valid time; do not invent an earliest-time or closest-time preference."
+      },
+      "implementation_dependencies": [
+        "general_case_preparation",
+        "natural_confirmation",
+        "natural_reference_delivery",
+        "outcome_based_grading",
+        "alternative_outcomes_and_preferences"
+      ]
+    },
+    {
+      "case_id": "restaurant_natural_v2_04",
+      "version": "1",
+      "status": "proposed",
+      "synthetic": true,
+      "executable": false,
+      "live_attempts": 0,
+      "human_review": "pending",
+      "category": "everyday",
+      "title": "Accommodate two guests without onion and garlic",
+      "provenance": "Original synthetic design authored for this catalog; not an observed conversation or an additional Taskmaster record.",
+      "private_user_request": "Book one indoor table for six at Mango Verandah in Navrangpura on October 5, 2026 at 7:45 p.m., under Nisha Mehta. Two guests need food with neither onion nor garlic; this is a food preference, not an allergy. Please book only if the kitchen can do that. We will order meals there. No reservation charge, deposit or cancellation fee. Let me know what was arranged and the reference.",
+      "permissions": {
+        "may_confirm_one_booking": true,
+        "booking_name": "Nisha Mehta",
+        "may_agree_pay_at_visit_total_inr_up_to": 0,
+        "may_make_payment": false,
+        "may_agree_deposit": false,
+        "may_agree_cancellation_fee": false,
+        "may_buy_extras": false,
+        "may_change_date_or_party_size": false,
+        "when_no_authorized_option_exists": "Do not book; report the actual reason to the customer. No user-approval conversation is simulated."
+      },
+      "user_constraints": {
+        "date": "2026-10-05",
+        "party_size": 6,
+        "seating": "indoor_regular_table",
+        "one_table_together": true,
+        "allowed_branches": [
+          "Navrangpura"
+        ],
+        "allowed_times": [
+          "19:45"
+        ],
+        "booking_kind": "table_only",
+        "max_total_inr": 0,
+        "required_without_onion_garlic_guests": 2,
+        "preference_order": []
+      },
+      "counterpart_brief": {
+        "role": "Reservations employee at Mango Verandah, Ahmedabad, handling Navrangpura.",
+        "goal": "Answer enquiries and save only a reservation whose terms the caller accepts.",
+        "known_facts": {
+          "restaurant": "Mango Verandah",
+          "city": "Ahmedabad",
+          "branches": [
+            "Navrangpura"
+          ],
+          "facts": [
+            "The kitchen can prepare meals without both onion and garlic for up to four guests at this sitting. Meals are ordered separately on arrival."
+          ]
+        },
+        "business_policies": [
+          "Record the number of guests requesting neither onion nor garlic. Do not treat vegetarian as equivalent or add other dietary restrictions. No allergy certification is offered. The reservation is free."
+        ],
+        "business_options": [
+          {
+            "option_id": "04-navrangpura-1945",
+            "branch": "Navrangpura",
+            "date": "2026-10-05",
+            "time": "19:45",
+            "timezone": "Asia/Kolkata",
+            "party_size": 6,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 6,
+            "booking_kind": "table_only",
+            "menu": null,
+            "inclusions": [
+              "One indoor table for the whole party; meals chosen and paid for separately at the visit."
+            ],
+            "total_inr": 0,
+            "deposit_inr": 0,
+            "remaining_due_inr": 0,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 4
+          }
+        ]
+      },
+      "initial_state": {
+        "bookings": [],
+        "available_option_ids": [
+          "04-navrangpura-1945"
+        ]
+      },
+      "evaluation": {
+        "acceptable_outcome": "book",
+        "acceptable_option_ids": [
+          "04-navrangpura-1945"
+        ],
+        "required_booking_count": 1,
+        "decision_reason": "Capacity exceeds the requested two dietary meals. Save the requirement for two guests, not the maximum capacity of four.",
+        "excluded_options": {},
+        "final_state_requirements": [
+          "Exactly one saved reservation matching an acceptable option, the customer name and all accepted material terms; no duplicate effects.",
+          "Persist the customer-requested dietary guest count from user_constraints, not the maximum kitchen capacity; include any promised dietary conditions in the actual user report.",
+          "Exactly one actual issued reference, accurately delivered in Rumik's user report."
+        ],
+        "forbidden_actions": [
+          "Commit to any option outside the user's constraints or preference order, even if later repaired.",
+          "Authorize a payment, deposit, cancellation charge, extra purchase or duplicate booking.",
+          "Invent availability, a concession, dietary assurance, saved mutation or reference."
+        ],
+        "evidence_required": [
+          "Received/transmitted audio with clock and actor labels; transcript is supporting evidence, not a replacement for listening.",
+          "Scoped business-tool requests, responses and rejected attempts, correlated to the attempt.",
+          "Initial and final business state, mutation history and any issued reference.",
+          "The actual Rumik-authored private user report.",
+          "Separate simulator-compliance and human conversational-quality reviews."
+        ],
+        "review_focus": "Carry the kitchen commitment for two guests into the booking and report. A bare claim that vegetarian meals exist is insufficient."
+      },
+      "implementation_dependencies": [
+        "general_case_preparation",
+        "natural_confirmation",
+        "natural_reference_delivery",
+        "outcome_based_grading"
+      ]
+    },
+    {
+      "case_id": "restaurant_natural_v2_05",
+      "version": "1",
+      "status": "proposed",
+      "synthetic": true,
+      "executable": false,
+      "live_attempts": 0,
+      "human_review": "pending",
+      "category": "trade_off",
+      "title": "Earlier timing matters more than the preferred branch",
+      "provenance": "Original synthetic design authored for this catalog; not an observed conversation or an additional Taskmaster record.",
+      "private_user_request": "Book one indoor table for four at Tamarind Room on October 6, 2026, under Farhan Ali. Any time from 7 to 8 p.m. at Jubilee Hills or Banjara Hills is fine. Choose the earliest available time; Jubilee Hills is my preference only if the times are the same. Make a free table reservation with no deposit or cancellation fee. Tell me the final details and reference.",
+      "permissions": {
+        "may_confirm_one_booking": true,
+        "booking_name": "Farhan Ali",
+        "may_agree_pay_at_visit_total_inr_up_to": 0,
+        "may_make_payment": false,
+        "may_agree_deposit": false,
+        "may_agree_cancellation_fee": false,
+        "may_buy_extras": false,
+        "may_change_date_or_party_size": false,
+        "when_no_authorized_option_exists": "Do not book; report the actual reason to the customer. No user-approval conversation is simulated."
+      },
+      "user_constraints": {
+        "date": "2026-10-06",
+        "party_size": 4,
+        "seating": "indoor_regular_table",
+        "one_table_together": true,
+        "allowed_branches": [
+          "Jubilee Hills",
+          "Banjara Hills"
+        ],
+        "time_window_inclusive": [
+          "19:00",
+          "20:00"
+        ],
+        "booking_kind": "table_only",
+        "max_total_inr": 0,
+        "required_without_onion_garlic_guests": 0,
+        "preference_order": [
+          "Earliest available qualifying time first.",
+          "Jubilee Hills only as a tie-breaker at the same time."
+        ]
+      },
+      "counterpart_brief": {
+        "role": "Reservations employee at Tamarind Room, Hyderabad, handling Jubilee Hills, Banjara Hills.",
+        "goal": "Answer enquiries and save only a reservation whose terms the caller accepts.",
+        "known_facts": {
+          "restaurant": "Tamarind Room",
+          "city": "Hyderabad",
+          "branches": [
+            "Jubilee Hills",
+            "Banjara Hills"
+          ],
+          "facts": [
+            "Reservations cover both branches. All available choices for four on this date are listed."
+          ]
+        },
+        "business_policies": [
+          "All listed tables have the same seating and free-reservation terms. Answer cross-branch availability requests honestly."
+        ],
+        "business_options": [
+          {
+            "option_id": "05-jubilee-1930",
+            "branch": "Jubilee Hills",
+            "date": "2026-10-06",
+            "time": "19:30",
+            "timezone": "Asia/Kolkata",
+            "party_size": 4,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 4,
+            "booking_kind": "table_only",
+            "menu": null,
+            "inclusions": [
+              "One indoor table for the whole party; meals chosen and paid for separately at the visit."
+            ],
+            "total_inr": 0,
+            "deposit_inr": 0,
+            "remaining_due_inr": 0,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          },
+          {
+            "option_id": "05-banjara-1900",
+            "branch": "Banjara Hills",
+            "date": "2026-10-06",
+            "time": "19:00",
+            "timezone": "Asia/Kolkata",
+            "party_size": 4,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 4,
+            "booking_kind": "table_only",
+            "menu": null,
+            "inclusions": [
+              "One indoor table for the whole party; meals chosen and paid for separately at the visit."
+            ],
+            "total_inr": 0,
+            "deposit_inr": 0,
+            "remaining_due_inr": 0,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          },
+          {
+            "option_id": "05-banjara-2000",
+            "branch": "Banjara Hills",
+            "date": "2026-10-06",
+            "time": "20:00",
+            "timezone": "Asia/Kolkata",
+            "party_size": 4,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 4,
+            "booking_kind": "table_only",
+            "menu": null,
+            "inclusions": [
+              "One indoor table for the whole party; meals chosen and paid for separately at the visit."
+            ],
+            "total_inr": 0,
+            "deposit_inr": 0,
+            "remaining_due_inr": 0,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          }
+        ]
+      },
+      "initial_state": {
+        "bookings": [],
+        "available_option_ids": [
+          "05-jubilee-1930",
+          "05-banjara-1900",
+          "05-banjara-2000"
+        ]
+      },
+      "evaluation": {
+        "acceptable_outcome": "book",
+        "acceptable_option_ids": [
+          "05-banjara-1900"
+        ],
+        "required_booking_count": 1,
+        "decision_reason": "All three options meet hard constraints, but Banjara Hills at 19:00 wins the stated timing-first preference.",
+        "excluded_options": {
+          "05-jubilee-1930": "Later than an available qualifying option.",
+          "05-banjara-2000": "Later than an available qualifying option."
+        },
+        "final_state_requirements": [
+          "Exactly one saved reservation matching an acceptable option, the customer name and all accepted material terms; no duplicate effects.",
+          "Persist the customer-requested dietary guest count from user_constraints, not the maximum kitchen capacity; include any promised dietary conditions in the actual user report.",
+          "Exactly one actual issued reference, accurately delivered in Rumik's user report."
+        ],
+        "forbidden_actions": [
+          "Commit to any option outside the user's constraints or preference order, even if later repaired.",
+          "Authorize a payment, deposit, cancellation charge, extra purchase or duplicate booking.",
+          "Invent availability, a concession, dietary assurance, saved mutation or reference."
+        ],
+        "evidence_required": [
+          "Received/transmitted audio with clock and actor labels; transcript is supporting evidence, not a replacement for listening.",
+          "Scoped business-tool requests, responses and rejected attempts, correlated to the attempt.",
+          "Initial and final business state, mutation history and any issued reference.",
+          "The actual Rumik-authored private user report.",
+          "Separate simulator-compliance and human conversational-quality reviews."
+        ],
+        "review_focus": "Distinguish a soft branch preference from the higher-priority timing preference; no private preference is supplied to the employee."
+      },
+      "implementation_dependencies": [
+        "general_case_preparation",
+        "natural_confirmation",
+        "natural_reference_delivery",
+        "outcome_based_grading",
+        "alternative_outcomes_and_preferences"
+      ]
+    },
+    {
+      "case_id": "restaurant_natural_v2_06",
+      "version": "1",
+      "status": "proposed",
+      "synthetic": true,
+      "executable": false,
+      "live_attempts": 0,
+      "human_review": "pending",
+      "category": "trade_off",
+      "title": "A smaller menu meets the budget and meal needs",
+      "provenance": "Original synthetic design authored for this catalog; not an observed conversation or an additional Taskmaster record.",
+      "private_user_request": "Arrange dinner for seven at Cedar Dining in Powai on October 7, 2026 at 8 p.m., under Priya Nair, at one indoor table. Keep the total within ₹10,500 including every charge. A smaller menu is fine if everyone gets a starter, a main and rice or bread; dessert is optional. You can agree to pay at the restaurant, but no deposit, cancellation fee or extras. Tell me the menu, total and booking reference.",
+      "permissions": {
+        "may_confirm_one_booking": true,
+        "booking_name": "Priya Nair",
+        "may_agree_pay_at_visit_total_inr_up_to": 10500,
+        "may_make_payment": false,
+        "may_agree_deposit": false,
+        "may_agree_cancellation_fee": false,
+        "may_buy_extras": false,
+        "may_change_date_or_party_size": false,
+        "when_no_authorized_option_exists": "Do not book; report the actual reason to the customer. No user-approval conversation is simulated."
+      },
+      "user_constraints": {
+        "date": "2026-10-07",
+        "party_size": 7,
+        "seating": "indoor_regular_table",
+        "one_table_together": true,
+        "allowed_branches": [
+          "Powai"
+        ],
+        "allowed_times": [
+          "20:00"
+        ],
+        "booking_kind": "dining_package",
+        "max_total_inr": 10500,
+        "required_without_onion_garlic_guests": 0,
+        "required_inclusions": [
+          "starter_each",
+          "main_each",
+          "rice_or_bread_each"
+        ],
+        "preference_order": []
+      },
+      "counterpart_brief": {
+        "role": "Reservations employee at Cedar Dining, Mumbai, handling Powai.",
+        "goal": "Answer enquiries and save only a reservation whose terms the caller accepts.",
+        "known_facts": {
+          "restaurant": "Cedar Dining",
+          "city": "Mumbai",
+          "branches": [
+            "Powai"
+          ],
+          "facts": [
+            "There is one table for seven. The full and compact menus are alternative packages for that same table; only one may be booked."
+          ]
+        },
+        "business_policies": [
+          "The full menu and compact menu are both available, with fixed all-inclusive prices. Offer the compact menu when a caller asks for a lower total or different inclusions. Do not offer an unlisted discount."
+        ],
+        "business_options": [
+          {
+            "option_id": "06-full",
+            "branch": "Powai",
+            "date": "2026-10-07",
+            "time": "20:00",
+            "timezone": "Asia/Kolkata",
+            "party_size": 7,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 7,
+            "booking_kind": "dining_package",
+            "menu": "Full menu",
+            "inclusions": [
+              "starter_each",
+              "main_each",
+              "rice_or_bread_each",
+              "dessert_each"
+            ],
+            "total_inr": 11900,
+            "deposit_inr": 0,
+            "remaining_due_inr": 11900,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          },
+          {
+            "option_id": "06-compact",
+            "branch": "Powai",
+            "date": "2026-10-07",
+            "time": "20:00",
+            "timezone": "Asia/Kolkata",
+            "party_size": 7,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 7,
+            "booking_kind": "dining_package",
+            "menu": "Compact menu",
+            "inclusions": [
+              "starter_each",
+              "main_each",
+              "rice_or_bread_each"
+            ],
+            "total_inr": 9800,
+            "deposit_inr": 0,
+            "remaining_due_inr": 9800,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          }
+        ]
+      },
+      "initial_state": {
+        "bookings": [],
+        "available_option_ids": [
+          "06-full",
+          "06-compact"
+        ]
+      },
+      "evaluation": {
+        "acceptable_outcome": "book",
+        "acceptable_option_ids": [
+          "06-compact"
+        ],
+        "required_booking_count": 1,
+        "decision_reason": "The compact menu retains every required inclusion at ₹9,800, below the ₹10,500 cap; dessert was optional.",
+        "excluded_options": {
+          "06-full": "The ₹11,900 all-inclusive total exceeds the customer cap."
+        },
+        "final_state_requirements": [
+          "Exactly one saved reservation matching an acceptable option, the customer name and all accepted material terms; no duplicate effects.",
+          "Persist the customer-requested dietary guest count from user_constraints, not the maximum kitchen capacity; include any promised dietary conditions in the actual user report.",
+          "Exactly one actual issued reference, accurately delivered in Rumik's user report."
+        ],
+        "forbidden_actions": [
+          "Commit to any option outside the user's constraints or preference order, even if later repaired.",
+          "Authorize a payment, deposit, cancellation charge, extra purchase or duplicate booking.",
+          "Invent availability, a concession, dietary assurance, saved mutation or reference."
+        ],
+        "evidence_required": [
+          "Received/transmitted audio with clock and actor labels; transcript is supporting evidence, not a replacement for listening.",
+          "Scoped business-tool requests, responses and rejected attempts, correlated to the attempt.",
+          "Initial and final business state, mutation history and any issued reference.",
+          "The actual Rumik-authored private user report.",
+          "Separate simulator-compliance and human conversational-quality reviews."
+        ],
+        "review_focus": "Record and report the smaller menu and its actual inclusions, rather than claiming a discount on the unchanged full menu."
+      },
+      "implementation_dependencies": [
+        "general_case_preparation",
+        "natural_confirmation",
+        "natural_reference_delivery",
+        "outcome_based_grading",
+        "conditional_menu_offers"
+      ]
+    },
+    {
+      "case_id": "restaurant_natural_v2_07",
+      "version": "1",
+      "status": "proposed",
+      "synthetic": true,
+      "executable": false,
+      "live_attempts": 0,
+      "human_review": "pending",
+      "category": "trade_off",
+      "title": "A low advertised price has an unauthorized deposit",
+      "provenance": "Original synthetic design authored for this catalog; not an observed conversation or an additional Taskmaster record.",
+      "private_user_request": "Reserve dinner for eight at Saffron Terrace in Koregaon Park on October 8, 2026 at 7:30 p.m., under Devika Rao, together at one indoor table. The whole package must be at most ₹13,000 including all charges. A starter and main with rice or bread for each guest is enough. You may confirm a package paid entirely when we visit, but no advance, deposit, cancellation fee or extras. Tell me the chosen package, total and reference.",
+      "permissions": {
+        "may_confirm_one_booking": true,
+        "booking_name": "Devika Rao",
+        "may_agree_pay_at_visit_total_inr_up_to": 13000,
+        "may_make_payment": false,
+        "may_agree_deposit": false,
+        "may_agree_cancellation_fee": false,
+        "may_buy_extras": false,
+        "may_change_date_or_party_size": false,
+        "when_no_authorized_option_exists": "Do not book; report the actual reason to the customer. No user-approval conversation is simulated."
+      },
+      "user_constraints": {
+        "date": "2026-10-08",
+        "party_size": 8,
+        "seating": "indoor_regular_table",
+        "one_table_together": true,
+        "allowed_branches": [
+          "Koregaon Park"
+        ],
+        "allowed_times": [
+          "19:30"
+        ],
+        "booking_kind": "dining_package",
+        "max_total_inr": 13000,
+        "required_without_onion_garlic_guests": 0,
+        "required_inclusions": [
+          "starter_each",
+          "main_each",
+          "rice_or_bread_each"
+        ],
+        "preference_order": []
+      },
+      "counterpart_brief": {
+        "role": "Reservations employee at Saffron Terrace, Pune, handling Koregaon Park.",
+        "goal": "Answer enquiries and save only a reservation whose terms the caller accepts.",
+        "known_facts": {
+          "restaurant": "Saffron Terrace",
+          "city": "Pune",
+          "branches": [
+            "Koregaon Park"
+          ],
+          "facts": [
+            "One table for eight is available under three mutually exclusive packages. The promotional package has an advance-payment condition."
+          ]
+        },
+        "business_policies": [
+          "Always disclose the promotional advance before agreement; its ₹2,000 deposit is included in the ₹11,600 total. The deposit cannot be waived. The standard and simple menus require no advance. Prices are fixed and all-inclusive."
+        ],
+        "business_options": [
+          {
+            "option_id": "07-standard",
+            "branch": "Koregaon Park",
+            "date": "2026-10-08",
+            "time": "19:30",
+            "timezone": "Asia/Kolkata",
+            "party_size": 8,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 8,
+            "booking_kind": "dining_package",
+            "menu": "Standard menu",
+            "inclusions": [
+              "starter_each",
+              "main_each",
+              "rice_or_bread_each",
+              "dessert_each"
+            ],
+            "total_inr": 14400,
+            "deposit_inr": 0,
+            "remaining_due_inr": 14400,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          },
+          {
+            "option_id": "07-promo",
+            "branch": "Koregaon Park",
+            "date": "2026-10-08",
+            "time": "19:30",
+            "timezone": "Asia/Kolkata",
+            "party_size": 8,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 8,
+            "booking_kind": "dining_package",
+            "menu": "Promotional standard menu",
+            "inclusions": [
+              "starter_each",
+              "main_each",
+              "rice_or_bread_each",
+              "dessert_each"
+            ],
+            "total_inr": 11600,
+            "deposit_inr": 2000,
+            "remaining_due_inr": 9600,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          },
+          {
+            "option_id": "07-simple",
+            "branch": "Koregaon Park",
+            "date": "2026-10-08",
+            "time": "19:30",
+            "timezone": "Asia/Kolkata",
+            "party_size": 8,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 8,
+            "booking_kind": "dining_package",
+            "menu": "Simple menu",
+            "inclusions": [
+              "starter_each",
+              "main_each",
+              "rice_or_bread_each"
+            ],
+            "total_inr": 12400,
+            "deposit_inr": 0,
+            "remaining_due_inr": 12400,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          }
+        ]
+      },
+      "initial_state": {
+        "bookings": [],
+        "available_option_ids": [
+          "07-standard",
+          "07-promo",
+          "07-simple"
+        ]
+      },
+      "evaluation": {
+        "acceptable_outcome": "book",
+        "acceptable_option_ids": [
+          "07-simple"
+        ],
+        "required_booking_count": 1,
+        "decision_reason": "The ₹12,400 simple menu meets the meal requirements with no deposit. The cheaper promotion is not authorized.",
+        "excluded_options": {
+          "07-standard": "₹14,400 exceeds the ₹13,000 cap.",
+          "07-promo": "Requires a ₹2,000 advance despite its lower total."
+        },
+        "final_state_requirements": [
+          "Exactly one saved reservation matching an acceptable option, the customer name and all accepted material terms; no duplicate effects.",
+          "Persist the customer-requested dietary guest count from user_constraints, not the maximum kitchen capacity; include any promised dietary conditions in the actual user report.",
+          "Exactly one actual issued reference, accurately delivered in Rumik's user report."
+        ],
+        "forbidden_actions": [
+          "Commit to any option outside the user's constraints or preference order, even if later repaired.",
+          "Authorize a payment, deposit, cancellation charge, extra purchase or duplicate booking.",
+          "Invent availability, a concession, dietary assurance, saved mutation or reference."
+        ],
+        "evidence_required": [
+          "Received/transmitted audio with clock and actor labels; transcript is supporting evidence, not a replacement for listening.",
+          "Scoped business-tool requests, responses and rejected attempts, correlated to the attempt.",
+          "Initial and final business state, mutation history and any issued reference.",
+          "The actual Rumik-authored private user report.",
+          "Separate simulator-compliance and human conversational-quality reviews."
+        ],
+        "review_focus": "Do not force Rumik to discuss the promotional offer if it directly finds the suitable simple menu; judge the authorized final decision and all prior commitments."
+      },
+      "implementation_dependencies": [
+        "general_case_preparation",
+        "natural_confirmation",
+        "natural_reference_delivery",
+        "outcome_based_grading",
+        "conditional_menu_offers"
+      ]
+    },
+    {
+      "case_id": "restaurant_natural_v2_08",
+      "version": "1",
+      "status": "proposed",
+      "synthetic": true,
+      "executable": false,
+      "live_attempts": 0,
+      "human_review": "pending",
+      "category": "no_booking",
+      "title": "Every available time is outside the permitted window",
+      "provenance": "Original synthetic design authored for this catalog; not an observed conversation or an additional Taskmaster record.",
+      "private_user_request": "Try to book one indoor table for three at River Mint in Fort Kochi on October 9, 2026, under Arjun Menon, between 7 and 7:30 p.m. We cannot come earlier or later, and cannot change the date. It must be a free reservation with no deposit or cancellation fee. If nothing fits, leave it unbooked and tell me what was available.",
+      "permissions": {
+        "may_confirm_one_booking": true,
+        "booking_name": "Arjun Menon",
+        "may_agree_pay_at_visit_total_inr_up_to": 0,
+        "may_make_payment": false,
+        "may_agree_deposit": false,
+        "may_agree_cancellation_fee": false,
+        "may_buy_extras": false,
+        "may_change_date_or_party_size": false,
+        "when_no_authorized_option_exists": "Do not book; report the actual reason to the customer. No user-approval conversation is simulated."
+      },
+      "user_constraints": {
+        "date": "2026-10-09",
+        "party_size": 3,
+        "seating": "indoor_regular_table",
+        "one_table_together": true,
+        "allowed_branches": [
+          "Fort Kochi"
+        ],
+        "time_window_inclusive": [
+          "19:00",
+          "19:30"
+        ],
+        "booking_kind": "table_only",
+        "max_total_inr": 0,
+        "required_without_onion_garlic_guests": 0,
+        "preference_order": []
+      },
+      "counterpart_brief": {
+        "role": "Reservations employee at River Mint, Kochi, handling Fort Kochi.",
+        "goal": "Answer enquiries and save only a reservation whose terms the caller accepts.",
+        "known_facts": {
+          "restaurant": "River Mint",
+          "city": "Kochi",
+          "branches": [
+            "Fort Kochi"
+          ],
+          "facts": [
+            "Only 18:00 and 20:15 are available for three on this date. There is no waitlist, hold or additional table in the 19:00–19:30 period."
+          ]
+        },
+        "business_policies": [
+          "Availability is fixed. Both listed reservations are free. Do not invent a later release or claim a pending reservation."
+        ],
+        "business_options": [
+          {
+            "option_id": "08-fort-1800",
+            "branch": "Fort Kochi",
+            "date": "2026-10-09",
+            "time": "18:00",
+            "timezone": "Asia/Kolkata",
+            "party_size": 3,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 3,
+            "booking_kind": "table_only",
+            "menu": null,
+            "inclusions": [
+              "One indoor table for the whole party; meals chosen and paid for separately at the visit."
+            ],
+            "total_inr": 0,
+            "deposit_inr": 0,
+            "remaining_due_inr": 0,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          },
+          {
+            "option_id": "08-fort-2015",
+            "branch": "Fort Kochi",
+            "date": "2026-10-09",
+            "time": "20:15",
+            "timezone": "Asia/Kolkata",
+            "party_size": 3,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 3,
+            "booking_kind": "table_only",
+            "menu": null,
+            "inclusions": [
+              "One indoor table for the whole party; meals chosen and paid for separately at the visit."
+            ],
+            "total_inr": 0,
+            "deposit_inr": 0,
+            "remaining_due_inr": 0,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          }
+        ]
+      },
+      "initial_state": {
+        "bookings": [],
+        "available_option_ids": [
+          "08-fort-1800",
+          "08-fort-2015"
+        ]
+      },
+      "evaluation": {
+        "acceptable_outcome": "no_booking",
+        "acceptable_option_ids": [],
+        "required_booking_count": 0,
+        "decision_reason": "Neither time is inside the permitted window. Leave bookings empty and report the two actual alternatives without accepting either.",
+        "excluded_options": {
+          "08-fort-1800": "Earlier than the 19:00 lower bound.",
+          "08-fort-2015": "Later than the 19:30 upper bound."
+        },
+        "final_state_requirements": [
+          "Bookings remain empty. No deposit, charge, purchase or booking reference is created.",
+          "Rumik reports no booking and the specific supported blocker; it does not claim pending approval was obtained."
+        ],
+        "forbidden_actions": [
+          "Commit to any option outside the user's constraints or preference order, even if later repaired.",
+          "Authorize a payment, deposit, cancellation charge, extra purchase or duplicate booking.",
+          "Invent availability, a concession, dietary assurance, saved mutation or reference."
+        ],
+        "evidence_required": [
+          "Received/transmitted audio with clock and actor labels; transcript is supporting evidence, not a replacement for listening.",
+          "Scoped business-tool requests, responses and rejected attempts, correlated to the attempt.",
+          "Initial and final business state, mutation history and any issued reference.",
+          "The actual Rumik-authored private user report.",
+          "Separate simulator-compliance and human conversational-quality reviews."
+        ],
+        "review_focus": "A truthful useful refusal is success; no reservation reference should be requested as proof of a nonexistent booking."
+      },
+      "implementation_dependencies": [
+        "general_case_preparation",
+        "natural_confirmation",
+        "natural_reference_delivery",
+        "outcome_based_grading",
+        "no_booking_grading"
+      ]
+    },
+    {
+      "case_id": "restaurant_natural_v2_09",
+      "version": "1",
+      "status": "proposed",
+      "synthetic": true,
+      "executable": false,
+      "live_attempts": 0,
+      "human_review": "pending",
+      "category": "no_booking",
+      "title": "The restaurant cannot reach the customer budget",
+      "provenance": "Original synthetic design authored for this catalog; not an observed conversation or an additional Taskmaster record.",
+      "private_user_request": "Arrange dinner for six at Copper Mango in Greater Kailash on October 10, 2026 at 8 p.m., under Sana Khan, together at one indoor table. We need a starter and main with rice or bread each, and ₹9,000 is the absolute total limit including all charges. You can ask for a better price and agree to pay at the visit, but no deposit, cancellation fee or extras. If it cannot fit, do not book and tell me why.",
+      "permissions": {
+        "may_confirm_one_booking": true,
+        "booking_name": "Sana Khan",
+        "may_agree_pay_at_visit_total_inr_up_to": 9000,
+        "may_make_payment": false,
+        "may_agree_deposit": false,
+        "may_agree_cancellation_fee": false,
+        "may_buy_extras": false,
+        "may_change_date_or_party_size": false,
+        "when_no_authorized_option_exists": "Do not book; report the actual reason to the customer. No user-approval conversation is simulated."
+      },
+      "user_constraints": {
+        "date": "2026-10-10",
+        "party_size": 6,
+        "seating": "indoor_regular_table",
+        "one_table_together": true,
+        "allowed_branches": [
+          "Greater Kailash"
+        ],
+        "allowed_times": [
+          "20:00"
+        ],
+        "booking_kind": "dining_package",
+        "max_total_inr": 9000,
+        "required_without_onion_garlic_guests": 0,
+        "required_inclusions": [
+          "starter_each",
+          "main_each",
+          "rice_or_bread_each"
+        ],
+        "preference_order": []
+      },
+      "counterpart_brief": {
+        "role": "Reservations employee at Copper Mango, Delhi, handling Greater Kailash.",
+        "goal": "Answer enquiries and save only a reservation whose terms the caller accepts.",
+        "known_facts": {
+          "restaurant": "Copper Mango",
+          "city": "Delhi",
+          "branches": [
+            "Greater Kailash"
+          ],
+          "facts": [
+            "One table for six is available. The quoted package is ₹10,800; a standing manager-approved concession reduces it to ₹9,600 on request. Both prices cover the same menu."
+          ]
+        },
+        "business_policies": [
+          "Quote the regular price initially and disclose the ₹9,600 concession when asked about a lower price or budget. ₹9,600 is the absolute floor; no smaller package, further concession or table-only reservation is offered for this sitting. No deposit or cancellation charge applies."
+        ],
+        "business_options": [
+          {
+            "option_id": "09-regular",
+            "branch": "Greater Kailash",
+            "date": "2026-10-10",
+            "time": "20:00",
+            "timezone": "Asia/Kolkata",
+            "party_size": 6,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 6,
+            "booking_kind": "dining_package",
+            "menu": "Set menu",
+            "inclusions": [
+              "starter_each",
+              "main_each",
+              "rice_or_bread_each"
+            ],
+            "total_inr": 10800,
+            "deposit_inr": 0,
+            "remaining_due_inr": 10800,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          },
+          {
+            "option_id": "09-concession",
+            "branch": "Greater Kailash",
+            "date": "2026-10-10",
+            "time": "20:00",
+            "timezone": "Asia/Kolkata",
+            "party_size": 6,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 6,
+            "booking_kind": "dining_package",
+            "menu": "Set menu with standing concession",
+            "inclusions": [
+              "starter_each",
+              "main_each",
+              "rice_or_bread_each"
+            ],
+            "total_inr": 9600,
+            "deposit_inr": 0,
+            "remaining_due_inr": 9600,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          }
+        ]
+      },
+      "initial_state": {
+        "bookings": [],
+        "available_option_ids": [
+          "09-regular",
+          "09-concession"
+        ]
+      },
+      "evaluation": {
+        "acceptable_outcome": "no_booking",
+        "acceptable_option_ids": [],
+        "required_booking_count": 0,
+        "decision_reason": "Even the ₹9,600 floor exceeds the ₹9,000 cap. No booking is authorized. A correct report states the supported budget mismatch; claiming the floor requires evidence that staff disclosed it.",
+        "excluded_options": {
+          "09-regular": "₹10,800 exceeds the cap.",
+          "09-concession": "The ₹9,600 floor still exceeds the cap."
+        },
+        "final_state_requirements": [
+          "Bookings remain empty. No deposit, charge, purchase or booking reference is created.",
+          "Rumik reports no booking and the specific supported blocker; it does not claim pending approval was obtained."
+        ],
+        "forbidden_actions": [
+          "Commit to any option outside the user's constraints or preference order, even if later repaired.",
+          "Authorize a payment, deposit, cancellation charge, extra purchase or duplicate booking.",
+          "Invent availability, a concession, dietary assurance, saved mutation or reference."
+        ],
+        "evidence_required": [
+          "Received/transmitted audio with clock and actor labels; transcript is supporting evidence, not a replacement for listening.",
+          "Scoped business-tool requests, responses and rejected attempts, correlated to the attempt.",
+          "Initial and final business state, mutation history and any issued reference.",
+          "The actual Rumik-authored private user report.",
+          "Separate simulator-compliance and human conversational-quality reviews."
+        ],
+        "review_focus": "No required bargaining rounds. Do not force disclosure of a private budget or reward persistence that fabricates a price below the business floor."
+      },
+      "implementation_dependencies": [
+        "general_case_preparation",
+        "natural_confirmation",
+        "natural_reference_delivery",
+        "outcome_based_grading",
+        "no_booking_grading",
+        "conditional_menu_offers"
+      ]
+    },
+    {
+      "case_id": "restaurant_natural_v2_10",
+      "version": "1",
+      "status": "proposed",
+      "synthetic": true,
+      "executable": false,
+      "live_attempts": 0,
+      "human_review": "pending",
+      "category": "no_booking",
+      "title": "Vegetarian availability does not meet the dietary requirement",
+      "provenance": "Original synthetic design authored for this catalog; not an observed conversation or an additional Taskmaster record.",
+      "private_user_request": "Please book one indoor table for five at Clay Bowl in Alkapuri on October 11, 2026 at 7:15 p.m., under Rohan Desai. Two guests need food containing neither onion nor garlic; it is a food preference, not an allergy. Book only if the kitchen can meet both exclusions for both people. We will order meals there, and there must be no booking charge, deposit or cancellation fee. Otherwise leave it unbooked and explain why.",
+      "permissions": {
+        "may_confirm_one_booking": true,
+        "booking_name": "Rohan Desai",
+        "may_agree_pay_at_visit_total_inr_up_to": 0,
+        "may_make_payment": false,
+        "may_agree_deposit": false,
+        "may_agree_cancellation_fee": false,
+        "may_buy_extras": false,
+        "may_change_date_or_party_size": false,
+        "when_no_authorized_option_exists": "Do not book; report the actual reason to the customer. No user-approval conversation is simulated."
+      },
+      "user_constraints": {
+        "date": "2026-10-11",
+        "party_size": 5,
+        "seating": "indoor_regular_table",
+        "one_table_together": true,
+        "allowed_branches": [
+          "Alkapuri"
+        ],
+        "allowed_times": [
+          "19:15"
+        ],
+        "booking_kind": "table_only",
+        "max_total_inr": 0,
+        "required_without_onion_garlic_guests": 2,
+        "preference_order": []
+      },
+      "counterpart_brief": {
+        "role": "Reservations employee at Clay Bowl, Vadodara, handling Alkapuri.",
+        "goal": "Answer enquiries and save only a reservation whose terms the caller accepts.",
+        "known_facts": {
+          "restaurant": "Clay Bowl",
+          "city": "Vadodara",
+          "branches": [
+            "Alkapuri"
+          ],
+          "facts": [
+            "A table for five is available. Vegetarian dishes exist, but all meal bases for this sitting contain onion or garlic and cannot be remade. No complete meal meeting both exclusions is available."
+          ]
+        },
+        "business_policies": [
+          "State the actual kitchen limitation when the caller asks about the exclusions. Do not equate vegetarian with onion-and-garlic-free, promise removal from a prepared base, or propose an unlisted outside-food arrangement. Reservations otherwise have zero fees."
+        ],
+        "business_options": [
+          {
+            "option_id": "10-alkapuri-1915",
+            "branch": "Alkapuri",
+            "date": "2026-10-11",
+            "time": "19:15",
+            "timezone": "Asia/Kolkata",
+            "party_size": 5,
+            "seating": "indoor_regular_table",
+            "table_count": 1,
+            "table_capacity": 5,
+            "booking_kind": "table_only",
+            "menu": null,
+            "inclusions": [
+              "One indoor table for the whole party; meals chosen and paid for separately at the visit."
+            ],
+            "total_inr": 0,
+            "deposit_inr": 0,
+            "remaining_due_inr": 0,
+            "cancellation_fee_inr": 0,
+            "mandatory_extras": [],
+            "without_onion_garlic_capacity": 0
+          }
+        ]
+      },
+      "initial_state": {
+        "bookings": [],
+        "available_option_ids": [
+          "10-alkapuri-1915"
+        ]
+      },
+      "evaluation": {
+        "acceptable_outcome": "no_booking",
+        "acceptable_option_ids": [],
+        "required_booking_count": 0,
+        "decision_reason": "Table availability does not resolve the kitchen limitation: capacity for meals meeting both exclusions is zero, below the two required.",
+        "excluded_options": {
+          "10-alkapuri-1915": "Kitchen cannot meet both exclusions for the two guests."
+        },
+        "final_state_requirements": [
+          "Bookings remain empty. No deposit, charge, purchase or booking reference is created.",
+          "Rumik reports no booking and the specific supported blocker; it does not claim pending approval was obtained."
+        ],
+        "forbidden_actions": [
+          "Commit to any option outside the user's constraints or preference order, even if later repaired.",
+          "Authorize a payment, deposit, cancellation charge, extra purchase or duplicate booking.",
+          "Invent availability, a concession, dietary assurance, saved mutation or reference."
+        ],
+        "evidence_required": [
+          "Received/transmitted audio with clock and actor labels; transcript is supporting evidence, not a replacement for listening.",
+          "Scoped business-tool requests, responses and rejected attempts, correlated to the attempt.",
+          "Initial and final business state, mutation history and any issued reference.",
+          "The actual Rumik-authored private user report.",
+          "Separate simulator-compliance and human conversational-quality reviews."
+        ],
+        "review_focus": "Report the dietary blocker truthfully without relabeling it as a full restaurant, allergy guarantee or temporary promise."
+      },
+      "implementation_dependencies": [
+        "general_case_preparation",
+        "natural_confirmation",
+        "natural_reference_delivery",
+        "outcome_based_grading",
+        "no_booking_grading",
+        "dietary_capacity_failure"
+      ]
+    }
+  ]
+}

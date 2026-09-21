@@ -110,24 +110,50 @@ class LocalEvidence:
             os.fsync(handle.fileno())
 
     async def emit(self, source, kind, payload=None, *, clock_id=None, observed_ns=None):
+        await self.emit_many(
+            [
+                {
+                    "source": source,
+                    "kind": kind,
+                    "payload": payload or {},
+                    "clock_id": clock_id,
+                    "observed_ns": observed_ns,
+                }
+            ]
+        )
+
+    async def emit_many(self, observations):
+        """Durably append one bounded observation batch with one disk synchronization.
+
+        The lock covers allocation and publication; snapshots cannot observe half a batch.
+        This does not defer durability beyond the call or change the append-only contract.
+        """
+        if not observations or len(observations) > 100:
+            raise ValueError("Evidence batches must contain 1 to 100 observations")
         async with self.lock:
             self._open()
             if self.recovering:
                 raise ValueError("Recovery cannot append to the original event log")
-            event = EvidenceEvent(
-                run_id=self.run_id,
-                source=source,
-                kind=kind,
-                sequence=self.sequence,
-                clock_id=clock_id or self.clock_id,
-                observed_monotonic_ns=observed_ns
-                if observed_ns is not None
-                else time.monotonic_ns(),
-                observed_at=datetime.now(UTC),
-                payload=payload or {},
+            events = [
+                EvidenceEvent(
+                    run_id=self.run_id,
+                    source=item["source"],
+                    kind=item["kind"],
+                    sequence=self.sequence + index,
+                    clock_id=item.get("clock_id") or self.clock_id,
+                    observed_monotonic_ns=item["observed_ns"]
+                    if item.get("observed_ns") is not None
+                    else time.monotonic_ns(),
+                    observed_at=datetime.now(UTC),
+                    payload=item.get("payload", {}),
+                )
+                for index, item in enumerate(observations)
+            ]
+            await asyncio.to_thread(
+                self._append_bytes,
+                b"".join(event.model_dump_json().encode() + b"\n" for event in events),
             )
-            await asyncio.to_thread(self._append_bytes, event.model_dump_json().encode() + b"\n")
-            self.sequence += 1
+            self.sequence += len(events)
 
     async def event_snapshot(self):
         """Read complete local events under the writer lock, including before sealing."""

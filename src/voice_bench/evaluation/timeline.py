@@ -24,6 +24,13 @@ ANCHOR_KINDS = {
     "caller_playback_cancelled",
     "scenario_event_requested",
     "scenario_event_delivered",
+    "conversation_event_requested",
+    "conversation_event_response",
+    "conversation_event_audio",
+    "conversation_event_status",
+    "counterpart_incomplete",
+    "conversation_idle_timeout",
+    "bridge_error",
 }
 
 
