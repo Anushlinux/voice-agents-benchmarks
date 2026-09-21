@@ -60,27 +60,41 @@ These figures cover observed replies only. Seven other employee speech items had
 | Other requested measurement | Result | What it means |
 | --- | --- | --- |
 | Word error rate (WER), provisional | **20.69%**: 288 edits / 1,392 reference words, across 10 cases | Comparison of an independent machine transcript of employee audio with Rumik’s recorded transcript |
-| Time to first generated token (TTFT) | Not available | Rumik’s first-token event was not exposed |
+| Time to first token / text (TTFT) | **Not measurable: 0 of 10 calls have first-text timestamps** | Saved Rumik transcripts contain text and speaker roles, with no token arrival times |
 | Endpointing accuracy | Not available | We lack Rumik’s turn-end decisions and reviewed labels for when each speaker finished |
 
 WER is **not yet a human-verified recognition score**. The reference transcription can contain mistakes, and Hindi/English writing differences can inflate the number. Human listening review is pending. Audio response timing cannot substitute for TTFT or endpointing accuracy.
+
+### TTFT: what we can calculate ourselves
+
+**Yes, we can calculate observed TTFT ourselves when the first text arrives as a timed event.** For this voice benchmark, that would be the time from the employee finishing speaking to the first nonempty Rumik text chunk reaching the harness. The two timestamps must use the same clock, or a verified clock mapping, and belong to the same response. This measures the full wait for text, including turn detection and network delay. It differs from Rumik’s internal model-generation time.
+
+**For these 10 saved calls, that first-text timestamp was not recorded.** We checked all 130,234 saved events and all 185 entries in Rumik’s post-call transcripts. Every transcript entry contains only `role` and `content`. The 28 timestamped transcript events belong to the simulated employee and mark a completed transcript; they are not Rumik’s first token. Provider callback records contain no additional timing events.
+
+| TTFT coverage | Samples | Average | p50 | p90 | p95 |
+| --- | ---: | --- | --- | --- | --- |
+| All 10 calls inspected; 0 calls measurable | 0 | Not available | Not available | Not available | Not available |
+
+The recorded audio lets us calculate **time to first speech (TTFS)**, which is already reported above. It cannot reveal when an earlier text token was generated or received. Transcribing the audio again would not recover that timestamp, and subtracting an assumed speech-generation delay would create an unsupported estimate.
+
+For future calls, measuring observed TTFT requires a timestamped first-text stream from Rumik, correlated with the employee’s speech-end timestamp. Internal model TTFT additionally requires the model’s generation-start and first-token timestamps. No new calls or paid evaluations were run for this audit. [Read the per-case timing audit](ttft-audit.json).
 
 ### Measurements by case
 
 All response times below are seconds. “—” means no response was available to time, not zero delay. WER is provisional in every row.
 
-| Case | Replies timed | Average | p50 | p90 | p95 | WER (edits / reference words) |
-| --- | ---: | ---: | ---: | ---: | ---: | --- |
-| 01 Aditi | 1 | 3.02 | 3.02 | 3.02 | 3.02 | 14.08% (10/71) |
-| 02 Kabir | 0 | — | — | — | — | 13.04% (3/23) |
-| 03 Meera | 5 | 2.57 | 2.33 | 3.91 | 3.91 | 22.50% (54/240) |
-| 04 Nisha | 3 | 5.97 | 3.40 | 12.30 | 12.30 | 38.54% (74/192) |
-| 05 Farhan | 2 | 2.39 | 2.24 | 2.54 | 2.54 | 13.64% (21/154) |
-| 06 Priya | 2 | 2.29 | 2.19 | 2.39 | 2.39 | 10.81% (20/185) |
-| 07 Devika | 3 | 2.88 | 2.66 | 3.38 | 3.38 | 23.51% (59/251) |
-| 08 Arjun | 0 | — | — | — | — | 0.00% (0/19) |
-| 09 Sana | 3 | 2.39 | 2.24 | 2.74 | 2.74 | 22.22% (38/171) |
-| 10 Rohan | 2 | 8.04 | 2.70 | 13.38 | 13.38 | 10.47% (9/86) |
+| Case | Speech replies timed | Average | p50 | p90 | p95 | TTFT | WER (edits / reference words) |
+| --- | ---: | ---: | ---: | ---: | ---: | --- | --- |
+| 01 Aditi | 1 | 3.02 | 3.02 | 3.02 | 3.02 | Not available | 14.08% (10/71) |
+| 02 Kabir | 0 | — | — | — | — | Not available | 13.04% (3/23) |
+| 03 Meera | 5 | 2.57 | 2.33 | 3.91 | 3.91 | Not available | 22.50% (54/240) |
+| 04 Nisha | 3 | 5.97 | 3.40 | 12.30 | 12.30 | Not available | 38.54% (74/192) |
+| 05 Farhan | 2 | 2.39 | 2.24 | 2.54 | 2.54 | Not available | 13.64% (21/154) |
+| 06 Priya | 2 | 2.29 | 2.19 | 2.39 | 2.39 | Not available | 10.81% (20/185) |
+| 07 Devika | 3 | 2.88 | 2.66 | 3.38 | 3.38 | Not available | 23.51% (59/251) |
+| 08 Arjun | 0 | — | — | — | — | Not available | 0.00% (0/19) |
+| 09 Sana | 3 | 2.39 | 2.24 | 2.74 | 2.74 | Not available | 22.22% (38/171) |
+| 10 Rohan | 2 | 8.04 | 2.70 | 13.38 | 13.38 | Not available | 10.47% (9/86) |
 
 ### Audio delivery and silence checks
 

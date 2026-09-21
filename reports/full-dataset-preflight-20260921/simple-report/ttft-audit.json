@@ -1,0 +1,247 @@
+{
+  "version": "saved-target-ttft-audit-v1",
+  "provider_calls": 0,
+  "attempts_examined": 10,
+  "events_examined": 130234,
+  "provider_transcript_entries": 185,
+  "attempts_with_measurable_target_ttft": 0,
+  "target_ttft_ms": {
+    "n": 0,
+    "mean": null,
+    "p50": null,
+    "p90": null,
+    "p95": null
+  },
+  "client_observed_definition": "First nonempty Rumik text chunk received minus end of employee speech delivered, with a common clock or a verified mapping and the same response identified.",
+  "internal_model_definition": "First model token generated minus model inference start; requires provider telemetry.",
+  "finding": "Saved Rumik transcripts have only role and content. All timestamped transcript events belong to the simulated employee and mark completed transcripts. No target first-text observation was saved.",
+  "not_substituted": [
+    "Received speech onset (TTFS)",
+    "Audio packet arrival",
+    "Independent post-call transcription timestamps",
+    "Counterpart response.created or completed transcript events",
+    "Estimated fixed speech synthesis delay"
+  ],
+  "cases": [
+    {
+      "case_id": "restaurant_natural_v2_01",
+      "events_examined": 8025,
+      "provider_transcript_entries": 10,
+      "provider_transcript_entry_fields": [
+        "content",
+        "role"
+      ],
+      "timestamped_target_text_events": 0,
+      "counterpart_final_transcript_events": 2,
+      "provider_callback_records": 0,
+      "ttft_ms": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null,
+        "p95": null
+      },
+      "status": "unavailable_missing_target_first_text_timestamp",
+      "source_event_log_sha256": "4cb07a974a0b156ed02f6bb08076aad733106da274cfcf1695dc866b49b7af4d",
+      "source_provider_record_sha256": "0f0604ab14ff7cf33d23c9deb3be7216f5cd7df91ecd01d290fe91a4ab0d0106"
+    },
+    {
+      "case_id": "restaurant_natural_v2_02",
+      "events_examined": 3455,
+      "provider_transcript_entries": 5,
+      "provider_transcript_entry_fields": [
+        "content",
+        "role"
+      ],
+      "timestamped_target_text_events": 0,
+      "counterpart_final_transcript_events": 1,
+      "provider_callback_records": 0,
+      "ttft_ms": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null,
+        "p95": null
+      },
+      "status": "unavailable_missing_target_first_text_timestamp",
+      "source_event_log_sha256": "f96b3a80d4e1b06c6af41a59b3a2b1518628540b9dcd34ef49fd016dc8e3aaf2",
+      "source_provider_record_sha256": "fa4abf28013d9c36002cfaa8238169c9079bcc04617f8a0b52f08fed98e2e0f6"
+    },
+    {
+      "case_id": "restaurant_natural_v2_03",
+      "events_examined": 20752,
+      "provider_transcript_entries": 33,
+      "provider_transcript_entry_fields": [
+        "content",
+        "role"
+      ],
+      "timestamped_target_text_events": 0,
+      "counterpart_final_transcript_events": 5,
+      "provider_callback_records": 0,
+      "ttft_ms": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null,
+        "p95": null
+      },
+      "status": "unavailable_missing_target_first_text_timestamp",
+      "source_event_log_sha256": "1269591fbfb5bc13220d4be66dfa88c89f0ff9a231f7d0b95eaf25ee7c38bc81",
+      "source_provider_record_sha256": "85d92c23066262d3fdddaf44a51a1f288aa65638a4dd3d0e0463bf6f2ae96404"
+    },
+    {
+      "case_id": "restaurant_natural_v2_04",
+      "events_examined": 19985,
+      "provider_transcript_entries": 24,
+      "provider_transcript_entry_fields": [
+        "content",
+        "role"
+      ],
+      "timestamped_target_text_events": 0,
+      "counterpart_final_transcript_events": 4,
+      "provider_callback_records": 0,
+      "ttft_ms": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null,
+        "p95": null
+      },
+      "status": "unavailable_missing_target_first_text_timestamp",
+      "source_event_log_sha256": "6e54e0927f1b20b6322eaeb5e0f0ee5b7f6697e3ea1d25d290f0f114ea6bf4c1",
+      "source_provider_record_sha256": "99acc19c821f4300571c7077f6249aa74487c642c02b8988f956b1be732db188"
+    },
+    {
+      "case_id": "restaurant_natural_v2_05",
+      "events_examined": 13839,
+      "provider_transcript_entries": 23,
+      "provider_transcript_entry_fields": [
+        "content",
+        "role"
+      ],
+      "timestamped_target_text_events": 0,
+      "counterpart_final_transcript_events": 3,
+      "provider_callback_records": 0,
+      "ttft_ms": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null,
+        "p95": null
+      },
+      "status": "unavailable_missing_target_first_text_timestamp",
+      "source_event_log_sha256": "bb8fb218de7bb4b887abb5d52c7da1361fb1df813f947f3d3792521b68918a7a",
+      "source_provider_record_sha256": "3d619a5182b26f97ce070ff7f1bb04436eb0221fc98227e090a0c63ef206bea6"
+    },
+    {
+      "case_id": "restaurant_natural_v2_06",
+      "events_examined": 15850,
+      "provider_transcript_entries": 25,
+      "provider_transcript_entry_fields": [
+        "content",
+        "role"
+      ],
+      "timestamped_target_text_events": 0,
+      "counterpart_final_transcript_events": 3,
+      "provider_callback_records": 0,
+      "ttft_ms": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null,
+        "p95": null
+      },
+      "status": "unavailable_missing_target_first_text_timestamp",
+      "source_event_log_sha256": "e71288b42060e746908c4fcfac557cc525c06455bb2271787075e73a9c7c2cbf",
+      "source_provider_record_sha256": "37534a9834762dbcaf850dc1e8636b2e06d8123465ab235bfdf5015b4a24fdab"
+    },
+    {
+      "case_id": "restaurant_natural_v2_07",
+      "events_examined": 21042,
+      "provider_transcript_entries": 28,
+      "provider_transcript_entry_fields": [
+        "content",
+        "role"
+      ],
+      "timestamped_target_text_events": 0,
+      "counterpart_final_transcript_events": 4,
+      "provider_callback_records": 0,
+      "ttft_ms": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null,
+        "p95": null
+      },
+      "status": "unavailable_missing_target_first_text_timestamp",
+      "source_event_log_sha256": "8b9f3e7c1ee93cc959ce3a13b6a2428698a4aee70c10586f8f65638cc082f4a3",
+      "source_provider_record_sha256": "5a358bc0f109271799990d4db24aa21dc4b2538ba2f5740a79f5727152412787"
+    },
+    {
+      "case_id": "restaurant_natural_v2_08",
+      "events_examined": 3032,
+      "provider_transcript_entries": 3,
+      "provider_transcript_entry_fields": [
+        "content",
+        "role"
+      ],
+      "timestamped_target_text_events": 0,
+      "counterpart_final_transcript_events": 1,
+      "provider_callback_records": 0,
+      "ttft_ms": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null,
+        "p95": null
+      },
+      "status": "unavailable_missing_target_first_text_timestamp",
+      "source_event_log_sha256": "c3e62a7e143214c27e4f3e89f54dc0fd3ae44bd0b66609d0888e3f5bc50fa6ef",
+      "source_provider_record_sha256": "0f642bf8290115b973b9cb0a54623b8c4350ab6afe8587676e4c239a3a2f74a0"
+    },
+    {
+      "case_id": "restaurant_natural_v2_09",
+      "events_examined": 12898,
+      "provider_transcript_entries": 24,
+      "provider_transcript_entry_fields": [
+        "content",
+        "role"
+      ],
+      "timestamped_target_text_events": 0,
+      "counterpart_final_transcript_events": 3,
+      "provider_callback_records": 0,
+      "ttft_ms": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null,
+        "p95": null
+      },
+      "status": "unavailable_missing_target_first_text_timestamp",
+      "source_event_log_sha256": "4b0dcc6c7326e33a1a669186811738da5776599a6915ce2bad13a8b5858b65b4",
+      "source_provider_record_sha256": "9b857ae7b9439ac2cb86a21b5815d38e235d647119d9449da6603ec48cf271c6"
+    },
+    {
+      "case_id": "restaurant_natural_v2_10",
+      "events_examined": 11356,
+      "provider_transcript_entries": 10,
+      "provider_transcript_entry_fields": [
+        "content",
+        "role"
+      ],
+      "timestamped_target_text_events": 0,
+      "counterpart_final_transcript_events": 2,
+      "provider_callback_records": 0,
+      "ttft_ms": {
+        "n": 0,
+        "mean": null,
+        "p50": null,
+        "p90": null,
+        "p95": null
+      },
+      "status": "unavailable_missing_target_first_text_timestamp",
+      "source_event_log_sha256": "2221df773e6ddd32b84e3c313b9dc72fb5a0fc7f779ba2bdb44e9e883fcb146b",
+      "source_provider_record_sha256": "7d4356d0774f1674d8b3fbaf4573bbf05c24052d434756e42b93bba2cceac1f4"
+    }
+  ]
+}

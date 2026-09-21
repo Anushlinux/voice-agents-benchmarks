@@ -34,6 +34,7 @@ src/voice_bench/channels/browser/static/
 /reports/full-dataset-preflight-20260921/simple-report/*
 !/reports/full-dataset-preflight-20260921/simple-report/README.md
 !/reports/full-dataset-preflight-20260921/simple-report/sharing-manifest.json
+!/reports/full-dataset-preflight-20260921/simple-report/ttft-audit.json
 !/reports/full-dataset-preflight-20260921/simple-report/cases/
 /reports/full-dataset-preflight-20260921/simple-report/cases/*
 !/reports/full-dataset-preflight-20260921/simple-report/cases/01-aditi.md

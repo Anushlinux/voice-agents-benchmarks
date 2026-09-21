@@ -88,7 +88,7 @@
   "jev_answers": 80,
   "accepted_checks": 196,
   "files": {
-    "README.md": "8c6c30cb9aec37cc8abdf29b532b68177017440ea56b83040347d3130be47819",
+    "README.md": "0bc1e8ee28832dc7e996450a0d8ffca6aeadd6b5c6083b22067e78ef2b1fcd8c",
     "cases/01-aditi.md": "f6e038353729c5a92242de6dc43d44333b7ee36c73af29afd69cf7c9ba84a4e2",
     "cases/02-kabir.md": "d961f15941eb36cf7a4b7a0ff9b9722aceb68a819fa8fd39e500af6317f5d239",
     "cases/03-meera.md": "d9e24f548b02c611c208dfcd3280ddb84194677c8b792e689b2096a51d01a2e3",
@@ -128,6 +128,7 @@
     "conversations/09-sana/transcript.md": "2f9c9d4eb13e8042acebd9f60236adaa99277ab1ce12cee2553484de73730646",
     "conversations/10-rohan/README.md": "7095ebcf5e633ce7d9afba8c32d7809884d417efc07fa568fffaee2f32fd274f",
     "conversations/10-rohan/conversation.mp3": "e65fdc2822da0bd0ce3edeaedd7ee8765e1c2bb1176a994741c267e94d6efa78",
-    "conversations/10-rohan/transcript.md": "59972e80a96a4f80a2d2c8f46b16c44e2dbf26b64366cae883d3c798714211ac"
+    "conversations/10-rohan/transcript.md": "59972e80a96a4f80a2d2c8f46b16c44e2dbf26b64366cae883d3c798714211ac",
+    "ttft-audit.json": "2064bcf86d473234af018a270ba8e16669bf56931222b39db951e2904c228486"
   }
 }
