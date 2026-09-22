@@ -330,8 +330,10 @@ def test_existing_agreement_survives_late_offer_preparation_only_for_unchanged_t
     assert consent_boundary({"workflow_version": "5"}, offer, []) == 20
 
 
-def test_new_cases_reject_the_old_pause_based_turn_configuration(catalog):
+@pytest.mark.parametrize("channel", ["browser", "phone"])
+def test_new_cases_reject_the_old_pause_based_turn_configuration(catalog, channel):
     config = load_config(Path("configs/restaurant-natural.example.toml"))
+    config = config.model_copy(update={"channels": (channel,)})
     case = convert_catalog(catalog)[0]
     for turn in (
         {"type": "server_vad", "silence_duration_ms": 500},

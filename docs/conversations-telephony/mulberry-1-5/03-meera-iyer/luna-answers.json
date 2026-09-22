@@ -1,0 +1,245 @@
+{
+  "response_id": "resp_009f8fd69a229b72006ab28d8d536887d28cd91e2cf8d0f36c",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "consent_alignment",
+      "status": "met",
+      "explanation": "The target says “जी हाँ” in the exchange, and the counterpart subsequently records the offered 18:45, no-fee table reservation. The available evidence supports agreement to the material reservation terms, although the exact interleaving is not established.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0007",
+        "speech-window-0008"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "जी हाँ"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "सिक्स फॉर्टी फाइव एएम-पीएम का सैलरड ठीक रहेगा, मेरा आयार के नाम से बुक कर दें और कृपया हमें संदर्भ संख्या बताएं।"
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, बताइए मैं आपकी क्या मदद कर सकता हूँ? हम आपको चार अक्टूबर दो हज़ार छब्बीस को शाम छह पैंतालीस बजे एक इंडोर रेग्युलर टेबल बिना किसी डिपॉजिट या कैंसलेशन फ़ी के बुक कर सकते हैं, जहाँ खाने का ऑर्डर और पेमेंट वहाँ जाकर होगा। क्या आप इस..."
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "counterpart",
+          "quote": "टाइम पर बुक करना चाहेंगे मीरा अय्यर के नाम से आपका बुकिंग कन्फर्म है संदर्भ संख्या है सिम एट नाइन ज़ीरो सिक्स नाइन फोर कृपया बताएं कि यह सही नोट कर लिया है"
+        }
+      ]
+    },
+    {
+      "name": "constraint_behavior",
+      "status": "not_met",
+      "explanation": "The target’s spoken request changes the assigned restaurant from Banyan Kitchen to Fanning Kitchen, the booking name from Meera Iyer to Mira Iyer, and expresses an ambiguous AM/PM range. Those are target-side deviations from the user’s assignment, even though the eventual business reservation itself satisfies the allowed branch, seating, time, party size and zero-charge constraints.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "config/case.json",
+        "business/final.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "Namaste. We'd like to reserve an indoor regular table for two at Fanning Kitchen at"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Are on four up 2026, any slot between 6:45 a.m.-7:30 a.m.-p.m. under the name Mira Iyer with no deposit or cancellation fee. Please let us know a possible time and the booking reference."
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "not_met",
+      "explanation": "The target does not preserve the user-assigned restaurant or booking name: it says “Fanning Kitchen” and “Mira Iyer” rather than using the assigned Banyan Kitchen and Meera Iyer. It also gives an unclear AM/PM time formulation rather than cleanly carrying forward the evening window.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "config/case.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "Namaste. We'd like to reserve an indoor regular table for two at Fanning Kitchen at"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Are on four up 2026, any slot between 6:45 a.m.-7:30 a.m.-p.m. under the name Mira Iyer with no deposit or cancellation fee. Please let us know a possible time and the booking reference."
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The exchange progresses from the reservation request to an affirmative response, a booking action, and a closing/readback request. There is no observable repeated-agreement loop or unjustified stall.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0007",
+        "speech-window-0008",
+        "business/audit.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Are on four up 2026, any slot between 6:45 a.m.-7:30 a.m.-p.m. under the name Mira Iyer with no deposit or cancellation fee. Please let us know a possible time and the booking reference."
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "जी हाँ"
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "counterpart",
+          "quote": "टाइम पर बुक करना चाहेंगे मीरा अय्यर के नाम से आपका बुकिंग कन्फर्म है संदर्भ संख्या है सिम एट नाइन ज़ीरो सिक्स नाइन फोर कृपया बताएं कि यह सही नोट कर लिया है"
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "met",
+      "explanation": "The counterpart uses the availability, offer and record tools, offers a permitted 18:45 Adyar table-only reservation with zero deposit and cancellation fee, and only says it is confirmed after the successful record result. Its spoken reference corresponds to the single issued reference SIM-890694; the target’s malformed restaurant/name wording is not a counterpart fabrication.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0007",
+        "speech-window-0008",
+        "business/audit.json",
+        "business/final.json",
+        "config/counterpart-brief.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, बताइए मैं आपकी क्या मदद कर सकता हूँ? हम आपको चार अक्टूबर दो हज़ार छब्बीस को शाम छह पैंतालीस बजे एक इंडोर रेग्युलर टेबल बिना किसी डिपॉजिट या कैंसलेशन फ़ी के बुक कर सकते हैं, जहाँ खाने का ऑर्डर और पेमेंट वहाँ जाकर होगा। क्या आप इस..."
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "counterpart",
+          "quote": "टाइम पर बुक करना चाहेंगे मीरा अय्यर के नाम से आपका बुकिंग कन्फर्म है संदर्भ संख्या है सिम एट नाइन ज़ीरो सिक्स नाइन फोर कृपया बताएं कि यह सही नोट कर लिया है"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for understandability and natural Hinglish. The supplied transcript alone cannot establish audio quality, pronunciation, or naturalness.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "The target asks for a reservation, supplies the requested booking details, requests the possible time and reference, and ends with a confirmation/readback question. These are relevant to the assigned task.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0005"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "Namaste. We'd like to reserve an indoor regular table for two at Fanning Kitchen at"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Are on four up 2026, any slot between 6:45 a.m.-7:30 a.m.-p.m. under the name Mira Iyer with no deposit or cancellation fee. Please let us know a possible time and the booking reference."
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "सिक्स फॉर्टी फाइव एएम-पीएम का सैलरड ठीक रहेगा, मेरा आयार के नाम से बुक कर दें और कृपया हमें संदर्भ संख्या बताएं।"
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "The transcript contains customer-facing reservation content and no clear internal turn-management instructions, but this rubric requires verifying the audible output directly. Text transcription alone cannot resolve that human-listening question.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "met",
+      "explanation": "The target acts as the caller/customer assistant: it requests a table, states booking constraints, accepts a proposed time, and asks for the reference. It does not offer restaurant services. The exchange is substantive, although some details are wrong relative to the assignment.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "Namaste. We'd like to reserve an indoor regular table for two at Fanning Kitchen at"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Are on four up 2026, any slot between 6:45 a.m.-7:30 a.m.-p.m. under the name Mira Iyer with no deposit or cancellation fee. Please let us know a possible time and the booking reference."
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "जी हाँ"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "सिक्स फॉर्टी फाइव एएम-पीएम का सैलरड ठीक रहेगा, मेरा आयार के नाम से बुक कर दें और कृपया हमें संदर्भ संख्या बताएं।"
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "not_met",
+      "explanation": "The report correctly states the restaurant, branch, date, time, seating, party size, booking name, and no deposit/cancellation fee, but it reports two reference numbers, “789, 0694,” instead of preserving the single issued reference SIM-890694. The actual report therefore fails the reference identity/count requirement.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

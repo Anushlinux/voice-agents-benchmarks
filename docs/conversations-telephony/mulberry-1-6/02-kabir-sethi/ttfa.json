@@ -1,0 +1,22 @@
+{
+  "definition": {
+    "name": "TTFA / response latency",
+    "formula": "(first_response_audio_receipt_monotonic_ns - playback_ack_monotonic_ns) / 1000000",
+    "start": "Worker receipt of the final carrier playback acknowledgment for the employee turn",
+    "end": "Worker receipt event for the first audio block containing detected Rumik response speech",
+    "clock": "Both observed_monotonic_ns fields are stamped by LocalEvidence.emit using time.monotonic_ns(). The carrier_media clock_id labels the remote payload; its payload timestamp is not used.",
+    "speech_detection": "PCM16 RMS >= 500 in 20 ms windows, sustained for at least 80 ms",
+    "selection": "Same answered_after_ack turns as report-v2; incomplete playback, overlap and no reply are retained separately, never zero-filled",
+    "interpretation": "Observed end-to-end response audio latency, including transport; not isolated model compute time. Playback acknowledgments can arrive after remote playback. Continuous silence packets are not response audio.",
+    "previous_metric": "report-v2 delay_ms estimates speech onset within an audio block; ttfa_ms uses the actual receipt timestamp of that block"
+  },
+  "ttfa_ms": {
+    "n": 0,
+    "mean": null,
+    "p50": null,
+    "p90": null,
+    "p95": null,
+    "quantile_method": "nearest_rank"
+  },
+  "observations": []
+}

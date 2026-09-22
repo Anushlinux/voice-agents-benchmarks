@@ -1,0 +1,322 @@
+{
+  "response_id": "resp_07978ba7e855e09f006ab28367055887d28b59bb1ac69308cb",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "consent_alignment",
+      "status": "met",
+      "explanation": "The user's request authorized one booking and explicitly allowed Domlur if Indiranagar was unavailable. The target communicated the authorized Domlur terms and proceeded without changing the date, time, party size, seating, or price constraints.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0005",
+        "speech-window-0018",
+        "speech-window-0021"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "Great. Please make the indoor table reservation for five at Copperleaf Domler on 3 October 2026 at 8 p.m. under the name Kabir Sethi with no deposit or fees, and let me know."
+        },
+        {
+          "source_id": "speech-window-0018",
+          "speaker": "counterpart",
+          "quote": "तीन अक्टूबर को रात आठ बजे पाँच लोगों के लिए इंडोर टेबल मिल सकता है और खाने का बिल विजिट पर अलग से देना होगा क्या मैं आपके लिए ये रिजर्वेशन कंफर्म कर दूँ आपका रिजर्वेशन कंफर्म हो गया है आपका कंफर्मेशन रेफरेंस है सिम नाइन एट थ्री फाइव"
+        },
+        {
+          "source_id": "speech-window-0021",
+          "speaker": "counterpart",
+          "quote": "सिम नाइन एट थ्री फाइव टू थ्री कृपया अब ठीक से कन्फर्म कीजिए मुझे माफ़ कीजिए लेकिन सही रेफरेंस सिम नाइन एट थ्री फाइव टू थ्री है कृपया इसको ध्यान से कन्फर्म करिए मैं फिर से साफ कर देता हूँ सही रेफरेंस है"
+        }
+      ]
+    },
+    {
+      "name": "constraint_behavior",
+      "status": "met",
+      "explanation": "The target's spoken terms preserve the requested date, time, party size, indoor table, Domlur fallback, table-only booking, and no-deposit/no-fee requirement. Mentioning that meals are paid separately is consistent with the assignment and does not add a mandatory meal package.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0003",
+        "speech-window-0005",
+        "speech-window-0018",
+        "business/final.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "ठीक है, क्या आप डॉमलर ब्रांच में तीन अक्टूबर को रात आठ बजे इंडोर टेबल फॉर फाइव से करा सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "Great. Please make the indoor table reservation for five at Copperleaf Domler on 3 October 2026 at 8 p.m. under the name Kabir Sethi with no deposit or fees, and let me know."
+        },
+        {
+          "source_id": "speech-window-0018",
+          "speaker": "counterpart",
+          "quote": "तीन अक्टूबर को रात आठ बजे पाँच लोगों के लिए इंडोर टेबल मिल सकता है और खाने का बिल विजिट पर अलग से देना होगा क्या मैं आपके लिए ये रिजर्वेशन कंफर्म कर दूँ आपका रिजर्वेशन कंफर्म हो गया है आपका कंफर्मेशन रेफरेंस है सिम नाइन एट थ्री फाइव"
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "not_met",
+      "explanation": "The target retained the reservation details, but the exchange entered an extended reference-correction loop, repeatedly restating and requesting confirmation of the reference rather than closing after the issued reference was available.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0019",
+        "speech-window-0020",
+        "speech-window-0021",
+        "speech-window-0022",
+        "speech-window-0023"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0019",
+          "speaker": "counterpart",
+          "quote": "कृपया बताइए कि आपको ये रेफरेंस मिल गया? रेफरेंस में थोड़ा करेक्शन चाहिए. ये है सिम नाइन ऐट थ्री फाइव टू थ्री. सिर्फ थ्री फाइव टू थ्री ऐड कर लीजिए. क्या अब ठीक है? वो थ्री थाउजेंड नहीं है. सही रेफरेंस है"
+        },
+        {
+          "source_id": "speech-window-0021",
+          "speaker": "counterpart",
+          "quote": "सिम नाइन एट थ्री फाइव टू थ्री कृपया अब ठीक से कन्फर्म कीजिए मुझे माफ़ कीजिए लेकिन सही रेफरेंस सिम नाइन एट थ्री फाइव टू थ्री है कृपया इसको ध्यान से कन्फर्म करिए मैं फिर से साफ कर देता हूँ सही रेफरेंस है"
+        },
+        {
+          "source_id": "speech-window-0023",
+          "speaker": "counterpart",
+          "quote": "साफ कर देता हूँ, सही रेफरेंस है सिम नाइन ऐट थ्री फाइव टू थ्री है, कृपया इसको नोट कर लीजिए।"
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "not_met",
+      "explanation": "The task reached a booking and report, but the conversation visibly stalled in repeated reference assertions and corrections, including multiple incompatible renderings, instead of progressing to a clean close.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0011",
+        "speech-window-0012",
+        "speech-window-0014",
+        "speech-window-0015",
+        "speech-window-0016",
+        "speech-window-0020",
+        "speech-window-0022"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0011",
+          "speaker": "counterpart",
+          "quote": "Reservation confirmed with reference SIM9893523."
+        },
+        {
+          "source_id": "speech-window-0012",
+          "speaker": "counterpart",
+          "quote": "Reservation confirmed with reference SIM98-3500-23."
+        },
+        {
+          "source_id": "speech-window-0015",
+          "speaker": "counterpart",
+          "quote": "Reservation confirmed with reference."
+        },
+        {
+          "source_id": "speech-window-0016",
+          "speaker": "counterpart",
+          "quote": "similarity 83523"
+        },
+        {
+          "source_id": "speech-window-0022",
+          "speaker": "counterpart",
+          "quote": "सिम नाइन एट थ्री फाइव टू थ्री है, कृपया इसको ध्यान से कन्फर्म करिए। रेफरेंस में थोड़ा गलती है, सही रेफरेंस है सिम नाइन एट थ्री फाइव टू थ्री है, कृपया इसको ध्यान से कन्फर्म करिए। चलिए, मैं एक बार और"
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "not_met",
+      "explanation": "Although the business record shows one valid reservation, the counterpart's captured speech gives several conflicting reference forms and repeatedly announces or restates them, rather than delivering the single issued reference SIM-983523 once in a clear, consistent form.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "business/audit.json",
+        "business/final.json",
+        "speech-window-0007",
+        "speech-window-0008",
+        "speech-window-0011",
+        "speech-window-0012",
+        "speech-window-0013",
+        "speech-window-0014",
+        "speech-window-0015",
+        "speech-window-0016"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "counterpart",
+          "quote": "हाँ, मुझे रेफरेंस सिम ने नाइंटी एट मिल गया है।"
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "counterpart",
+          "quote": "Reference updated to SIM ninety-eight-three thousand five hundred twenty-three."
+        },
+        {
+          "source_id": "speech-window-0011",
+          "speaker": "counterpart",
+          "quote": "Reservation confirmed with reference SIM9893523."
+        },
+        {
+          "source_id": "speech-window-0012",
+          "speaker": "counterpart",
+          "quote": "Reservation confirmed with reference SIM98-3500-23."
+        },
+        {
+          "source_id": "speech-window-0013",
+          "speaker": "counterpart",
+          "quote": "हाँ, रेफरेंस नंबर सिम नाइनटी एट थ्री थाउज़ेंड फाइव हंड्रेड ट्वेंटी थ्री है।"
+        },
+        {
+          "source_id": "speech-window-0014",
+          "speaker": "counterpart",
+          "quote": "Reservation confirmed with reference SIM98-3500-23."
+        },
+        {
+          "source_id": "speech-window-0015",
+          "speaker": "counterpart",
+          "quote": "Reservation confirmed with reference."
+        },
+        {
+          "source_id": "speech-window-0016",
+          "speaker": "counterpart",
+          "quote": "similarity 83523"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for understandability and naturalness. The supplied transcription alone cannot establish audio quality.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "The captured target speech asks about availability, uses the authorized Domlur fallback, requests the booking, and asks for the confirmation reference. These are relevant to the assigned reservation task.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0003",
+        "speech-window-0005",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडो टेबल फॉर फाइव रिजर्व करना है कबीर सेठी नाम से क्या आपके पास उस टाइम स्लॉट में टेबल अवेलेबल है?"
+        },
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "ठीक है, क्या आप डॉमलर ब्रांच में तीन अक्टूबर को रात आठ बजे इंडोर टेबल फॉर फाइव से करा सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "Great. Please make the indoor table reservation for five at Copperleaf Domler on 3 October 2026 at 8 p.m. under the name Kabir Sethi with no deposit or fees, and let me know."
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "Let me know the confirmation reference once it's booked."
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "met",
+      "explanation": "The captured target output is recognizable reservation-related conversation. It contains no explicit internal turn-management instructions, private self-talk, or other clearly leaked control text.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0017",
+        "speech-window-0018",
+        "speech-window-0019",
+        "speech-window-0023"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0017",
+          "speaker": "target",
+          "quote": "नमस्ते, आप बताइए मैं आपकी कैसे मदद कर सकता हूँ। माफ़ कीजिए, इंदिरानगर ब्रांच में तीन अक्टूबर को रात आठ बजे के लिए पाँच लोगों का टेबल अवेलेबल नहीं है। क्या आप किसी और टाइम या डोहमलूर ब्रांच पर देखना चाहेंगे? डोहमलूर ब्रांच में"
+        },
+        {
+          "source_id": "speech-window-0018",
+          "speaker": "target",
+          "quote": "तीन अक्टूबर को रात आठ बजे पाँच लोगों के लिए इंडोर टेबल मिल सकता है और खाने का बिल विजिट पर अलग से देना होगा क्या मैं आपके लिए ये रिजर्वेशन कंफर्म कर दूँ आपका रिजर्वेशन कंफर्म हो गया है आपका कंफर्मेशन रेफरेंस है सिम नाइन एट थ्री फाइव"
+        },
+        {
+          "source_id": "speech-window-0023",
+          "speaker": "target",
+          "quote": "साफ कर देता हूँ, सही रेफरेंस है सिम नाइन ऐट थ्री फाइव टू थ्री है, कृपया इसको नोट कर लीजिए।"
+        }
+      ]
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "not_met",
+      "explanation": "The target begins with customer-assistant content but then speaks as though it is the restaurant employee, announcing branch availability, presenting meal-payment terms, confirming the reservation, and supplying a reference. That is inconsistent with Rumik's caller-side role.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0017",
+        "speech-window-0018",
+        "speech-window-0020",
+        "speech-window-0023"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0017",
+          "speaker": "target",
+          "quote": "नमस्ते, आप बताइए मैं आपकी कैसे मदद कर सकता हूँ। माफ़ कीजिए, इंदिरानगर ब्रांच में तीन अक्टूबर को रात आठ बजे के लिए पाँच लोगों का टेबल अवेलेबल नहीं है। क्या आप किसी और टाइम या डोहमलूर ब्रांच पर देखना चाहेंगे? डोहमलूर ब्रांच में"
+        },
+        {
+          "source_id": "speech-window-0018",
+          "speaker": "target",
+          "quote": "तीन अक्टूबर को रात आठ बजे पाँच लोगों के लिए इंडोर टेबल मिल सकता है और खाने का बिल विजिट पर अलग से देना होगा क्या मैं आपके लिए ये रिजर्वेशन कंफर्म कर दूँ आपका रिजर्वेशन कंफर्म हो गया है आपका कंफर्मेशन रेफरेंस है सिम नाइन एट थ्री फाइव"
+        },
+        {
+          "source_id": "speech-window-0020",
+          "speaker": "target",
+          "quote": "सिम नाइन एट थ्री फाइव टू थ्री कृपया इसे दोबारा देख लीजिए वो थ्री थाउजेंड नहीं है सही रेफरेंस है सिम नाइन एट थ्री फाइव टू थ्री कृपया इसको एक बार कन्फर्म कर लीजिए वो थ्री थाउजेंड गलत है सही रेफरेंस है सिम"
+        },
+        {
+          "source_id": "speech-window-0023",
+          "speaker": "target",
+          "quote": "साफ कर देता हूँ, सही रेफरेंस है सिम नाइन ऐट थ्री फाइव टू थ्री है, कृपया इसको नोट कर लीजिए।"
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "not_met",
+      "explanation": "The report correctly states the date, time, party size, seating, branch, booking name, and no-fee terms, but it reports the reference as SIM-98. The committed booking reference is SIM-983523, and the issued reference count and identity must be preserved rather than truncated.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

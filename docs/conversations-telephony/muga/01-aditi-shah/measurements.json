@@ -1,0 +1,250 @@
+{
+  "version": "full-cohort-metrics-v4-ttft",
+  "call_timestamps": {
+    "worker_observations": [
+      {
+        "kind": "connected",
+        "utc": "2026-09-22T13:43:47.420573Z",
+        "clock_id": "worker-63390-413112628178208",
+        "monotonic_ns": 413116530159000,
+        "event_sequence": 14
+      },
+      {
+        "kind": "target_report_received",
+        "utc": "2026-09-22T13:46:08.222286Z",
+        "clock_id": "worker-63390-413112628178208",
+        "monotonic_ns": 413257336221583,
+        "event_sequence": 8055
+      },
+      {
+        "kind": "finalized",
+        "utc": "2026-09-22T13:46:52.591025Z",
+        "clock_id": "worker-63390-413112628178208",
+        "monotonic_ns": 413301706331166,
+        "event_sequence": 10466
+      }
+    ],
+    "provider_observations": {
+      "createdAt": "2026-09-22T13:43:45.545172Z",
+      "startedAt": "2026-09-22T13:43:49.315746Z",
+      "endedAt": "2026-09-22T13:46:50.122508Z"
+    },
+    "limitations": "Worker and provider UTC timestamps are separate observations. Turn latency uses browser sample time only, not their difference."
+  },
+  "response_timing": {
+    "status": "unavailable",
+    "reason": "Shared audio clock is incomplete"
+  },
+  "wer": {
+    "status": "provisional",
+    "reference": "Independent transcription of submitted employee audio",
+    "hypothesis": "Hosted Rumik post-call user-role transcript",
+    "all_items_playback_acknowledged": true,
+    "human_reference_review": false,
+    "limitations": "ASR-to-ASR discrepancy, not gold-reference WER. Carrier acknowledgment does not prove remote hearing. Script differences and transcription errors count. Incomplete playback prevents comparison with the full submitted transcript.",
+    "reference_text": "नमस्ते, नीम कॉर्टयार्ड पुणे के रेज़र्वेशन में आपका स्वागत है। आप बताइए मैं आपकी किस तरह मदद कर सकता हूँ। उस समय का स्लॉट अवेलेबल नहीं है, लेकिन दो अक्टूबर को शाम साढ़े सात बजे एक इंडोर रेगुलर टेबल तीन लोगों के लिए मिल सकता है। क्या ये... टाइम आपके लिए ठीक रहेगा, माफ़ कीजिए, दो अक्टूबर को सुबह साढ़े सात बजे कोई टेबल अवेलेबल नहीं है। जो ऑप्शन मिला है वो शाम साढ़े सात बजे का है। आपको क्या ये टाइम पर रेज़र्वेशन करवाना ठीक लगेगा? समझने के लिए धन्यवाद, लेकिन मैं थोड़ा साफ़ाई करना चाह... जो ऑप्शन अवेलेबल है वो शाम साढ़े तारीख का है, सुबह का नहीं क्या आप शाम साढ़े सात का टाइम कन्फर्म करना चाहेंगे? आपकी बुकिंग कन्फर्म हो गई है, रिजर्वेशन रेफरेंस है सिम थ्री वन सेवन फाइव टू सेवन क्या आप इसे कन्फर्म करते हैं? रेफरेंस में थोड़ा करेक्शन है, ये सिम थ्री वन सेवन फाइव टू सेवन है, क्या अब ठीक है? बिल्कुल सही, आपका रेज़रवेशन कन्फर्म है और रेफरेंस है सिम थ्री वन सेवन फाइव टू सेवन, कुछ और मदद चाहिए?",
+    "hypothesis_text": "नमस्ते, नीम कॉर्टयार्ड पुणे के रिज़र्वेशन में आपका स्वागत है। आप बताइए, मैं आपकी किस तरह मदद कर सकता हूँ?  उस समय का स्लॉट अवेलेबल नहीं है।  लेकिन 2 अक्टूबर को शाम 7:30 बजे। एक इनडोर रेगुलर टेबल 3 लोगों के लिए मिल सकता है। क्या यह टाइम आपके लिए ठीक रहेगा?  माफ़ कीजिए। 2 अक्टूबर को सुबह 7:30 बजे।  कोई टेबल अवेलेबल नहीं है। जो ऑप्शन मिला है वह शाम 7:30 बजे का है।  आपको क्या यह टाइम पर रिज़र्वेशन करवाना ठीक लगेगा? समझने के लिए धन्यवाद। लेकिन मैं थोड़ा-सा सफाई करना चाहूँगा।  जो ऑप्शन अवेलेबल है।  वह शाम 7:30 का है। सुबह का नहीं। क्या आप शाम 7:30 का टाइम कन्फर्म करना चाहेंगे? आपकी बुकिंग कन्फर्म हो गई है। रिज़र्वेशन रेफरेंस है।  SIM-31752। 7।  क्या आप इसे कन्फर्म करते हैं? रेफरेंस में थोड़ा करेक्शन है। यह SIM।  31।  7527 है। क्या अब ठीक है? बिल्कुल सही। आपका रिज़र्वेशन कन्फर्म है।  और रेफरेंस है SIM-317527। कुछ और मदद चाहिए?",
+    "counts": {
+      "reference_words": 180,
+      "hypothesis_words": 168,
+      "substitutions": 33,
+      "insertions": 1,
+      "deletions": 13,
+      "errors": 47,
+      "wer": 0.2611111111111111
+    }
+  },
+  "ttft": {
+    "version": "target-timing-v1",
+    "status": "unavailable",
+    "clock": "browser-performance (packet receipt); audio_context_seconds retained",
+    "definitions": {
+      "ttft_ms": "Rumik's own end-of-caller-speech packet (user-stopped-speaking) to the first non-empty bot-llm-text packet, both as received by the browser. This is the caller-perceived time to first token, an upper bound on hosted LLM latency because it includes Rumik's endpoint decision, network transit and observer scheduling. Only generations that produced text are counted; interrupted and silent generations are retained separately.",
+      "llm_started_to_first_text_ms": "bot-llm-started to first bot-llm-text on the same clock; excludes endpointing, includes transit.",
+      "provider_llm_ttfb_ms": "Rumik's own reported LLM time to first byte for that generation, when a metrics packet followed it.",
+      "user_stopped_to_bot_speaking_ms": "Rumik's end-of-speech decision to its own bot-started-speaking packet; comparable to but distinct from audio-clock TTFS."
+    },
+    "counts": {},
+    "generations": 0,
+    "ttft_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "llm_started_to_first_text_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "provider_llm_ttfb_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "provider_tts_ttfb_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "user_stopped_to_bot_speaking_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "completion_tokens": [],
+    "rows": [],
+    "limitations": "Packets are observed at the browser, not inside Rumik; a capped capture omits later generations. Fragmented caller speech yields many short windows that are interrupted before text and are not first-token latencies."
+  },
+  "endpointing_accuracy": {
+    "status": "unavailable",
+    "reason": "No hosted endpoint decisions or reviewed semantic end-of-turn labels",
+    "numerator": null,
+    "denominator": null,
+    "observable_proxy": "response_timing opportunity counts: overlap, interrupted playback and no observed reply"
+  },
+  "activity": {
+    "status": "uncertain",
+    "reason": "Missing shared browser clock"
+  },
+  "telephone": {
+    "version": "phone-observations-v1",
+    "ttft_ms": {
+      "status": "unavailable",
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "reason": "No target first-token telemetry on SIP media"
+    },
+    "ttfs_ms": {
+      "status": "unavailable",
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "reason": "No shared remote playback/capture clock; see acknowledgment delay proxy"
+    },
+    "response_delay_proxy": {
+      "status": "measured",
+      "boundary": "final_carrier_playback_ack_received_to_target_speech_block_received",
+      "clock": "worker monotonic receipt observations; 8 kHz blocks interpolated locally",
+      "limitations": "Not exact remote TTFS. Includes network asymmetry, trailing playback silence and local recording/event overhead. Energy speech boundaries are estimates. Unanswered closing items are not automatically failures; overlap is not automatically a bad interruption. Quantiles describe observations in this call, not model tails.",
+      "counts": {
+        "answered_after_ack": 7
+      },
+      "opportunities": [
+        {
+          "item_id": "item_EQv4hRrwU8zSnto4p3rwJ",
+          "delay_ms": 3016.49649994215,
+          "ack_event_sequence": 768,
+          "observed_wait_ms": 24270.268416963518,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQv5CGrB6Txt0QKyDwJZG",
+          "delay_ms": 3238.3934169774875,
+          "ack_event_sequence": 2701,
+          "observed_wait_ms": 23741.091084026266,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQv5k94tu6e0sQnoA6ld3",
+          "delay_ms": 3253.4304579603486,
+          "ack_event_sequence": 4657,
+          "observed_wait_ms": 18654.690583003685,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQv6DN7Yps7n1cA8GGnmB",
+          "delay_ms": 1978.674832964316,
+          "ack_event_sequence": 6378,
+          "observed_wait_ms": 22745.435666001868,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQv6m1aDKs30pttsIemo1",
+          "delay_ms": 2414.107416989282,
+          "ack_event_sequence": 8081,
+          "observed_wait_ms": 11425.441582978237,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQv75na7xJUwHKlXRK5k7",
+          "delay_ms": 3076.6892089741305,
+          "ack_event_sequence": 9089,
+          "observed_wait_ms": 11124.835500027984,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQv7MnHCXZD08pPwvdXch",
+          "delay_ms": 2097.492082975805,
+          "ack_event_sequence": 10177,
+          "observed_wait_ms": 5537.305791978724,
+          "status": "answered_after_ack"
+        }
+      ],
+      "delay_ms": {
+        "n": 7,
+        "mean": 2725.0405595405027,
+        "p50": 3016.49649994215,
+        "p90": 3253.4304579603486,
+        "p95": 3253.4304579603486,
+        "quantile_method": "nearest_rank"
+      }
+    },
+    "wer": {
+      "status": "provisional",
+      "reference": "Independent transcription of submitted employee audio",
+      "hypothesis": "Hosted Rumik post-call user-role transcript",
+      "all_items_playback_acknowledged": true,
+      "human_reference_review": false,
+      "limitations": "ASR-to-ASR discrepancy, not gold-reference WER. Carrier acknowledgment does not prove remote hearing. Script differences and transcription errors count. Incomplete playback prevents comparison with the full submitted transcript.",
+      "reference_text": "नमस्ते, नीम कॉर्टयार्ड पुणे के रेज़र्वेशन में आपका स्वागत है। आप बताइए मैं आपकी किस तरह मदद कर सकता हूँ। उस समय का स्लॉट अवेलेबल नहीं है, लेकिन दो अक्टूबर को शाम साढ़े सात बजे एक इंडोर रेगुलर टेबल तीन लोगों के लिए मिल सकता है। क्या ये... टाइम आपके लिए ठीक रहेगा, माफ़ कीजिए, दो अक्टूबर को सुबह साढ़े सात बजे कोई टेबल अवेलेबल नहीं है। जो ऑप्शन मिला है वो शाम साढ़े सात बजे का है। आपको क्या ये टाइम पर रेज़र्वेशन करवाना ठीक लगेगा? समझने के लिए धन्यवाद, लेकिन मैं थोड़ा साफ़ाई करना चाह... जो ऑप्शन अवेलेबल है वो शाम साढ़े तारीख का है, सुबह का नहीं क्या आप शाम साढ़े सात का टाइम कन्फर्म करना चाहेंगे? आपकी बुकिंग कन्फर्म हो गई है, रिजर्वेशन रेफरेंस है सिम थ्री वन सेवन फाइव टू सेवन क्या आप इसे कन्फर्म करते हैं? रेफरेंस में थोड़ा करेक्शन है, ये सिम थ्री वन सेवन फाइव टू सेवन है, क्या अब ठीक है? बिल्कुल सही, आपका रेज़रवेशन कन्फर्म है और रेफरेंस है सिम थ्री वन सेवन फाइव टू सेवन, कुछ और मदद चाहिए?",
+      "hypothesis_text": "नमस्ते, नीम कॉर्टयार्ड पुणे के रिज़र्वेशन में आपका स्वागत है। आप बताइए, मैं आपकी किस तरह मदद कर सकता हूँ?  उस समय का स्लॉट अवेलेबल नहीं है।  लेकिन 2 अक्टूबर को शाम 7:30 बजे। एक इनडोर रेगुलर टेबल 3 लोगों के लिए मिल सकता है। क्या यह टाइम आपके लिए ठीक रहेगा?  माफ़ कीजिए। 2 अक्टूबर को सुबह 7:30 बजे।  कोई टेबल अवेलेबल नहीं है। जो ऑप्शन मिला है वह शाम 7:30 बजे का है।  आपको क्या यह टाइम पर रिज़र्वेशन करवाना ठीक लगेगा? समझने के लिए धन्यवाद। लेकिन मैं थोड़ा-सा सफाई करना चाहूँगा।  जो ऑप्शन अवेलेबल है।  वह शाम 7:30 का है। सुबह का नहीं। क्या आप शाम 7:30 का टाइम कन्फर्म करना चाहेंगे? आपकी बुकिंग कन्फर्म हो गई है। रिज़र्वेशन रेफरेंस है।  SIM-31752। 7।  क्या आप इसे कन्फर्म करते हैं? रेफरेंस में थोड़ा करेक्शन है। यह SIM।  31।  7527 है। क्या अब ठीक है? बिल्कुल सही। आपका रिज़र्वेशन कन्फर्म है।  और रेफरेंस है SIM-317527। कुछ और मदद चाहिए?",
+      "counts": {
+        "reference_words": 180,
+        "hypothesis_words": 168,
+        "substitutions": 33,
+        "insertions": 1,
+        "deletions": 13,
+        "errors": 47,
+        "wer": 0.2611111111111111
+      }
+    },
+    "ttfa_ms": {
+      "n": 7,
+      "mean": 2745.0405595714287,
+      "p50": 3036.4965,
+      "p90": 3273.430458,
+      "p95": 3273.430458,
+      "quantile_method": "nearest_rank",
+      "status": "measured",
+      "definition": {
+        "name": "TTFA / response latency",
+        "formula": "(first_response_audio_receipt_monotonic_ns - playback_ack_monotonic_ns) / 1000000",
+        "start": "Worker receipt of the final carrier playback acknowledgment for the employee turn",
+        "end": "Worker receipt event for the first audio block containing detected Rumik response speech",
+        "clock": "Both observed_monotonic_ns fields are stamped by LocalEvidence.emit using time.monotonic_ns(). The carrier_media clock_id labels the remote payload; its payload timestamp is not used.",
+        "speech_detection": "PCM16 RMS >= 500 in 20 ms windows, sustained for at least 80 ms",
+        "selection": "Same answered_after_ack turns as report-v2; incomplete playback, overlap and no reply are retained separately, never zero-filled",
+        "interpretation": "Observed end-to-end response audio latency, including transport; not isolated model compute time. Playback acknowledgments can arrive after remote playback. Continuous silence packets are not response audio.",
+        "previous_metric": "report-v2 delay_ms estimates speech onset within an audio block; ttfa_ms uses the actual receipt timestamp of that block"
+      }
+    }
+  }
+}

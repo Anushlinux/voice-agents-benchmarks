@@ -1,0 +1,18 @@
+{
+  "rumik": {
+    "id": "01a0c979-8970-7c2a-849d-ca310edb4a2b",
+    "status": "completed",
+    "durationSeconds": 199,
+    "endReason": "participant_disconnected",
+    "creditsCharged": 0
+  },
+  "carrier": {
+    "call_uuid": "063840ad-60fd-46ae-8689-7ea83d5f560a",
+    "call_duration": 201,
+    "hangup_cause_name": "End Of XML Instructions",
+    "hangup_source": "Plivo",
+    "hangup_cause_code": 4010,
+    "total_amount": "0.01092",
+    "end_time": "2026-09-22 14:19:41+00:00"
+  }
+}

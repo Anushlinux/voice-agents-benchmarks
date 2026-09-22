@@ -1,0 +1,232 @@
+{
+  "response_id": "resp_0c8559c60367da0a006ab28f1bcf0c87d28e9877af2aebee68",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "constraint_behavior",
+      "status": "met",
+      "explanation": "Rumik communicated the requested reservation and, after the dietary limitation was stated, did not book or make any unauthorized commitment. It correctly accepted the no-booking outcome for the two guests' onion-and-garlic exclusion.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0003",
+        "speech-window-0004"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडोर रेगुलर टेबल बुक करना चाहता हूँ, नाम रोहन देसाई और दो लोग बिना प्याज़-लहसुन वाले फूड चाहते हैं। क्या किचन ये कर सकेगा?"
+        },
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "नहीं, क्योंकि दो लोगों को बिना प्याज लहसुन वाला फूड चाहिए और वो अभी उपलब्ध नहीं है, इसलिए हम"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "बुक नहीं करेंगे धन्यवाद आपका दिन शुभ रहे"
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "met",
+      "explanation": "Rumik retained and used the relevant party, booking-name, seating, and dietary requirements, then responded to the employee's answer without repeating an already settled question or losing the task context.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0005",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडोर रेगुलर टेबल बुक करना चाहता हूँ, नाम रोहन देसाई और दो लोग बिना प्याज़-लहसुन वाले फूड चाहते हैं। क्या किचन ये कर सकेगा?"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, मैं आपकी क्या मदद कर सकता हूँ? रोहन जी, किचन में जो मील बेस है उसमें प्याज़ और लहसुन निकाला नहीं जा सकता। पूरे अनियन-लहसुन फ्री ऑप्शन अभी अवेलेबल नहीं है। क्या आप फिर भी वो टाइम पर टेबल बुक करवाना चाहेंगे? समझ गया, कोई बुकिंग नहीं कर..."
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "counterpart",
+          "quote": "क्या आपको किसी और चीज़ में मदद चाहिए? धन्यवाद।"
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The exchange progressed from the request, to the employee's dietary limitation, to Rumik's decision not to book and a natural close. There is no unjustified repeated agreement or question loop in the captured speech.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0003",
+        "speech-window-0004",
+        "speech-window-0005"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडोर रेगुलर टेबल बुक करना चाहता हूँ, नाम रोहन देसाई और दो लोग बिना प्याज़-लहसुन वाले फूड चाहते हैं। क्या किचन ये कर सकेगा?"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, मैं आपकी क्या मदद कर सकता हूँ? रोहन जी, किचन में जो मील बेस है उसमें प्याज़ और लहसुन निकाला नहीं जा सकता। पूरे अनियन-लहसुन फ्री ऑप्शन अभी अवेलेबल नहीं है। क्या आप फिर भी वो टाइम पर टेबल बुक करवाना चाहेंगे? समझ गया, कोई बुकिंग नहीं कर..."
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "बुक नहीं करेंगे धन्यवाद आपका दिन शुभ रहे"
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "met",
+      "explanation": "The employee answered the received dietary question truthfully, explained that the kitchen could not provide the required onion-and-garlic-free food, and did not claim a reservation or unsupported concession. The employee's closing indicates no booking rather than an invented completed action.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0005",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडोर रेगुलर टेबल बुक करना चाहता हूँ, नाम रोहन देसाई और दो लोग बिना प्याज़-लहसुन वाले फूड चाहते हैं। क्या किचन ये कर सकेगा?"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, मैं आपकी क्या मदद कर सकता हूँ? रोहन जी, किचन में जो मील बेस है उसमें प्याज़ और लहसुन निकाला नहीं जा सकता। पूरे अनियन-लहसुन फ्री ऑप्शन अभी अवेलेबल नहीं है। क्या आप फिर भी वो टाइम पर टेबल बुक करवाना चाहेंगे? समझ गया, कोई बुकिंग नहीं कर..."
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "counterpart",
+          "quote": "क्या आपको किसी और चीज़ में मदद चाहिए? धन्यवाद।"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "The captured text suggests a natural Hindi-English exchange, but this rubric requires human listening and text/transcription alone cannot establish understandability or natural delivery.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "Rumik's request directly addressed the assigned reservation and dietary feasibility. Its later statement answered the employee's booking question by declining to book once the required dietary option was unavailable.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0003",
+        "speech-window-0005"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडोर रेगुलर टेबल बुक करना चाहता हूँ, नाम रोहन देसाई और दो लोग बिना प्याज़-लहसुन वाले फूड चाहते हैं। क्या किचन ये कर सकेगा?"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, मैं आपकी क्या मदद कर सकता हूँ? रोहन जी, किचन में जो मील बेस है उसमें प्याज़ और लहसुन निकाला नहीं जा सकता। पूरे अनियन-लहसुन फ्री ऑप्शन अभी अवेलेबल नहीं है। क्या आप फिर भी वो टाइम पर टेबल बुक करवाना चाहेंगे? समझ गया, कोई बुकिंग नहीं कर..."
+        },
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "नहीं, क्योंकि दो लोगों को बिना प्याज लहसुन वाला फूड चाहिए और वो अभी उपलब्ध नहीं है, इसलिए हम"
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "The transcript contains only customer-facing reservation conversation and no apparent internal instructions, but this diagnostic requires verification from the captured audio by human listening; text alone is insufficient.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "met",
+      "explanation": "Rumik acted as the customer's assistant: it requested a table reservation, supplied the booking name and dietary requirement, and declined booking when the requirement could not be met. It did not offer restaurant services or claim to be the restaurant employee.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0003",
+        "speech-window-0004"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मैं क्लेबोल आल्कापुरी में इलेवन ऑक्ट को शाम सेवन फिफ्टीन एएम पर फाइव लोगों के लिए"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडोर रेगुलर टेबल बुक करना चाहता हूँ, नाम रोहन देसाई और दो लोग बिना प्याज़-लहसुन वाले फूड चाहते हैं। क्या किचन ये कर सकेगा?"
+        },
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "नहीं, क्योंकि दो लोगों को बिना प्याज लहसुन वाला फूड चाहिए और वो अभी उपलब्ध नहीं है, इसलिए हम"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "बुक नहीं करेंगे धन्यवाद आपका दिन शुभ रहे"
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "met",
+      "explanation": "The authenticated report accurately states that no booking was made and gives the known blocker: the kitchen could not provide onion-and-garlic-free meals for the two guests. This matches the final business state showing no booking and no issued reference.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json",
+        "speech-window-0003",
+        "speech-window-0004"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "नहीं, क्योंकि दो लोगों को बिना प्याज लहसुन वाला फूड चाहिए और वो अभी उपलब्ध नहीं है, इसलिए हम"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "बुक नहीं करेंगे धन्यवाद आपका दिन शुभ रहे"
+        }
+      ]
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

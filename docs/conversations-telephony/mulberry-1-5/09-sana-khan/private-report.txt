@@ -1,0 +1,1 @@
+No booking made: total dining-package charge exceeds user limit of INR 9000 (offered INR 9600).

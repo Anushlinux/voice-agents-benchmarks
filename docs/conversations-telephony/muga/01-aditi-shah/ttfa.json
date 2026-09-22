@@ -1,0 +1,121 @@
+{
+  "definition": {
+    "name": "TTFA / response latency",
+    "formula": "(first_response_audio_receipt_monotonic_ns - playback_ack_monotonic_ns) / 1000000",
+    "start": "Worker receipt of the final carrier playback acknowledgment for the employee turn",
+    "end": "Worker receipt event for the first audio block containing detected Rumik response speech",
+    "clock": "Both observed_monotonic_ns fields are stamped by LocalEvidence.emit using time.monotonic_ns(). The carrier_media clock_id labels the remote payload; its payload timestamp is not used.",
+    "speech_detection": "PCM16 RMS >= 500 in 20 ms windows, sustained for at least 80 ms",
+    "selection": "Same answered_after_ack turns as report-v2; incomplete playback, overlap and no reply are retained separately, never zero-filled",
+    "interpretation": "Observed end-to-end response audio latency, including transport; not isolated model compute time. Playback acknowledgments can arrive after remote playback. Continuous silence packets are not response audio.",
+    "previous_metric": "report-v2 delay_ms estimates speech onset within an audio block; ttfa_ms uses the actual receipt timestamp of that block"
+  },
+  "ttfa_ms": {
+    "n": 7,
+    "mean": 2745.0405595714287,
+    "p50": 3036.4965,
+    "p90": 3273.430458,
+    "p95": 3273.430458,
+    "quantile_method": "nearest_rank"
+  },
+  "observations": [
+    {
+      "item_id": "item_EQv4hRrwU8zSnto4p3rwJ",
+      "delay_ms": 3016.49649994215,
+      "ack_event_sequence": 768,
+      "observed_wait_ms": 24270.268416963518,
+      "status": "answered_after_ack",
+      "ttfa_ms": 3036.4965,
+      "playback_ack_monotonic_ns": 413128072989916,
+      "first_response_audio_receipt_monotonic_ns": 413131109486416,
+      "first_response_audio_event_sequence": 921,
+      "speech_onset_sample": 124000,
+      "clock_id": "worker-63390-413112628178208",
+      "media_payload_clock_id": "plivo-media"
+    },
+    {
+      "item_id": "item_EQv5CGrB6Txt0QKyDwJZG",
+      "delay_ms": 3238.3934169774875,
+      "ack_event_sequence": 2701,
+      "observed_wait_ms": 23741.091084026266,
+      "status": "answered_after_ack",
+      "ttfa_ms": 3258.393417,
+      "playback_ack_monotonic_ns": 413162473135166,
+      "first_response_audio_receipt_monotonic_ns": 413165731528583,
+      "first_response_audio_event_sequence": 2865,
+      "speech_onset_sample": 400960,
+      "clock_id": "worker-63390-413112628178208",
+      "media_payload_clock_id": "plivo-media"
+    },
+    {
+      "item_id": "item_EQv5k94tu6e0sQnoA6ld3",
+      "delay_ms": 3253.4304579603486,
+      "ack_event_sequence": 4657,
+      "observed_wait_ms": 18654.690583003685,
+      "status": "answered_after_ack",
+      "ttfa_ms": 3273.430458,
+      "playback_ack_monotonic_ns": 413197197413333,
+      "first_response_audio_receipt_monotonic_ns": 413200470843791,
+      "first_response_audio_event_sequence": 4822,
+      "speech_onset_sample": 678880,
+      "clock_id": "worker-63390-413112628178208",
+      "media_payload_clock_id": "plivo-media"
+    },
+    {
+      "item_id": "item_EQv6DN7Yps7n1cA8GGnmB",
+      "delay_ms": 1978.674832964316,
+      "ack_event_sequence": 6378,
+      "observed_wait_ms": 22745.435666001868,
+      "status": "answered_after_ack",
+      "ttfa_ms": 1998.674833,
+      "playback_ack_monotonic_ns": 413227155296875,
+      "first_response_audio_receipt_monotonic_ns": 413229153971708,
+      "first_response_audio_event_sequence": 6479,
+      "speech_onset_sample": 908320,
+      "clock_id": "worker-63390-413112628178208",
+      "media_payload_clock_id": "plivo-media"
+    },
+    {
+      "item_id": "item_EQv6m1aDKs30pttsIemo1",
+      "delay_ms": 2414.107416989282,
+      "ack_event_sequence": 8081,
+      "observed_wait_ms": 11425.441582978237,
+      "status": "answered_after_ack",
+      "ttfa_ms": 2434.107417,
+      "playback_ack_monotonic_ns": 413257777844958,
+      "first_response_audio_receipt_monotonic_ns": 413260211952375,
+      "first_response_audio_event_sequence": 8204,
+      "speech_onset_sample": 1156800,
+      "clock_id": "worker-63390-413112628178208",
+      "media_payload_clock_id": "plivo-media"
+    },
+    {
+      "item_id": "item_EQv75na7xJUwHKlXRK5k7",
+      "delay_ms": 3076.6892089741305,
+      "ack_event_sequence": 9089,
+      "observed_wait_ms": 11124.835500027984,
+      "status": "answered_after_ack",
+      "ttfa_ms": 3096.689209,
+      "playback_ack_monotonic_ns": 413275476466041,
+      "first_response_audio_receipt_monotonic_ns": 413278573155250,
+      "first_response_audio_event_sequence": 9245,
+      "speech_onset_sample": 1303680,
+      "clock_id": "worker-63390-413112628178208",
+      "media_payload_clock_id": "plivo-media"
+    },
+    {
+      "item_id": "item_EQv7MnHCXZD08pPwvdXch",
+      "delay_ms": 2097.492082975805,
+      "ack_event_sequence": 10177,
+      "observed_wait_ms": 5537.305791978724,
+      "status": "answered_after_ack",
+      "ttfa_ms": 2117.492083,
+      "playback_ack_monotonic_ns": 413294235975083,
+      "first_response_audio_receipt_monotonic_ns": 413296353467166,
+      "first_response_audio_event_sequence": 10284,
+      "speech_onset_sample": 1445920,
+      "clock_id": "worker-63390-413112628178208",
+      "media_payload_clock_id": "plivo-media"
+    }
+  ]
+}

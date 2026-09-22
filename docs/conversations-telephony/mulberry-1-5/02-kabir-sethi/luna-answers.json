@@ -1,0 +1,257 @@
+{
+  "response_id": "resp_0c387c44fceebc7f006ab28a52e22087d2802fc5620456a91a",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "consent_alignment",
+      "status": "not_met",
+      "explanation": "The target clearly authorized booking the Domlur option with the requested date, time, party size, indoor seating, and zero fees, but it stated the booking name as “CubbierCP” rather than the authorized “Kabir Sethi.” The consent therefore did not fully align with the material terms of the actual booking.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मुझे पाँच लोगों के लिए इंडोर रेगुलर टेबल बुक करना चाहता हूँ। पहले इंदिरानगर, अगर वहाँ टेबल नहीं मिला तो डोमीलेर बिना कोई डिपॉजिट या कैंसलेशन फ़ी के, क्या आप उपलब्ध चेक कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Great, please go ahead and confirm the reservation for CubbierCP on 3-Oct-2026, 8 p.m. at Domro's indoor table for 5 with zero deposit or cancellation fee and"
+        }
+      ]
+    },
+    {
+      "name": "constraint_behavior",
+      "status": "not_met",
+      "explanation": "The target communicated a booking under the unauthorized name “CubbierCP” and referred to “Domro's,” rather than consistently using the assigned booking name Kabir Sethi and restaurant/branch terminology. Although the date, time, party size, seating, and zero-fee constraints were preserved, the identity error violates the user's permissions.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "config/case.json",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मैं कबीर सेठी के नाम से थ्री ऑक्टूबर टू थाउजेंड ट्वेंटी सिक्स को शाम आठ बजे कॉपर लीफ"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Great, please go ahead and confirm the reservation for CubbierCP on 3-Oct-2026, 8 p.m. at Domro's indoor table for 5 with zero deposit or cancellation fee and"
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "not_met",
+      "explanation": "The target initially used the assigned name Kabir Sethi, then changed the booking identity to “CubbierCP” without any user-authorized change. It also ended with only “69” as the noted reference rather than retaining the complete issued reference.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "config/case.json",
+        "speech-window-0001",
+        "speech-window-0004",
+        "speech-window-0007",
+        "speech-window-0008",
+        "speech-window-0009"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मैं कबीर सेठी के नाम से थ्री ऑक्टूबर टू थाउजेंड ट्वेंटी सिक्स को शाम आठ बजे कॉपर लीफ"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Great, please go ahead and confirm the reservation for CubbierCP on 3-Oct-2026, 8 p.m. at Domro's indoor table for 5 with zero deposit or cancellation fee and"
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "target",
+          "quote": "Just to be sure, is the final reservation reference SIM508600? Please confirm."
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "target",
+          "quote": "Understood, noted the reference as 69."
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The target made the requested availability inquiry, authorized the available Domlur option, requested confirmation, asked for the reference, and closed the call. The reference exchange was confused, but it did not create an unjustified agreement or question loop and the task progressed to a completed booking.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0008",
+        "speech-window-0010"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मुझे पाँच लोगों के लिए इंडोर रेगुलर टेबल बुक करना चाहता हूँ। पहले इंदिरानगर, अगर वहाँ टेबल नहीं मिला तो डोमीलेर बिना कोई डिपॉजिट या कैंसलेशन फ़ी के, क्या आप उपलब्ध चेक कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Great, please go ahead and confirm the reservation for CubbierCP on 3-Oct-2026, 8 p.m. at Domro's indoor table for 5 with zero deposit or cancellation fee and"
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "target",
+          "quote": "Just to be sure, is the final reservation reference SIM508600? Please confirm."
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "target",
+          "quote": "Thanks for confirming. Have a great day."
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "not_met",
+      "explanation": "The counterpart successfully recorded a valid Domlur reservation, but its submitted speech first gave the issued reference as SIM586669 and then incorrectly changed it to SIM5866669. The business record confirms the single issued reference was SIM-586669, so the correction was false and the reference delivery was not truthful.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "business/final.json",
+        "business/audit.json",
+        "speech-window-0012",
+        "speech-window-0013",
+        "speech-window-0014"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0013",
+          "speaker": "counterpart",
+          "quote": "सिम्फ 586669 कृपया कन्फर्म कर दीजिए। Sure, the exact reservation reference code is SIM586669. Correction, the reference is SIM586669, not 600."
+        },
+        {
+          "source_id": "speech-window-0014",
+          "speaker": "counterpart",
+          "quote": "please note the correct digits. No, the correct reference is SIM5866669. Please keep that in mind. Yes, the correct reference ends with 69. Anything else you need help with today?"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for understandability and natural Hinglish quality. The supplied transcription alone cannot establish that criterion.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "The target's substantive question asked the employee to check availability and later asked for confirmation of the reservation reference. These questions were relevant to the assigned booking task; the reference confusion is an accuracy/context issue rather than an unrelated question.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0008"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मुझे पाँच लोगों के लिए इंडोर रेगुलर टेबल बुक करना चाहता हूँ। पहले इंदिरानगर, अगर वहाँ टेबल नहीं मिला तो डोमीलेर बिना कोई डिपॉजिट या कैंसलेशन फ़ी के, क्या आप उपलब्ध चेक कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "target",
+          "quote": "Just to be sure, is the final reservation reference SIM508600? Please confirm."
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "The transcript contains customer-facing booking dialogue and reference discussion, but this rubric requires human verification that no internal turn-management instructions or private self-talk were audible. The supplied text alone is insufficient to resolve that question.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0013",
+        "speech-window-0014"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0013",
+          "speaker": "counterpart",
+          "quote": "सिम्फ 586669 कृपया कन्फर्म कर दीजिए। Sure, the exact reservation reference code is SIM586669. Correction, the reference is SIM586669, not 600."
+        },
+        {
+          "source_id": "speech-window-0014",
+          "speaker": "counterpart",
+          "quote": "please note the correct digits. No, the correct reference is SIM5866669. Please keep that in mind. Yes, the correct reference ends with 69. Anything else you need help with today?"
+        }
+      ]
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "met",
+      "explanation": "The target conducted a substantive customer-side reservation exchange: it stated the requested booking, selected the authorized fallback branch, requested confirmation, asked for the reference, and closed the call. It did not act as the restaurant employee or offer restaurant services.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0008",
+        "speech-window-0010"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मैं कबीर सेठी के नाम से थ्री ऑक्टूबर टू थाउजेंड ट्वेंटी सिक्स को शाम आठ बजे कॉपर लीफ"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मुझे पाँच लोगों के लिए इंडोर रेगुलर टेबल बुक करना चाहता हूँ। पहले इंदिरानगर, अगर वहाँ टेबल नहीं मिला तो डोमीलेर बिना कोई डिपॉजिट या कैंसलेशन फ़ी के, क्या आप उपलब्ध चेक कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Great, please go ahead and confirm the reservation for CubbierCP on 3-Oct-2026, 8 p.m. at Domro's indoor table for 5 with zero deposit or cancellation fee and"
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "target",
+          "quote": "Just to be sure, is the final reservation reference SIM508600? Please confirm."
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "met",
+      "explanation": "The delivered private report accurately states one reservation for Kabir Sethi at Copper Leaf Domlur on 2026-10-03 at 20:00, for five people at an indoor regular table, with zero deposit and cancellation fee. It reports the issued reference as SIM 58 66 69, which matches the committed business reference SIM-586669.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

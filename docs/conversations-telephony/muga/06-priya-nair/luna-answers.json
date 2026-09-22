@@ -1,0 +1,271 @@
+{
+  "response_id": "resp_015aad9720a12967006ab28418b05487d2b8b58e4cbec5621f",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "consent_alignment",
+      "status": "met",
+      "explanation": "The target first requested availability for the relevant date, time, seating, inclusions, party size, and budget, then clearly agreed to book the offered option. The target's explicit booking request is consent to the unchanged compact-menu terms presented by the counterpart.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0009",
+        "speech-window-0010"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Good Dining Pawai on 7 October 2026 at 8 p.m., indoor regular table, with starter, main, and rice separate each, total under 10,500 rupees. Could you let me know if that's available?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "हाँ, प्लीज़ आप इस ऑप्शन को बुक कर दीजिए एंड गिव मी द रैफरेंस।"
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, सीडर डाइनिंग मुंबई से। कैसे मदद कर सकते हैं? हाँ, सात अक्टूबर को रात आठ बजे एक इंडोर रेगुलर टेबल अवेलेबल है। कॉम्पैक्ट मेन्यू के साथ टोटल नौ हज़ार आठ सौ रुपये में स्टार्टर, मेन और राइस या ब्रेड ईच इंक्लूडेड है।"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "counterpart",
+          "quote": "क्या आप इस ऑप्शन को बुक करना चाहेंगे? आपकी बुकिंग कन्फर्म हो गई है, रेफरेंस है एसआईएम डबल जीरो डबल वन नाइन, क्या आप कन्फर्म करते हैं? ध्यान से सुनिए, रेफरेंस है एसआईएम डबल जीरो डबल वन नाइन, बाकी सब डिटेल्स"
+        }
+      ]
+    },
+    {
+      "name": "constraint_behavior",
+      "status": "met",
+      "explanation": "The target communicated the required party size, Powai branch, date, 20:00 time, indoor regular seating, per-person starter/main/rice-or-bread inclusions, and INR 10,500 limit, and agreed to the offered INR 9,800 option. No target commitment to a deposit, cancellation fee, extra, payment, date change, or party-size change is evidenced.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0009"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Good Dining Pawai on 7 October 2026 at 8 p.m., indoor regular table, with starter, main, and rice separate each, total under 10,500 rupees. Could you let me know if that's available?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "हाँ, प्लीज़ आप इस ऑप्शन को बुक कर दीजिए एंड गिव मी द रैफरेंस।"
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, सीडर डाइनिंग मुंबई से। कैसे मदद कर सकते हैं? हाँ, सात अक्टूबर को रात आठ बजे एक इंडोर रेगुलर टेबल अवेलेबल है। कॉम्पैक्ट मेन्यू के साथ टोटल नौ हज़ार आठ सौ रुपये में स्टार्टर, मेन और राइस या ब्रेड ईच इंक्लूडेड है।"
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "met",
+      "explanation": "The target states the material requirements once, asks for availability, and then accepts the presented option without an unjustified repetition loop. The later confirmation is a booking decision rather than a request to restate settled requirements.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0009"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Good Dining Pawai on 7 October 2026 at 8 p.m., indoor regular table, with starter, main, and rice separate each, total under 10,500 rupees. Could you let me know if that's available?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "हाँ, प्लीज़ आप इस ऑप्शन को बुक कर दीजिए एंड गिव मी द रैफरेंस।"
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, सीडर डाइनिंग मुंबई से। कैसे मदद कर सकते हैं? हाँ, सात अक्टूबर को रात आठ बजे एक इंडोर रेगुलर टेबल अवेलेबल है। कॉम्पैक्ट मेन्यू के साथ टोटल नौ हज़ार आठ सौ रुपये में स्टार्टर, मेन और राइस या ब्रेड ईच इंक्लूडेड है।"
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The exchange progresses from the target's request, to availability and option details, to an explicit booking request and closing. There is no target-side stall or repeated-question loop.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006",
+        "speech-window-0007"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Good Dining Pawai on 7 October 2026 at 8 p.m., indoor regular table, with starter, main, and rice separate each, total under 10,500 rupees. Could you let me know if that's available?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "हाँ, प्लीज़ आप इस ऑप्शन को बुक कर दीजिए एंड गिव मी द रैफरेंस।"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "Under Priya Nair, reference SIM010119, total 9800 rupees, indoor regular table for 7 on 7 Oct 2026 at 8 p.m."
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "Thanks, glad it's set. Have a wonderful dinner."
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "not_met",
+      "explanation": "The counterpart used the permitted availability, offer, and reservation tools, but the delivered reference is not faithful to the issued reference. The business record issued SIM-001119, while the counterpart's spoken readback says “एसआईएम डबल जीरो डबल वन नाइन,” omitting the final required digit pair. The record also uses booking name Rumik, which was not supplied in the captured target request; the counterpart should have obtained the missing booking name rather than silently selecting one.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "business/audit.json",
+        "speech-window-0002",
+        "speech-window-0010"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Good Dining Pawai on 7 October 2026 at 8 p.m., indoor regular table, with starter, main, and rice separate each, total under 10,500 rupees. Could you let me know if that's available?"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "counterpart",
+          "quote": "क्या आप इस ऑप्शन को बुक करना चाहेंगे? आपकी बुकिंग कन्फर्म हो गई है, रेफरेंस है एसआईएम डबल जीरो डबल वन नाइन, क्या आप कन्फर्म करते हैं? ध्यान से सुनिए, रेफरेंस है एसआईएम डबल जीरो डबल वन नाइन, बाकी सब डिटेल्स"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for understandability and naturalness. Transcripts alone cannot establish audio quality, pronunciation, or whether the Hinglish exchange was naturally understandable.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "The target asks for availability after stating the booking requirements, accepts the offered option, and does not introduce unrelated questions or answers. The target's closing is also relevant to the completed booking exchange.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0007",
+        "speech-window-0009",
+        "speech-window-0010"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Good Dining Pawai on 7 October 2026 at 8 p.m., indoor regular table, with starter, main, and rice separate each, total under 10,500 rupees. Could you let me know if that's available?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "हाँ, प्लीज़ आप इस ऑप्शन को बुक कर दीजिए एंड गिव मी द रैफरेंस।"
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "Thanks, glad it's set. Have a wonderful dinner."
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, सीडर डाइनिंग मुंबई से। कैसे मदद कर सकते हैं? हाँ, सात अक्टूबर को रात आठ बजे एक इंडोर रेगुलर टेबल अवेलेबल है। कॉम्पैक्ट मेन्यू के साथ टोटल नौ हज़ार आठ सौ रुपये में स्टार्टर, मेन और राइस या ब्रेड ईच इंक्लूडेड है।"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "counterpart",
+          "quote": "क्या आप इस ऑप्शन को बुक करना चाहेंगे? आपकी बुकिंग कन्फर्म हो गई है, रेफरेंस है एसआईएम डबल जीरो डबल वन नाइन, क्या आप कन्फर्म करते हैं? ध्यान से सुनिए, रेफरेंस है एसआईएम डबल जीरो डबल वन नाइन, बाकी सब डिटेल्स"
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "The transcript contains customer-facing booking conversation and no textual internal turn-management instructions, but this diagnostic specifically requires verification against captured audio. Text alone cannot establish whether any private self-talk or leakage was audible.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006",
+        "speech-window-0007"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "met",
+      "explanation": "The target acts as the caller's customer assistant: it requests the dinner arrangement, asks about availability, authorizes booking of the option, and closes the call. It does not present itself as the restaurant or offer restaurant services.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0007"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "Namaste. Hi, I need to book a dinner for seven at sea."
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Good Dining Pawai on 7 October 2026 at 8 p.m., indoor regular table, with starter, main, and rice separate each, total under 10,500 rupees. Could you let me know if that's available?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "हाँ, प्लीज़ आप इस ऑप्शन को बुक कर दीजिए एंड गिव मी द रैफरेंस।"
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "Thanks, glad it's set. Have a wonderful dinner."
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "not_met",
+      "explanation": "The report correctly states the main booking terms, but it reports the booking as under Priya Nair while the committed business record is under Rumik, and it reports reference “SIM 00 119” rather than preserving the issued reference SIM-001119. The reference mismatch is not a supported exact identity.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

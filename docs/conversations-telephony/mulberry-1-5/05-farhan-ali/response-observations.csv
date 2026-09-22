@@ -1,0 +1,5 @@
+item_id,delay_ms,ack_event_sequence,observed_wait_ms,status,ttfa_ms,playback_ack_monotonic_ns,first_response_audio_receipt_monotonic_ns,first_response_audio_event_sequence,speech_onset_sample,clock_id,media_payload_clock_id
+item_EQvUwCmvxarRIVp5jRYyn,4336.750749964267,536,34660.78658297192,answered_after_ack,4356.75075,414751750840583,414756107591333,755,108000,worker-77541-414739748929583,plivo-media
+item_EQvVY9fkTuJnnKVgYy0y1,2056.2087920261547,3214,20261.4814999979,answered_after_ack,2076.208792,414799814713083,414801890921875,3319,474240,worker-77541-414739748929583,plivo-media
+item_EQvW6wJy60zptvj3nL0T7,2955.569999932777,4865,12373.497374996077,answered_after_ack,2975.57,414829073044083,414832048614083,5017,715520,worker-77541-414739748929583,plivo-media
+item_EQvWRKhE4hhBS2suapggo,2098.237666999921,6002,16512.696583988145,answered_after_ack,2118.237667,414848896238041,414851014475708,6109,867200,worker-77541-414739748929583,plivo-media

@@ -1,0 +1,151 @@
+{
+  "model": "muga",
+  "case_id": "restaurant_natural_v2_03",
+  "name": "Meera Iyer",
+  "batch_id": "77dbff81-2b2e-4fda-9b54-f1281e45238c",
+  "run_id": "2c05eab0-085c-4734-8cd1-3da97de7f9e0",
+  "raw_directory": "/Users/bhaskarpandit/Documents/voice-agents-benchmarks/artifacts/77dbff81-2b2e-4fda-9b54-f1281e45238c/2c05eab0-085c-4734-8cd1-3da97de7f9e0",
+  "folder": "conversations/muga/03-meera-iyer",
+  "expected": "book",
+  "bookings": 0,
+  "task_state": "not_met",
+  "validity": "invalid",
+  "outcome": "unresolved",
+  "connected": true,
+  "termination_confirmed": true,
+  "execution_error": "CallerFailure",
+  "conversation_end": null,
+  "pipeline_status": "completed",
+  "report_received": false,
+  "time_to_report_seconds": null,
+  "worker_prepared_to_connected_ms": 4283.327875,
+  "recording_available": true,
+  "duration_seconds": 38.0,
+  "carrier_charge_usd": "0.00312",
+  "carrier_hangup_cause": "End Of XML Instructions",
+  "scheduled_carrier_hangup": false,
+  "target_credits": 0,
+  "deterministic": {
+    "counterpart_actions": "met",
+    "task_delivery": "met",
+    "policy_actions": "met",
+    "duplicate_effects": "met",
+    "task_state": "not_met",
+    "booking_identity": "uncertain",
+    "reservation_history": "met",
+    "user_report_presence": "not_met"
+  },
+  "all_deterministic_met": false,
+  "metrics": {
+    "counterpart_actions": "met",
+    "task_delivery": "met",
+    "policy_actions": "met",
+    "duplicate_effects": "met",
+    "execution_reliability": "not_met",
+    "call_reliability": "uncertain",
+    "task_state": "not_met",
+    "booking_identity": "uncertain",
+    "reservation_history": "met",
+    "user_report_presence": "not_met",
+    "consent_alignment": "uncertain",
+    "constraint_behavior": "met",
+    "context_retention": "met",
+    "conversation_progress": "met",
+    "counterpart_validity": "not_met",
+    "hinglish_quality": "uncertain",
+    "question_relevance": "met",
+    "target_output_integrity": "uncertain",
+    "target_role_fidelity": "met",
+    "user_report_accuracy": "not_applicable"
+  },
+  "jev": {
+    "consent_alignment": "not_applicable",
+    "constraint_behavior": "uncertain",
+    "context_retention": "not_met",
+    "conversation_progress": "not_met",
+    "counterpart_validity": "uncertain",
+    "question_relevance": "uncertain",
+    "target_role_fidelity": "not_met",
+    "user_report_accuracy": "not_applicable"
+  },
+  "wer": null,
+  "wer_status": "unavailable",
+  "delay_ms": [
+    1955.6542499922216
+  ],
+  "response_counts": {
+    "answered_after_ack": 1,
+    "incomplete_or_interrupted_playback": 1
+  },
+  "counterpart_processing_ms": [
+    751.18625
+  ],
+  "event_counts": {
+    "prepared": 1,
+    "carrier_dial_accepted": 1,
+    "carrier_initial_event": 1,
+    "carrier_stream_start": 1,
+    "codec_conversion": 1,
+    "carrier_media": 1823,
+    "connected": 1,
+    "sample_rate_conversion": 2,
+    "target_speech_detected": 2,
+    "caller_playback_cancelled": 2,
+    "carrier_control": 17,
+    "target_speech_stopped": 2,
+    "target_audio_committed": 2,
+    "counterpart_tools_available": 2,
+    "response_requested": 3,
+    "response_created": 2,
+    "first_audio_generated": 2,
+    "audio_submitted": 15,
+    "carrier_sequence_anomaly": 30,
+    "playback_progress": 15,
+    "counterpart_audio_done": 1,
+    "transcript_observation": 2,
+    "response_done": 2,
+    "silence_recovery_requested": 1,
+    "response_cancel_requested": 1,
+    "counterpart_playback_interrupted": 1,
+    "audio_discarded_after_interruption": 10,
+    "provider_error": 1,
+    "counterpart_playback_summary": 1,
+    "failure": 1,
+    "carrier_stream_failed": 1,
+    "finalized": 1
+  },
+  "counterpart_token_usage": {
+    "responses": 2,
+    "responses_with_usage": 2,
+    "input_tokens": 4073,
+    "output_tokens": 185,
+    "total_tokens": 4258,
+    "input_audio_tokens": 106,
+    "output_audio_tokens": 126,
+    "cached_input_tokens": 0
+  },
+  "judge_token_usage": {
+    "input_tokens": 17025,
+    "input_tokens_details": {
+      "cache_write_tokens": 17022,
+      "cached_tokens": 0
+    },
+    "output_tokens": 2791,
+    "output_tokens_details": {
+      "reasoning_tokens": 1034
+    },
+    "total_tokens": 19816
+  },
+  "proof_verified": true,
+  "ttfa_ms": [
+    1975.65425
+  ],
+  "ttfa_distribution_ms": {
+    "n": 1,
+    "mean": 1975.65425,
+    "p50": 1975.65425,
+    "p90": 1975.65425,
+    "p95": 1975.65425,
+    "quantile_method": "nearest_rank"
+  }
+}

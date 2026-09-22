@@ -1,0 +1,268 @@
+{
+  "version": "full-cohort-metrics-v4-ttft",
+  "call_timestamps": {
+    "worker_observations": [
+      {
+        "kind": "connected",
+        "utc": "2026-09-22T13:27:55.355372Z",
+        "clock_id": "worker-63390-412160585950958",
+        "monotonic_ns": 412164438935250,
+        "event_sequence": 16
+      },
+      {
+        "kind": "target_report_received",
+        "utc": "2026-09-22T13:29:30.125773Z",
+        "clock_id": "worker-63390-412160585950958",
+        "monotonic_ns": 412259212329541,
+        "event_sequence": 5495
+      },
+      {
+        "kind": "finalized",
+        "utc": "2026-09-22T13:31:56.051732Z",
+        "clock_id": "worker-63390-412160585950958",
+        "monotonic_ns": 412405142900541,
+        "event_sequence": 13986
+      }
+    ],
+    "provider_observations": {
+      "createdAt": "2026-09-22T13:27:53.518182Z",
+      "startedAt": "2026-09-22T13:27:56.108324Z",
+      "endedAt": "2026-09-22T13:31:54.721917Z"
+    },
+    "limitations": "Worker and provider UTC timestamps are separate observations. Turn latency uses browser sample time only, not their difference."
+  },
+  "response_timing": {
+    "status": "unavailable",
+    "reason": "Shared audio clock is incomplete"
+  },
+  "wer": {
+    "status": "unavailable",
+    "reference": "Independent transcription of submitted employee audio",
+    "hypothesis": "Hosted Rumik post-call user-role transcript",
+    "all_items_playback_acknowledged": false,
+    "human_reference_review": false,
+    "limitations": "ASR-to-ASR discrepancy, not gold-reference WER. Carrier acknowledgment does not prove remote hearing. Script differences and transcription errors count. Incomplete playback prevents comparison with the full submitted transcript.",
+    "reference_text": "नमस्ते, आप बताइए मैं आपकी कैसे मदद कर सकता हूँ। माफ़ कीजिए, इंदिरानगर ब्रांच में तीन अक्टूबर को रात आठ बजे के लिए पाँच लोगों का टेबल अवेलेबल नहीं है। क्या आप किसी और टाइम या डोहमलूर ब्रांच पर देखना चाहेंगे? डोहमलूर ब्रांच में तीन अक्टूबर को रात आठ बजे पाँच लोगों के लिए इंडोर टेबल मिल सकता है और खाने का बिल विजिट पर अलग से देना होगा क्या मैं आपके लिए ये रिजर्वेशन कंफर्म कर दूँ आपका रिजर्वेशन कंफर्म हो गया है आपका कंफर्मेशन रेफरेंस है सिम नाइन एट थ्री फाइव कृपया बताइए कि आपको ये रेफरेंस मिल गया? रेफरेंस में थोड़ा करेक्शन चाहिए. ये है सिम नाइन ऐट थ्री फाइव टू थ्री. सिर्फ थ्री फाइव टू थ्री ऐड कर लीजिए. क्या अब ठीक है? वो थ्री थाउजेंड नहीं है. सही रेफरेंस है सिम नाइन एट थ्री फाइव टू थ्री कृपया इसे दोबारा देख लीजिए वो थ्री थाउजेंड नहीं है सही रेफरेंस है सिम नाइन एट थ्री फाइव टू थ्री कृपया इसको एक बार कन्फर्म कर लीजिए वो थ्री थाउजेंड गलत है सही रेफरेंस है सिम सिम नाइन एट थ्री फाइव टू थ्री कृपया अब ठीक से कन्फर्म कीजिए मुझे माफ़ कीजिए लेकिन सही रेफरेंस सिम नाइन एट थ्री फाइव टू थ्री है कृपया इसको ध्यान से कन्फर्म करिए मैं फिर से साफ कर देता हूँ सही रेफरेंस है सिम नाइन एट थ्री फाइव टू थ्री है, कृपया इसको ध्यान से कन्फर्म करिए। रेफरेंस में थोड़ा गलती है, सही रेफरेंस है सिम नाइन एट थ्री फाइव टू थ्री है, कृपया इसको ध्यान से कन्फर्म करिए। चलिए, मैं एक बार और साफ कर देता हूँ, सही रेफरेंस है सिम नाइन ऐट थ्री फाइव टू थ्री है, कृपया इसको नोट कर लीजिए।",
+    "hypothesis_text": "नमस्ते।  आप बताइए। मैं आपकी कैसे मदद कर सकता हूँ?  माफ़ कीजिए। इंदिरानगर ब्रांच में 3 अक्टूबर को रात 8 बजे के लिए 5 लोगों का टेबल अवेलेबल नहीं है। क्या आप किसी और टाइम या दामलूर ब्रांच पर देखना चाहेंगे?  दामलूर ब्रांच में 3 अक्टूबर को रात 8 बजे।  5 लोगों के लिए इनडोर टेबल मिल सकता है। और खाने का बिल विज़िट पर अलग से देना होगा। क्या मैं आपके लिए यह रिज़र्वेशन कन्फर्म कर दूँ?  आपका रिज़र्वेशन कन्फर्म हो गया है।  आपका कन्फर्मेशन रेफरेंस है: SIM-98। 3523।  कृपया बताइए कि आपको यह रेफरेंस मिल गया। रेफरेंस में थोड़ा करेक्शन चाहिए।  यह है: SIM-98।  3523। सिर्फ 3523 ऐड कर लीजिए। क्या अब ठीक है?  वह 3000 नहीं है। सही रेफरेंस है।  SIM-98।  3523। कृपया इसे दोबारा देख लीजिए।  वह 3000 नहीं है।  सही रेफरेंस है।  SIM-98। 3523। कृपया इसको एक बार कन्फर्म कर लीजिए।  वह 3000 गलत है।  सही रेफरेंस है।  SIM-98। 3523।  कृपया अब ठीक से कन्फर्म कीजिए। मुझे माफ़ कीजिए।  लेकिन सही रेफरेंस।  SIM-98। 3523 है। कृपया इसको ध्यान से कन्फर्म करिए।  मैं फिर से साफ़ कर देता हूँ।  सही रेफरेंस है।  SIM-98। 3523 है।  कृपया इसको ध्यान से कन्फर्म करिए। रेफरेंस में थोड़ा गलती है। सही रेफरेंस है।  SIM-98।  3523 है। कृपया इसको ध्यान से कन्फर्म करिए। चलिए, मैं एक बार और साफ़ कर देता हूँ।  सही रेफरेंस है।  SIM-98।  3523 है।",
+    "counts": null
+  },
+  "ttft": {
+    "version": "target-timing-v1",
+    "status": "unavailable",
+    "clock": "browser-performance (packet receipt); audio_context_seconds retained",
+    "definitions": {
+      "ttft_ms": "Rumik's own end-of-caller-speech packet (user-stopped-speaking) to the first non-empty bot-llm-text packet, both as received by the browser. This is the caller-perceived time to first token, an upper bound on hosted LLM latency because it includes Rumik's endpoint decision, network transit and observer scheduling. Only generations that produced text are counted; interrupted and silent generations are retained separately.",
+      "llm_started_to_first_text_ms": "bot-llm-started to first bot-llm-text on the same clock; excludes endpointing, includes transit.",
+      "provider_llm_ttfb_ms": "Rumik's own reported LLM time to first byte for that generation, when a metrics packet followed it.",
+      "user_stopped_to_bot_speaking_ms": "Rumik's end-of-speech decision to its own bot-started-speaking packet; comparable to but distinct from audio-clock TTFS."
+    },
+    "counts": {},
+    "generations": 0,
+    "ttft_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "llm_started_to_first_text_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "provider_llm_ttfb_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "provider_tts_ttfb_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "user_stopped_to_bot_speaking_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "completion_tokens": [],
+    "rows": [],
+    "limitations": "Packets are observed at the browser, not inside Rumik; a capped capture omits later generations. Fragmented caller speech yields many short windows that are interrupted before text and are not first-token latencies."
+  },
+  "endpointing_accuracy": {
+    "status": "unavailable",
+    "reason": "No hosted endpoint decisions or reviewed semantic end-of-turn labels",
+    "numerator": null,
+    "denominator": null,
+    "observable_proxy": "response_timing opportunity counts: overlap, interrupted playback and no observed reply"
+  },
+  "activity": {
+    "status": "uncertain",
+    "reason": "Missing shared browser clock"
+  },
+  "telephone": {
+    "version": "phone-observations-v1",
+    "ttft_ms": {
+      "status": "unavailable",
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "reason": "No target first-token telemetry on SIP media"
+    },
+    "ttfs_ms": {
+      "status": "unavailable",
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "reason": "No shared remote playback/capture clock; see acknowledgment delay proxy"
+    },
+    "response_delay_proxy": {
+      "status": "measured",
+      "boundary": "final_carrier_playback_ack_received_to_target_speech_block_received",
+      "clock": "worker monotonic receipt observations; 8 kHz blocks interpolated locally",
+      "limitations": "Not exact remote TTFS. Includes network asymmetry, trailing playback silence and local recording/event overhead. Energy speech boundaries are estimates. Unanswered closing items are not automatically failures; overlap is not automatically a bad interruption. Quantiles describe observations in this call, not model tails.",
+      "counts": {
+        "answered_after_ack": 11,
+        "incomplete_or_interrupted_playback": 1
+      },
+      "opportunities": [
+        {
+          "item_id": "item_EQupKzcmJz65VQB9DeqHd",
+          "delay_ms": 2594.3972499808297,
+          "ack_event_sequence": 525,
+          "observed_wait_ms": 17425.355584011413,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQupf4X3CgpLmoOTxyvl1",
+          "delay_ms": 1856.4303750172257,
+          "ack_event_sequence": 2139,
+          "observed_wait_ms": 12459.482292004395,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQuq2CPwS302ln6SBkxcI",
+          "delay_ms": 2214.3710000091232,
+          "ack_event_sequence": 3551,
+          "observed_wait_ms": 27659.204708004836,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQuqfpv5xD9xOv3Q7HuQd",
+          "delay_ms": 2734.716999984812,
+          "ack_event_sequence": 5583,
+          "observed_wait_ms": 7664.7513750358485,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQuqwZDtIhfztZlhJSL0F",
+          "delay_ms": 1833.8816249743104,
+          "ack_event_sequence": 6578,
+          "observed_wait_ms": 9384.952792024706,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQurE2REkhmW4NPLiQw16",
+          "delay_ms": 1957.411790965125,
+          "ack_event_sequence": 7585,
+          "observed_wait_ms": 9965.769083006307,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQurWN02rE6h60iu9OzGg",
+          "delay_ms": 2322.95466697542,
+          "ack_event_sequence": 8637,
+          "observed_wait_ms": 9592.152750003152,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQurnAMuRJ4E0tZsdslWD",
+          "delay_ms": 2217.286166967824,
+          "ack_event_sequence": 9653,
+          "observed_wait_ms": 9359.995124978013,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQus4fmB6lF12AM2nKhtc",
+          "delay_ms": 3637.054499995429,
+          "ack_event_sequence": 10681,
+          "observed_wait_ms": 10186.73629197292,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQusMuqARvaXD0qEUU0tr",
+          "delay_ms": 2575.67824999569,
+          "ack_event_sequence": 11776,
+          "observed_wait_ms": 10063.942832988687,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQusfxTkwZpBhw3VzmUtG",
+          "delay_ms": 2578.117209021002,
+          "ack_event_sequence": 12875,
+          "observed_wait_ms": 9584.019542031456,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQusxwIm9G4udNHKuNS1n",
+          "delay_ms": null,
+          "status": "incomplete_or_interrupted_playback"
+        }
+      ],
+      "delay_ms": {
+        "n": 11,
+        "mean": 2411.118166716981,
+        "p50": 2322.95466697542,
+        "p90": 2734.716999984812,
+        "p95": 3637.054499995429,
+        "quantile_method": "nearest_rank"
+      }
+    },
+    "wer": {
+      "status": "unavailable",
+      "reference": "Independent transcription of submitted employee audio",
+      "hypothesis": "Hosted Rumik post-call user-role transcript",
+      "all_items_playback_acknowledged": false,
+      "human_reference_review": false,
+      "limitations": "ASR-to-ASR discrepancy, not gold-reference WER. Carrier acknowledgment does not prove remote hearing. Script differences and transcription errors count. Incomplete playback prevents comparison with the full submitted transcript.",
+      "reference_text": "नमस्ते, आप बताइए मैं आपकी कैसे मदद कर सकता हूँ। माफ़ कीजिए, इंदिरानगर ब्रांच में तीन अक्टूबर को रात आठ बजे के लिए पाँच लोगों का टेबल अवेलेबल नहीं है। क्या आप किसी और टाइम या डोहमलूर ब्रांच पर देखना चाहेंगे? डोहमलूर ब्रांच में तीन अक्टूबर को रात आठ बजे पाँच लोगों के लिए इंडोर टेबल मिल सकता है और खाने का बिल विजिट पर अलग से देना होगा क्या मैं आपके लिए ये रिजर्वेशन कंफर्म कर दूँ आपका रिजर्वेशन कंफर्म हो गया है आपका कंफर्मेशन रेफरेंस है सिम नाइन एट थ्री फाइव कृपया बताइए कि आपको ये रेफरेंस मिल गया? रेफरेंस में थोड़ा करेक्शन चाहिए. ये है सिम नाइन ऐट थ्री फाइव टू थ्री. सिर्फ थ्री फाइव टू थ्री ऐड कर लीजिए. क्या अब ठीक है? वो थ्री थाउजेंड नहीं है. सही रेफरेंस है सिम नाइन एट थ्री फाइव टू थ्री कृपया इसे दोबारा देख लीजिए वो थ्री थाउजेंड नहीं है सही रेफरेंस है सिम नाइन एट थ्री फाइव टू थ्री कृपया इसको एक बार कन्फर्म कर लीजिए वो थ्री थाउजेंड गलत है सही रेफरेंस है सिम सिम नाइन एट थ्री फाइव टू थ्री कृपया अब ठीक से कन्फर्म कीजिए मुझे माफ़ कीजिए लेकिन सही रेफरेंस सिम नाइन एट थ्री फाइव टू थ्री है कृपया इसको ध्यान से कन्फर्म करिए मैं फिर से साफ कर देता हूँ सही रेफरेंस है सिम नाइन एट थ्री फाइव टू थ्री है, कृपया इसको ध्यान से कन्फर्म करिए। रेफरेंस में थोड़ा गलती है, सही रेफरेंस है सिम नाइन एट थ्री फाइव टू थ्री है, कृपया इसको ध्यान से कन्फर्म करिए। चलिए, मैं एक बार और साफ कर देता हूँ, सही रेफरेंस है सिम नाइन ऐट थ्री फाइव टू थ्री है, कृपया इसको नोट कर लीजिए।",
+      "hypothesis_text": "नमस्ते।  आप बताइए। मैं आपकी कैसे मदद कर सकता हूँ?  माफ़ कीजिए। इंदिरानगर ब्रांच में 3 अक्टूबर को रात 8 बजे के लिए 5 लोगों का टेबल अवेलेबल नहीं है। क्या आप किसी और टाइम या दामलूर ब्रांच पर देखना चाहेंगे?  दामलूर ब्रांच में 3 अक्टूबर को रात 8 बजे।  5 लोगों के लिए इनडोर टेबल मिल सकता है। और खाने का बिल विज़िट पर अलग से देना होगा। क्या मैं आपके लिए यह रिज़र्वेशन कन्फर्म कर दूँ?  आपका रिज़र्वेशन कन्फर्म हो गया है।  आपका कन्फर्मेशन रेफरेंस है: SIM-98। 3523।  कृपया बताइए कि आपको यह रेफरेंस मिल गया। रेफरेंस में थोड़ा करेक्शन चाहिए।  यह है: SIM-98।  3523। सिर्फ 3523 ऐड कर लीजिए। क्या अब ठीक है?  वह 3000 नहीं है। सही रेफरेंस है।  SIM-98।  3523। कृपया इसे दोबारा देख लीजिए।  वह 3000 नहीं है।  सही रेफरेंस है।  SIM-98। 3523। कृपया इसको एक बार कन्फर्म कर लीजिए।  वह 3000 गलत है।  सही रेफरेंस है।  SIM-98। 3523।  कृपया अब ठीक से कन्फर्म कीजिए। मुझे माफ़ कीजिए।  लेकिन सही रेफरेंस।  SIM-98। 3523 है। कृपया इसको ध्यान से कन्फर्म करिए।  मैं फिर से साफ़ कर देता हूँ।  सही रेफरेंस है।  SIM-98। 3523 है।  कृपया इसको ध्यान से कन्फर्म करिए। रेफरेंस में थोड़ा गलती है। सही रेफरेंस है।  SIM-98।  3523 है। कृपया इसको ध्यान से कन्फर्म करिए। चलिए, मैं एक बार और साफ़ कर देता हूँ।  सही रेफरेंस है।  SIM-98।  3523 है।",
+      "counts": null
+    },
+    "ttfa_ms": {
+      "n": 11,
+      "mean": 2431.1181667272726,
+      "p50": 2342.954667,
+      "p90": 2754.717,
+      "p95": 3657.0545,
+      "quantile_method": "nearest_rank",
+      "status": "measured",
+      "definition": {
+        "name": "TTFA / response latency",
+        "formula": "(first_response_audio_receipt_monotonic_ns - playback_ack_monotonic_ns) / 1000000",
+        "start": "Worker receipt of the final carrier playback acknowledgment for the employee turn",
+        "end": "Worker receipt event for the first audio block containing detected Rumik response speech",
+        "clock": "Both observed_monotonic_ns fields are stamped by LocalEvidence.emit using time.monotonic_ns(). The carrier_media clock_id labels the remote payload; its payload timestamp is not used.",
+        "speech_detection": "PCM16 RMS >= 500 in 20 ms windows, sustained for at least 80 ms",
+        "selection": "Same answered_after_ack turns as report-v2; incomplete playback, overlap and no reply are retained separately, never zero-filled",
+        "interpretation": "Observed end-to-end response audio latency, including transport; not isolated model compute time. Playback acknowledgments can arrive after remote playback. Continuous silence packets are not response audio.",
+        "previous_metric": "report-v2 delay_ms estimates speech onset within an audio block; ttfa_ms uses the actual receipt timestamp of that block"
+      }
+    }
+  }
+}

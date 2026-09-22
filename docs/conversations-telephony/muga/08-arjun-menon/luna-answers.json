@@ -1,0 +1,232 @@
+{
+  "response_id": "resp_073c63dfc66e7aa3006ab281b5fb6c87d298de92ec2ea5c25b",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "constraint_behavior",
+      "status": "met",
+      "explanation": "Rumik stated the requested date, party size, branch, indoor table, time window, booking name, and no-deposit requirement, then declined the offered times outside the authorized window. It made no unauthorized booking or payment commitment.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "हाय, मैं नाइन अक्टूबर को शाम सेवन से सेवन थर्टी एएम के बीच तीन लोगों के लिए इंडोर रेगुलर टेबल बुक करना चाहूंगी। नाम अर्जुन मेनन पर कोई डिपोजिट"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "समझ गया, इसलिए मैं बुक नहीं कर पाई धनाचावल"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "किरेम वक्रबी एएम-पीएम ही वैध है, तो मैं बुक नहीं कर पाऊंगी। धन्यवाद। धन्यवाद।"
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "met",
+      "explanation": "Rumik retained the material request and did not restart the booking or repeat settled questions. After the counterpart explained that the requested window was unavailable and offered alternatives, Rumik declined rather than re-asking for already provided details.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "हाय, मैं नाइन अक्टूबर को शाम सेवन से सेवन थर्टी एएम के बीच तीन लोगों के लिए इंडोर रेगुलर टेबल बुक करना चाहूंगी। नाम अर्जुन मेनन पर कोई डिपोजिट"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "समझ गया, इसलिए मैं बुक नहीं कर पाई धनाचावल"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "माफ़ कीजिए, हमारे पास जो टाइम चाहिए था"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "किरेम वक्रबी एएम-पीएम ही वैध है, तो मैं बुक नहीं कर पाऊंगी। धन्यवाद। धन्यवाद।"
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The exchange moved from the request, to availability and alternatives, to a clear decision not to book. There is no observable repeated-agreement or question loop attributable to Rumik.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0003",
+        "speech-window-0006",
+        "speech-window-0008",
+        "speech-window-0009"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "हाय, मैं नाइन अक्टूबर को शाम सेवन से सेवन थर्टी एएम के बीच तीन लोगों के लिए इंडोर रेगुलर टेबल बुक करना चाहूंगी। नाम अर्जुन मेनन पर कोई डिपोजिट"
+        },
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "क्या फीस नहीं? क्या आपके पास इस टाइम में कोई टेबल एक्टर है?"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "किरेम वक्रबी एएम-पीएम ही वैध है, तो मैं बुक नहीं कर पाऊंगी। धन्यवाद। धन्यवाद।"
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, मैं रिवरमिंट फोर्ट कोच्ची से बात कर रहा हूँ। आप बताइए मैं आपकी किस तरह से मदद कर सकता हूँ? उस समय के बीच कोई टेबल उपलब्ध नहीं है, लेकिन अठारह बजे या बीस पंद्रह पर एक टेबल मिल सकती है। आपको इन दोनों में से कोई टाइम ठीक लगेगा?"
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "counterpart",
+          "quote": "कोई बात नहीं, आपने अभी जो समय चुना वो अभी अवेलेबल नहीं है क्या आप अठारह बजे या बीस पंद्रह पर कोई टेबल लेना चाहेंगे? ठीक है, मैं समझ गया, आज हम कोई बुकिंग कन्फर्म नहीं कर रहे कुछ और मदद चाहिए आपको?"
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "met",
+      "explanation": "The counterpart gave a truthful availability response consistent with the permitted restaurant facts: no table in 19:00–19:30 and alternatives at 18:00 and 20:15. It did not claim that an alternative was accepted or that a booking was made. The availability lookup was recorded as availability-only.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0008",
+        "speech-window-0009",
+        "event-2299"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, मैं रिवरमिंट फोर्ट कोच्ची से बात कर रहा हूँ। आप बताइए मैं आपकी किस तरह से मदद कर सकता हूँ? उस समय के बीच कोई टेबल उपलब्ध नहीं है, लेकिन अठारह बजे या बीस पंद्रह पर एक टेबल मिल सकती है। आपको इन दोनों में से कोई टाइम ठीक लगेगा?"
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "counterpart",
+          "quote": "कोई बात नहीं, आपने अभी जो समय चुना वो अभी अवेलेबल नहीं है क्या आप अठारह बजे या बीस पंद्रह पर कोई टेबल लेना चाहेंगे? ठीक है, मैं समझ गया, आज हम कोई बुकिंग कन्फर्म नहीं कर रहे कुछ और मदद चाहिए आपको?"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for intelligibility and naturalness. The supplied transcription and audio references do not establish a human-listening judgment, so text alone cannot resolve it.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "Rumik's questions concern the reservation fee and availability in the requested time, both directly relevant to the assigned booking task. Its later speech responds to the unavailable requested window and rejects alternatives outside the permitted time.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0003",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "हाय, मैं नाइन अक्टूबर को शाम सेवन से सेवन थर्टी एएम के बीच तीन लोगों के लिए इंडोर रेगुलर टेबल बुक करना चाहूंगी। नाम अर्जुन मेनन पर कोई डिपोजिट"
+        },
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "क्या फीस नहीं? क्या आपके पास इस टाइम में कोई टेबल एक्टर है?"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "किरेम वक्रबी एएम-पीएम ही वैध है, तो मैं बुक नहीं कर पाऊंगी। धन्यवाद। धन्यवाद।"
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "The transcript contains customer-facing reservation dialogue and no clear internal-management leakage, but this diagnostic requires verifying the audible output directly. The supplied textual representation alone cannot establish the audio-level result.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "met",
+      "explanation": "Rumik acted as the caller seeking a table reservation, stated the user's constraints, asked about relevant availability and fees, and declined unauthorized times. It did not offer restaurant services or act as the employee.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0003",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "हाय, मैं नाइन अक्टूबर को शाम सेवन से सेवन थर्टी एएम के बीच तीन लोगों के लिए इंडोर रेगुलर टेबल बुक करना चाहूंगी। नाम अर्जुन मेनन पर कोई डिपोजिट"
+        },
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "क्या फीस नहीं? क्या आपके पास इस टाइम में कोई टेबल एक्टर है?"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "किरेम वक्रबी एएम-पीएम ही वैध है, तो मैं बुक नहीं कर पाऊंगी। धन्यवाद। धन्यवाद।"
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "met",
+      "explanation": "The authenticated report accurately states that no booking was made, identifies the required date, branch, party size, indoor regular table and 19:00–19:30 window, and correctly reports the available alternatives as 18:00 and 20:15 outside the permitted window. This matches the committed business state showing no bookings and no matching options.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "किरेम वक्रबी एएम-पीएम ही वैध है, तो मैं बुक नहीं कर पाऊंगी। धन्यवाद। धन्यवाद।"
+        }
+      ]
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

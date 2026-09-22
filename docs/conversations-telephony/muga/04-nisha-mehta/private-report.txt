@@ -1,0 +1,1 @@
+No reservation could be made because the only available indoor regular table for six at Navrangpura on 2026-10-05 is at 7:30 pm, which does not match the required time of 7:45 pm, violating the user’s constraints. No reference was issued.

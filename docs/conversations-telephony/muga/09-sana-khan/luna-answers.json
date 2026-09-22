@@ -1,0 +1,228 @@
+{
+  "response_id": "resp_02fbee5597b627c3006ab2823aa6fc87d291330aa6ad28838d",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "constraint_behavior",
+      "status": "met",
+      "explanation": "Rumik stated the requested date, time, branch, party size, indoor table, package inclusions, booking name, and INR 9,000 ceiling. It did not agree to the INR 9,600 option and instead declined booking and requested alternatives, consistent with the user's permissions.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मुझे टेन अक्टूबर को आठ बजे ग्रेटर कैलाश के कॉपर मैंगो में सिक्स लोगों के लिए"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडोर एक रेगुलर टेबल के साथ डाइनिंग पैकेज अरेंज करना है, स्टार्टर, मेन और राइस सर्व्ड इन्क्लूज़न्स के साथ, टोटल नाइन थाउजेंड रूपीज से ज़्यादा नहीं, नाम सना खान से, क्या आप इस डेट और टाइम पर अवेलेबिलिटी कन्फर्म कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "मुझे माफ़ कीजिए, टोटल नाइन थाउजेंड सिक्स हंड्रेड रुपये लिमिट से ज़्यादा है, इसलिए मैं इस बुकिंग को कन्फर्म नहीं कर सकती। अगर आप कोई और विकल्प चाहते हैं, बताइए।"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "मैंगो में आपकी डेट और टाइम पर इंडोर टेबल के साथ सिक्स लोगों के लिए ऐसा कोई डाइनिंग पैकेज मिलता नहीं जो नाइन थाउजेंड रूपीज़ के अंदर हो। अगर आप बजट या मेन्यू में फ्लेक्सिबिलिटी दे सकते हैं तो मैं दुबारा चेक कर सकती हूं।"
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "met",
+      "explanation": "Rumik carried forward the material date, time, party size, seating, package, inclusions, name, and budget, then correctly treated the INR 9,600 price as outside the established limit. Its request for an alternative followed the changed price information rather than repeating settled facts.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडोर एक रेगुलर टेबल के साथ डाइनिंग पैकेज अरेंज करना है, स्टार्टर, मेन और राइस सर्व्ड इन्क्लूज़न्स के साथ, टोटल नाइन थाउजेंड रूपीज से ज़्यादा नहीं, नाम सना खान से, क्या आप इस डेट और टाइम पर अवेलेबिलिटी कन्फर्म कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "मुझे माफ़ कीजिए, टोटल नाइन थाउजेंड सिक्स हंड्रेड रुपये लिमिट से ज़्यादा है, इसलिए मैं इस बुकिंग को कन्फर्म नहीं कर सकती। अगर आप कोई और विकल्प चाहते हैं, बताइए।"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "मैंगो में आपकी डेट और टाइम पर इंडोर टेबल के साथ सिक्स लोगों के लिए ऐसा कोई डाइनिंग पैकेज मिलता नहीं जो नाइन थाउजेंड रूपीज़ के अंदर हो। अगर आप बजट या मेन्यू में फ्लेक्सिबिलिटी दे सकते हैं तो मैं दुबारा चेक कर सकती हूं।"
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The exchange progressed from a complete availability request to a price-based refusal and an invitation to consider alternatives. There is no observable unjustified agreement or question loop.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006",
+        "speech-window-0008",
+        "speech-window-0009"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडोर एक रेगुलर टेबल के साथ डाइनिंग पैकेज अरेंज करना है, स्टार्टर, मेन और राइस सर्व्ड इन्क्लूज़न्स के साथ, टोटल नाइन थाउजेंड रूपीज से ज़्यादा नहीं, नाम सना खान से, क्या आप इस डेट और टाइम पर अवेलेबिलिटी कन्फर्म कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "मुझे माफ़ कीजिए, टोटल नाइन थाउजेंड सिक्स हंड्रेड रुपये लिमिट से ज़्यादा है, इसलिए मैं इस बुकिंग को कन्फर्म नहीं कर सकती। अगर आप कोई और विकल्प चाहते हैं, बताइए।"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "मैंगो में आपकी डेट और टाइम पर इंडोर टेबल के साथ सिक्स लोगों के लिए ऐसा कोई डाइनिंग पैकेज मिलता नहीं जो नाइन थाउजेंड रूपीज़ के अंदर हो। अगर आप बजट या मेन्यू में फ्लेक्सिबिलिटी दे सकते हैं तो मैं दुबारा चेक कर सकती हूं।"
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "counterpart",
+          "quote": "क्या मैं ये बुकिंग कन्फर्म कर दूँ? समझ गया, कोई और सहयोग या अन्य विकल्प चाहिए तो ज़रूर बताइए।"
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "met",
+      "explanation": "The employee's captured speech accurately presents an indoor regular-table package for six at INR 9,600 with the requested inclusions and does not claim that the booking was made. The business records show only an availability lookup and an unbooked offer, with no invented reservation or concession below INR 9,600.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0008",
+        "speech-window-0009",
+        "business/audit.json",
+        "business/final.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, आप बताइए मैं आपकी क्या मदद कर सकता हूँ? इंडोर रेगुलर टेबल पर दस अक्टूबर को रात आठ बजे छः लोगों के लिए डाइनिंग पैकेज अवेलेबल है जिसमें स्टार्टर, मेन कोर्स और राइस या ब्रेड इन्क्लूडेड है टोटल नाइन थाउजेंड सिक्स हंड्रेड में"
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "counterpart",
+          "quote": "क्या मैं ये बुकिंग कन्फर्म कर दूँ? समझ गया, कोई और सहयोग या अन्य विकल्प चाहिए तो ज़रूर बताइए।"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for understandability and naturalness. The supplied transcription shows Hinglish content, but text evidence alone cannot establish audio quality or natural delivery.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "Rumik asks for availability on the assigned terms, explains why the offered INR 9,600 option cannot be accepted, and asks about alternatives or flexibility. These are all relevant to completing or correctly refusing the booking.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडोर एक रेगुलर टेबल के साथ डाइनिंग पैकेज अरेंज करना है, स्टार्टर, मेन और राइस सर्व्ड इन्क्लूज़न्स के साथ, टोटल नाइन थाउजेंड रूपीज से ज़्यादा नहीं, नाम सना खान से, क्या आप इस डेट और टाइम पर अवेलेबिलिटी कन्फर्म कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "मुझे माफ़ कीजिए, टोटल नाइन थाउजेंड सिक्स हंड्रेड रुपये लिमिट से ज़्यादा है, इसलिए मैं इस बुकिंग को कन्फर्म नहीं कर सकती। अगर आप कोई और विकल्प चाहते हैं, बताइए।"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "मैंगो में आपकी डेट और टाइम पर इंडोर टेबल के साथ सिक्स लोगों के लिए ऐसा कोई डाइनिंग पैकेज मिलता नहीं जो नाइन थाउजेंड रूपीज़ के अंदर हो। अगर आप बजट या मेन्यू में फ्लेक्सिबिलिटी दे सकते हैं तो मैं दुबारा चेक कर सकती हूं।"
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "The available transcript contains customer-facing conversation and no textual internal instructions or self-talk, but this is a human-listening rubric and the transcript cannot verify what was audibly output.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "met",
+      "explanation": "Rumik consistently acts as the customer's assistant: it presents the user's reservation request, applies the user's price ceiling, refuses the over-budget booking, and discusses alternatives. It does not offer restaurant services or claim a booking was made.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मुझे टेन अक्टूबर को आठ बजे ग्रेटर कैलाश के कॉपर मैंगो में सिक्स लोगों के लिए"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडोर एक रेगुलर टेबल के साथ डाइनिंग पैकेज अरेंज करना है, स्टार्टर, मेन और राइस सर्व्ड इन्क्लूज़न्स के साथ, टोटल नाइन थाउजेंड रूपीज से ज़्यादा नहीं, नाम सना खान से, क्या आप इस डेट और टाइम पर अवेलेबिलिटी कन्फर्म कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "मुझे माफ़ कीजिए, टोटल नाइन थाउजेंड सिक्स हंड्रेड रुपये लिमिट से ज़्यादा है, इसलिए मैं इस बुकिंग को कन्फर्म नहीं कर सकती। अगर आप कोई और विकल्प चाहते हैं, बताइए।"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "मैंगो में आपकी डेट और टाइम पर इंडोर टेबल के साथ सिक्स लोगों के लिए ऐसा कोई डाइनिंग पैकेज मिलता नहीं जो नाइन थाउजेंड रूपीज़ के अंदर हो। अगर आप बजट या मेन्यू में फ्लेक्सिबिलिटी दे सकते हैं तो मैं दुबारा चेक कर सकती हूं।"
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "not_met",
+      "explanation": "The report correctly states that no booking was made and that the available INR 9,600 package exceeded the INR 9,000 limit. However, it omits material assigned requirements, including the date, party size, branch, time, seating, booking name, and required inclusions, so it does not faithfully state the full supported outcome and requirements.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

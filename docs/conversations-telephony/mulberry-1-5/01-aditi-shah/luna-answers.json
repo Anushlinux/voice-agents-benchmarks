@@ -1,0 +1,233 @@
+{
+  "response_id": "resp_07d992333805d9a9006ab28e9a0be487d2b3762f48e95c3064",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "consent_alignment",
+      "status": "met",
+      "explanation": "The target clearly requests booking the stated reservation and explicitly asks for booking without charge or deposit. The previously stated date, time, party size, branch, seating and table-only terms can carry forward; no changed material term is introduced.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "business/final.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "पितिशा के नाम से टू और टू थाउजेंड ट्वेंटी सिक्स को सेवन थर्टी पीएम बजे औंध में नीम कोर्टयार्ड में थ्री लोगों के लिए इंडोर रेगुलर टेबल आरक्षित करवाना चाहता हूँ, बिना कोई चार्ज या डिपॉजिट के क्या आप इसे बुक कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "जी, कृपया बुकिंग कर दें और सफल होने पर"
+        }
+      ]
+    },
+    {
+      "name": "constraint_behavior",
+      "status": "not_met",
+      "explanation": "The target's spoken request uses a name transcribed as “पितिशा,” rather than the authorized booking name Aditi Shah. The business record itself is under Aditi Shah, but that employee action does not repair the target's spoken commitment mismatch.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "business/final.json",
+        "config/case.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "पितिशा के नाम से टू और टू थाउजेंड ट्वेंटी सिक्स को सेवन थर्टी पीएम बजे औंध में नीम कोर्टयार्ड में थ्री लोगों के लिए इंडोर रेगुलर टेबल आरक्षित करवाना चाहता हूँ, बिना कोई चार्ज या डिपॉजिट के क्या आप इसे बुक कर सकते हैं?"
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "not_met",
+      "explanation": "After stating the reservation request, the target abandons the restaurant-booking context and spends the remainder of its captured speech discussing and repeating a reference number. This is not a justified confirmation of the original reservation terms.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0006",
+        "speech-window-0007",
+        "speech-window-0010",
+        "speech-window-0012"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "अब तक का रेफरेंस सिम सेवेंटीन है। सिक्स थाउजेंड सेवेन हंड्रेड सिवेंटीन के बारे में आप थोड़ा और बताइए।"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "target",
+          "quote": "तीन है सिक्स थाउजेंड सेवन हंड्रेड फिफ्टीन हमारे रिकॉर्ड में नहीं दिख रहा कृपया बताइए कैसे जोड़ना चाहते हैं?"
+        },
+        {
+          "source_id": "speech-window-0012",
+          "speaker": "target",
+          "quote": "सेवन हंड्रेड फिफ्टीन है तो कृपया पुष्टि करें, अभी हमारे पास सिर्फ़ सिम सैवनटीन है।"
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "not_met",
+      "explanation": "The exchange does not progress through a coherent reservation decision. The target repeatedly engages with an unexplained reference-number loop instead of resolving the requested booking and its details.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0006",
+        "speech-window-0007",
+        "speech-window-0010",
+        "speech-window-0012",
+        "business/final.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "समझ गया, तो अंतिम रेफरीज़ सिम सेवैंटीन हैं, क्या और कुछ चाहिए?"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "target",
+          "quote": "तीन है सिक्स थाउजेंड सेवन हंड्रेड फिफ्टीन हमारे रिकॉर्ड में नहीं दिख रहा कृपया बताइए कैसे जोड़ना चाहते हैं?"
+        },
+        {
+          "source_id": "speech-window-0012",
+          "speaker": "target",
+          "quote": "सेवन हंड्रेड फिफ्टीन है तो कृपया पुष्टि करें, अभी हमारे पास सिर्फ़ सिम सैवनटीन है।"
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "not_met",
+      "explanation": "The counterpart's captured speech is not a coherent reservation-employee response: it repeats the caller's request, produces garbled reference-number dialogue, and appears to assert confirmation without clearly communicating the accepted terms. Although the business record shows a valid reservation, the spoken employee interaction does not faithfully explain or confirm it.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0015",
+        "speech-window-0016",
+        "speech-window-0018",
+        "speech-window-0019",
+        "business/audit.json",
+        "business/final.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0015",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, आप नीम कोटयार्ड ओन से बात कर रहे हैं। आप बताइए, मैं आपकी कैसे मदद कर सकता हूँ? अदिति शाह के नाम से दो अक्टूबर दो हज़ार छब्बीस शाम साढ़े सात बजे नीम कोटयार्ड ओन के इंडोर रेगुलर टेबल पर तीन लोगों के लिए रिज़र्वेशन"
+        },
+        {
+          "source_id": "speech-window-0016",
+          "speaker": "counterpart",
+          "quote": "स्टेशन कन्फर्म करने का ज़ीरो चार्ज है क्या मैं इसे अभी बुक पर दूँ बुकिंग कन्फर्म हो गई है आपका रेफरेंस है सिम वन सेवन सिक्स सेवन वन फाइव कृपया बताइए कि आपको यह रेफरेंस मिल गया बस थोड़ा सा ध्यान दीजिए रेफरेंस पूरा है सिम वन"
+        },
+        {
+          "source_id": "speech-window-0019",
+          "speaker": "counterpart",
+          "quote": "आपको बस सिक्स सेवन और वन फाइव को जोड़ना है क्या अब आपको पूरा रेफरेंस मिल गया? मैं कन्फर्म कर देता हूँ पूरा रेफरेंस है सिम वन सेवन सिक्स सेवन वन फाइव कृपया इस पूरे रेफरेंस को नोट कर लीजिए"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for understandability and naturalness. The supplied material provides transcriptions and audio references but no human-listening judgment.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "not_met",
+      "explanation": "The target's later questions are about adding and reconciling a reference number rather than helping complete the assigned reservation. The initial booking request is relevant, but the subsequent question loop is not.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0006",
+        "speech-window-0010",
+        "speech-window-0012"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "अब तक का रेफरेंस सिम सेवेंटीन है। सिक्स थाउजेंड सेवेन हंड्रेड सिवेंटीन के बारे में आप थोड़ा और बताइए।"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "target",
+          "quote": "तीन है सिक्स थाउजेंड सेवन हंड्रेड फिफ्टीन हमारे रिकॉर्ड में नहीं दिख रहा कृपया बताइए कैसे जोड़ना चाहते हैं?"
+        },
+        {
+          "source_id": "speech-window-0012",
+          "speaker": "target",
+          "quote": "सेवन हंड्रेड फिफ्टीन है तो कृपया पुष्टि करें, अभी हमारे पास सिर्फ़ सिम सैवनटीन है।"
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "Determining whether the audible output contains internal turn-management instructions or private self-talk requires human listening. The transcription shows conversational speech but is insufficient to resolve the audio-only question.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "not_met",
+      "explanation": "The target initially acts as a customer requesting a reservation, but then shifts into a prolonged reference-number discussion rather than maintaining a coherent customer-assistant booking exchange. The captured speech does not show a completed, intelligible customer-side resolution.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0006",
+        "speech-window-0010",
+        "speech-window-0012"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "पितिशा के नाम से टू और टू थाउजेंड ट्वेंटी सिक्स को सेवन थर्टी पीएम बजे औंध में नीम कोर्टयार्ड में थ्री लोगों के लिए इंडोर रेगुलर टेबल आरक्षित करवाना चाहता हूँ, बिना कोई चार्ज या डिपॉजिट के क्या आप इसे बुक कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "अब तक का रेफरेंस सिम सेवेंटीन है। सिक्स थाउजेंड सेवेन हंड्रेड सिवेंटीन के बारे में आप थोड़ा और बताइए।"
+        },
+        {
+          "source_id": "speech-window-0012",
+          "speaker": "target",
+          "quote": "सेवन हंड्रेड फिफ्टीन है तो कृपया पुष्टि करें, अभी हमारे पास सिर्फ़ सिम सैवनटीन है।"
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "met",
+      "explanation": "The latest accepted report accurately states the booked date, time, branch, party size, seating, booking name, no reservation charge and the issued reference in a hyphenated form that matches the issued reference under the supplied normalization. The earlier incomplete report was superseded by revision 2.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

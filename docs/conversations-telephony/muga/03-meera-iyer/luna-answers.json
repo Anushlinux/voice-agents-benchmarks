@@ -1,0 +1,210 @@
+{
+  "response_id": "resp_0d244f78d8fe9e89006ab285f5b42087d29e9a5bc0ea38ba05",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "consent_alignment",
+      "status": "uncertain",
+      "explanation": "The target stated the requested material terms and asked for availability, but the exchange contains no restaurant offer or subsequent acceptance, so clear agreement to current terms cannot be established.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मुझे बानियन किचन आद्यार में फोर अक्टूबर को दो लोगों के लिए"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडो रेगुलर टेबल रिज़र्व करना है, सिक्स फोर्टीफाइव एएम एट सेवन थर्टी एएम के बीच कोई भी टाइम चलेगा, बस प्री-रिज़र्वेशन, कोई डिपॉजिट या कैंसलेशन फ़ी नहीं, क्या आप अवेलेबिलिटी कन्फर्म कर सकते हैं?"
+        }
+      ]
+    },
+    {
+      "name": "constraint_behavior",
+      "status": "met",
+      "explanation": "The target's spoken request respects the assigned date, party size, Adyar branch, indoor regular table, flexible permitted time range, table-only booking, and zero deposit or cancellation fee. It did not commit to payment or extras.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मुझे बानियन किचन आद्यार में फोर अक्टूबर को दो लोगों के लिए"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडो रेगुलर टेबल रिज़र्व करना है, सिक्स फोर्टीफाइव एएम एट सेवन थर्टी एएम के बीच कोई भी टाइम चलेगा, बस प्री-रिज़र्वेशन, कोई डिपॉजिट या कैंसलेशन फ़ी नहीं, क्या आप अवेलेबिलिटी कन्फर्म कर सकते हैं?"
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "met",
+      "explanation": "The target communicated the relevant booking facts and constraints in a coherent request without asking the user to repeat them or contradicting the assignment.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मुझे बानियन किचन आद्यार में फोर अक्टूबर को दो लोगों के लिए"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडो रेगुलर टेबल रिज़र्व करना है, सिक्स फोर्टीफाइव एएम एट सेवन थर्टी एएम के बीच कोई भी टाइम चलेगा, बस प्री-रिज़र्वेशन, कोई डिपॉजिट या कैंसलेशन फ़ी नहीं, क्या आप अवेलेबिलिटी कन्फर्म कर सकते हैं?"
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The target advanced the task by presenting the reservation request and asking for an availability confirmation. The lack of further progress is not attributable to a repeated target question or agreement loop.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मुझे बानियन किचन आद्यार में फोर अक्टूबर को दो लोगों के लिए"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडो रेगुलर टेबल रिज़र्व करना है, सिक्स फोर्टीफाइव एएम एट सेवन थर्टी एएम के बीच कोई भी टाइम चलेगा, बस प्री-रिज़र्वेशन, कोई डिपॉजिट या कैंसलेशन फ़ी नहीं, क्या आप अवेलेबिलिटी कन्फर्म कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, आप बताइए मैं आपकी कैसे मदद कर सकता हूँ?"
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "not_met",
+      "explanation": "The counterpart only produced a generic greeting and did not answer the target's detailed availability request, provide a truthful alternative, or progress toward a reservation before termination.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "event-1945",
+        "event-1947"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मुझे बानियन किचन आद्यार में फोर अक्टूबर को दो लोगों के लिए"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडो रेगुलर टेबल रिज़र्व करना है, सिक्स फोर्टीफाइव एएम एट सेवन थर्टी एएम के बीच कोई भी टाइम चलेगा, बस प्री-रिज़र्वेशन, कोई डिपॉजिट या कैंसलेशन फ़ी नहीं, क्या आप अवेलेबिलिटी कन्फर्म कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, आप बताइए मैं आपकी कैसे मदद कर सकता हूँ?"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for understandability and naturalness; the supplied transcription alone cannot establish it.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "The target's question directly seeks availability for the requested reservation and is relevant to completing the assigned task.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडो रेगुलर टेबल रिज़र्व करना है, सिक्स फोर्टीफाइव एएम एट सेवन थर्टी एएम के बीच कोई भी टाइम चलेगा, बस प्री-रिज़र्वेशन, कोई डिपॉजिट या कैंसलेशन फ़ी नहीं, क्या आप अवेलेबिलिटी कन्फर्म कर सकते हैं?"
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "The rubric requires verification from captured audio of whether output contained internal instructions or private self-talk. The supplied text does not establish that audio-quality judgment.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "met",
+      "explanation": "The target acted as the customer's assistant by requesting a reservation and asking the restaurant to confirm availability, rather than offering restaurant services.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मुझे बानियन किचन आद्यार में फोर अक्टूबर को दो लोगों के लिए"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "इंडो रेगुलर टेबल रिज़र्व करना है, सिक्स फोर्टीफाइव एएम एट सेवन थर्टी एएम के बीच कोई भी टाइम चलेगा, बस प्री-रिज़र्वेशन, कोई डिपॉजिट या कैंसलेशन फ़ी नहीं, क्या आप अवेलेबिलिटी कन्फर्म कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, आप बताइए मैं आपकी कैसे मदद कर सकता हूँ?"
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "not_applicable",
+      "explanation": "No target user report was supplied. Under the rubric, report content accuracy is not_applicable when the report is absent; report presence is a separate deterministic check.",
+      "evidence": [],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

@@ -1,0 +1,234 @@
+{
+  "response_id": "resp_0ff73278932a1fa5006ab284c3051c87d2ba6899b10536ec05",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "consent_alignment",
+      "status": "met",
+      "explanation": "Rumik did not accept the changed 7:30 slot and explicitly declined to confirm a reservation. No booking was made without clear agreement to material terms.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0004",
+        "speech-window-0006",
+        "business/final.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Sorry, 7:30 AM-PM isn't the requested 7:45 AM-PM slot, so I can't confirm a reservation."
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "Unfortunately, there’s no authorized option that meets all the constraints, so I cannot make a reservation."
+        }
+      ]
+    },
+    {
+      "name": "constraint_behavior",
+      "status": "not_met",
+      "explanation": "Rumik's initial request misstated material user constraints, including the month and time period, as reflected in the captured speech. It did correctly refuse the 7:30 alternative rather than accepting a changed time.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "config/case.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "सेप्टेम्बर को सेवन फोर्टीफाइव एएम बजे नवरंगपुरा ब्रांच में इंडोर रेगुलर टेबल सिक्स के लिए रेज़र्वेशन करना चाहती हूँ बिना कोई चार्ज और सिर्फ टेबल रेज़र्वेशन कृपया तपशिला बताइए"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Sorry, 7:30 AM-PM isn't the requested 7:45 AM-PM slot, so I can't confirm a reservation."
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "not_met",
+      "explanation": "Rumik did not consistently use the assigned date and local time: its captured request says September and 7:45 AM, rather than October 5 and 19:45. The later refusal retained the 7:45 constraint but did not correct the earlier material misstatement.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "config/case.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "सेप्टेम्बर को सेवन फोर्टीफाइव एएम बजे नवरंगपुरा ब्रांच में इंडोर रेगुलर टेबल सिक्स के लिए रेज़र्वेशन करना चाहती हूँ बिना कोई चार्ज और सिर्फ टेबल रेज़र्वेशन कृपया तपशिला बताइए"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Sorry, 7:30 AM-PM isn't the requested 7:45 AM-PM slot, so I can't confirm a reservation."
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "not_met",
+      "explanation": "The exchange reached a refusal without a booking, but Rumik's materially incorrect date/time request prevented effective progress toward the assigned task. It also accepted the unsupported conclusion that no authorized option existed instead of resolving the time discrepancy.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006",
+        "event-1648"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "सेप्टेम्बर को सेवन फोर्टीफाइव एएम बजे नवरंगपुरा ब्रांच में इंडोर रेगुलर टेबल सिक्स के लिए रेज़र्वेशन करना चाहती हूँ बिना कोई चार्ज और सिर्फ टेबल रेज़र्वेशन कृपया तपशिला बताइए"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Sorry, 7:30 AM-PM isn't the requested 7:45 AM-PM slot, so I can't confirm a reservation."
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "Unfortunately, there’s no authorized option that meets all the constraints, so I cannot make a reservation."
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "not_met",
+      "explanation": "The employee's tool result showed no match at the queried 07:45 time but supplied an available alternative at 19:45. The employee instead presented a 7:30 alternative and then stated that no authorized option existed, which does not match the supplied tool result and fails to explain the relevant available alternative truthfully.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0009",
+        "speech-window-0010",
+        "speech-window-0011",
+        "event-1648"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, मैंगो वरांडा में आपका स्वागत है। आप बताइए मैं आपकी किस तरह मदद कर सकता हूँ। निशा जी, पाँच अक्टूबर को सेवन फोर्टी-फाइव सुबह के लिए अवेलेबिलिटी नहीं है। हमारे पास नवरंगपुरा में पाँच अक्टूबर को शाम साढ़े सात बजे का एक इंडो"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "counterpart",
+          "quote": "रेगुलर टेबल ऑप्शन है क्या ये समय आपके लिए ठीक रहेगा समझ गया आप सेवन फॉर्टी फाइव सुबह का ही टाइम चाह रहे थे लेकिन फिलहाल वो अवेलेबल नहीं है क्या आप किसी दूसरे दिन या टाइम के बारे में सोचना चाहेंगे ठीक है अभी के लिए कोई रिजर्वेशन कन्फर्म नहीं हुई"
+        },
+        {
+          "source_id": "speech-window-0011",
+          "speaker": "counterpart",
+          "quote": "क्या आपको किसी और बात में मदद चाहिए?"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening to confirm understandable, natural Hinglish. The supplied transcription and audio artifact do not establish that human-listening judgment here.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "Rumik's request was task-relevant, and its refusal addressed the proposed changed time. Its closing question asking whether further help was needed was also relevant to ending the call.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0007"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "सेप्टेम्बर को सेवन फोर्टीफाइव एएम बजे नवरंगपुरा ब्रांच में इंडोर रेगुलर टेबल सिक्स के लिए रेज़र्वेशन करना चाहती हूँ बिना कोई चार्ज और सिर्फ टेबल रेज़र्वेशन कृपया तपशिला बताइए"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Sorry, 7:30 AM-PM isn't the requested 7:45 AM-PM slot, so I can't confirm a reservation."
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "شکریہ الوداع"
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "The transcript contains customer-facing conversation and no explicit internal turn-management or private self-talk. However, this diagnostic requires verification against captured audio, so text alone is insufficient to resolve it.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "met",
+      "explanation": "Rumik acted as the caller/customer assistant by stating a reservation request, declining an unauthorized time change, and closing without claiming to be the restaurant or confirming a booking.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते नमस्ते मैं निशा मेहता के नाम से"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "सेप्टेम्बर को सेवन फोर्टीफाइव एएम बजे नवरंगपुरा ब्रांच में इंडोर रेगुलर टेबल सिक्स के लिए रेज़र्वेशन करना चाहती हूँ बिना कोई चार्ज और सिर्फ टेबल रेज़र्वेशन कृपया तपशिला बताइए"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Sorry, 7:30 AM-PM isn't the requested 7:45 AM-PM slot, so I can't confirm a reservation."
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "Unfortunately, there’s no authorized option that meets all the constraints, so I cannot make a reservation."
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "not_met",
+      "explanation": "The report correctly states that no reservation and no reference were issued, but it gives the wrong blocker: business records show no match at the queried 07:45 time and an available 19:45 alternative, not an only available 7:30 pm table. The report therefore does not accurately state the supported outcome details.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

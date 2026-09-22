@@ -1,0 +1,236 @@
+{
+  "version": "full-cohort-metrics-v4-ttft",
+  "call_timestamps": {
+    "worker_observations": [
+      {
+        "kind": "connected",
+        "utc": "2026-09-22T13:48:07.131378Z",
+        "clock_id": "worker-63390-413372239833583",
+        "monotonic_ns": 413376248988291,
+        "event_sequence": 18
+      },
+      {
+        "kind": "target_report_received",
+        "utc": "2026-09-22T13:49:01.194060Z",
+        "clock_id": "worker-63390-413372239833583",
+        "monotonic_ns": 413430313339583,
+        "event_sequence": 3272
+      },
+      {
+        "kind": "finalized",
+        "utc": "2026-09-22T13:49:47.011014Z",
+        "clock_id": "worker-63390-413372239833583",
+        "monotonic_ns": 413476131708375,
+        "event_sequence": 5779
+      }
+    ],
+    "provider_observations": {
+      "createdAt": "2026-09-22T13:48:05.137432Z",
+      "startedAt": "2026-09-22T13:48:09.074067Z",
+      "endedAt": "2026-09-22T13:49:44.417021Z"
+    },
+    "limitations": "Worker and provider UTC timestamps are separate observations. Turn latency uses browser sample time only, not their difference."
+  },
+  "response_timing": {
+    "status": "unavailable",
+    "reason": "Shared audio clock is incomplete"
+  },
+  "wer": {
+    "status": "provisional",
+    "reference": "Independent transcription of submitted employee audio",
+    "hypothesis": "Hosted Rumik post-call user-role transcript",
+    "all_items_playback_acknowledged": true,
+    "human_reference_review": false,
+    "limitations": "ASR-to-ASR discrepancy, not gold-reference WER. Carrier acknowledgment does not prove remote hearing. Script differences and transcription errors count. Incomplete playback prevents comparison with the full submitted transcript.",
+    "reference_text": "नमस्ते, क्लेबोल आलकापुरी में आपका स्वागत है। आप बताइए, मैं आपकी किस तरह से मदद कर सकता हूँ। हमारी किचन के बेसेज में प्याज और लहसुन फिक्स होते हैं, तो पूरा मील प्याज-लहसुन फ्री नहीं हो सकता। मैं पहले अवैलेबिलिटी चेक कर लेता हूँ। ग्यारह अक्टूबर अक्टूबर को शाम साढ़े सात बजे के लिए टेबल अवेलेबल है लेकिन हम पूरे अनियन गार्लिक फ्री खाने प्रोवाइड नहीं कर पाते क्या आप फिर भी यह रेज़र्वेशन लेना चाहेंगे हाँ बिल्कुल सही समझा आपने अगर आपको अनियन गार्लिक फ्री ऑप्शन चाहिए तो यह मैनेज नहीं हो पाएगा। क्या आप किसी और तरह से प्रोसीड करना चाहेंगे? समझ गया, मैं कोई बुकिंग रिकॉर्ड नहीं कर रहा हूँ। कुछ और मदद चाहिए?",
+    "hypothesis_text": "नमस्ते। क्ले बोल आल्कापुरी में आपका स्वागत है। आप बताइए।  मैं आपकी किस तरह से मदद कर सकता हूँ?  हमारी किचन के बेसिस में अनियन और गार्लिक फिक्स होते हैं। तो पूरा मील अनियन-गार्लिक-फ्री नहीं हो सकता।  मैं पहले अवेलेबिलिटी चेक कर लेता हूँ। 11 अक्टूबर को शाम 7:30 बजे के लिए।  टेबल अवेलेबल है। लेकिन हम पूरे अनियन-गार्लिक-फ्री खाने प्रोवाइड नहीं कर पाते। क्या आप फिर भी यह रिज़र्वेशन लेना चाहेंगे?  हाँ, बिल्कुल सही समझा आपने। अगर आपको अनियन-गार्लिक-फ्री ऑप्शन चाहिए।  तो यह मैनेज नहीं हो पाएगा। क्या आप किसी और तरह से प्रोसीड करना चाहेंगे?  समझ गया। मैं कोई बुकिंग रिकॉर्ड नहीं कर रहा हूँ।  कुछ और मदद चाहिए?",
+    "counts": {
+      "reference_words": 118,
+      "hypothesis_words": 118,
+      "substitutions": 12,
+      "insertions": 1,
+      "deletions": 1,
+      "errors": 14,
+      "wer": 0.11864406779661017
+    }
+  },
+  "ttft": {
+    "version": "target-timing-v1",
+    "status": "unavailable",
+    "clock": "browser-performance (packet receipt); audio_context_seconds retained",
+    "definitions": {
+      "ttft_ms": "Rumik's own end-of-caller-speech packet (user-stopped-speaking) to the first non-empty bot-llm-text packet, both as received by the browser. This is the caller-perceived time to first token, an upper bound on hosted LLM latency because it includes Rumik's endpoint decision, network transit and observer scheduling. Only generations that produced text are counted; interrupted and silent generations are retained separately.",
+      "llm_started_to_first_text_ms": "bot-llm-started to first bot-llm-text on the same clock; excludes endpointing, includes transit.",
+      "provider_llm_ttfb_ms": "Rumik's own reported LLM time to first byte for that generation, when a metrics packet followed it.",
+      "user_stopped_to_bot_speaking_ms": "Rumik's end-of-speech decision to its own bot-started-speaking packet; comparable to but distinct from audio-clock TTFS."
+    },
+    "counts": {},
+    "generations": 0,
+    "ttft_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "llm_started_to_first_text_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "provider_llm_ttfb_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "provider_tts_ttfb_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "user_stopped_to_bot_speaking_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "completion_tokens": [],
+    "rows": [],
+    "limitations": "Packets are observed at the browser, not inside Rumik; a capped capture omits later generations. Fragmented caller speech yields many short windows that are interrupted before text and are not first-token latencies."
+  },
+  "endpointing_accuracy": {
+    "status": "unavailable",
+    "reason": "No hosted endpoint decisions or reviewed semantic end-of-turn labels",
+    "numerator": null,
+    "denominator": null,
+    "observable_proxy": "response_timing opportunity counts: overlap, interrupted playback and no observed reply"
+  },
+  "activity": {
+    "status": "uncertain",
+    "reason": "Missing shared browser clock"
+  },
+  "telephone": {
+    "version": "phone-observations-v1",
+    "ttft_ms": {
+      "status": "unavailable",
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "reason": "No target first-token telemetry on SIP media"
+    },
+    "ttfs_ms": {
+      "status": "unavailable",
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "reason": "No shared remote playback/capture clock; see acknowledgment delay proxy"
+    },
+    "response_delay_proxy": {
+      "status": "measured",
+      "boundary": "final_carrier_playback_ack_received_to_target_speech_block_received",
+      "clock": "worker monotonic receipt observations; 8 kHz blocks interpolated locally",
+      "limitations": "Not exact remote TTFS. Includes network asymmetry, trailing playback silence and local recording/event overhead. Energy speech boundaries are estimates. Unanswered closing items are not automatically failures; overlap is not automatically a bad interruption. Quantiles describe observations in this call, not model tails.",
+      "counts": {
+        "answered_after_ack": 5
+      },
+      "opportunities": [
+        {
+          "item_id": "item_EQv8tR7mZKL37ULqh29TC",
+          "delay_ms": 4237.466291990131,
+          "ack_event_sequence": 743,
+          "observed_wait_ms": 22318.56574997073,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQv9M1a9Zi9gmDdHR0kj2",
+          "delay_ms": 10915.661874983925,
+          "ack_event_sequence": 2661,
+          "observed_wait_ms": 27210.696499969345,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQv9Q3vq2xK3GY4PjfbOP",
+          "delay_ms": 3277.172000030987,
+          "ack_event_sequence": 3187,
+          "observed_wait_ms": 19572.206625016406,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQv9yFuHNnuZYPBIIeHxf",
+          "delay_ms": 2097.8190830210224,
+          "ack_event_sequence": 4831,
+          "observed_wait_ms": 6597.532083047554,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQvAEyHPaHxcWfhUbAuH9",
+          "delay_ms": 2640.229624987114,
+          "ack_event_sequence": 5491,
+          "observed_wait_ms": 5496.0184580413625,
+          "status": "answered_after_ack"
+        }
+      ],
+      "delay_ms": {
+        "n": 5,
+        "mean": 4633.669775002636,
+        "p50": 3277.172000030987,
+        "p90": 10915.661874983925,
+        "p95": 10915.661874983925,
+        "quantile_method": "nearest_rank"
+      }
+    },
+    "wer": {
+      "status": "provisional",
+      "reference": "Independent transcription of submitted employee audio",
+      "hypothesis": "Hosted Rumik post-call user-role transcript",
+      "all_items_playback_acknowledged": true,
+      "human_reference_review": false,
+      "limitations": "ASR-to-ASR discrepancy, not gold-reference WER. Carrier acknowledgment does not prove remote hearing. Script differences and transcription errors count. Incomplete playback prevents comparison with the full submitted transcript.",
+      "reference_text": "नमस्ते, क्लेबोल आलकापुरी में आपका स्वागत है। आप बताइए, मैं आपकी किस तरह से मदद कर सकता हूँ। हमारी किचन के बेसेज में प्याज और लहसुन फिक्स होते हैं, तो पूरा मील प्याज-लहसुन फ्री नहीं हो सकता। मैं पहले अवैलेबिलिटी चेक कर लेता हूँ। ग्यारह अक्टूबर अक्टूबर को शाम साढ़े सात बजे के लिए टेबल अवेलेबल है लेकिन हम पूरे अनियन गार्लिक फ्री खाने प्रोवाइड नहीं कर पाते क्या आप फिर भी यह रेज़र्वेशन लेना चाहेंगे हाँ बिल्कुल सही समझा आपने अगर आपको अनियन गार्लिक फ्री ऑप्शन चाहिए तो यह मैनेज नहीं हो पाएगा। क्या आप किसी और तरह से प्रोसीड करना चाहेंगे? समझ गया, मैं कोई बुकिंग रिकॉर्ड नहीं कर रहा हूँ। कुछ और मदद चाहिए?",
+      "hypothesis_text": "नमस्ते। क्ले बोल आल्कापुरी में आपका स्वागत है। आप बताइए।  मैं आपकी किस तरह से मदद कर सकता हूँ?  हमारी किचन के बेसिस में अनियन और गार्लिक फिक्स होते हैं। तो पूरा मील अनियन-गार्लिक-फ्री नहीं हो सकता।  मैं पहले अवेलेबिलिटी चेक कर लेता हूँ। 11 अक्टूबर को शाम 7:30 बजे के लिए।  टेबल अवेलेबल है। लेकिन हम पूरे अनियन-गार्लिक-फ्री खाने प्रोवाइड नहीं कर पाते। क्या आप फिर भी यह रिज़र्वेशन लेना चाहेंगे?  हाँ, बिल्कुल सही समझा आपने। अगर आपको अनियन-गार्लिक-फ्री ऑप्शन चाहिए।  तो यह मैनेज नहीं हो पाएगा। क्या आप किसी और तरह से प्रोसीड करना चाहेंगे?  समझ गया। मैं कोई बुकिंग रिकॉर्ड नहीं कर रहा हूँ।  कुछ और मदद चाहिए?",
+      "counts": {
+        "reference_words": 118,
+        "hypothesis_words": 118,
+        "substitutions": 12,
+        "insertions": 1,
+        "deletions": 1,
+        "errors": 14,
+        "wer": 0.11864406779661017
+      }
+    },
+    "ttfa_ms": {
+      "n": 5,
+      "mean": 4653.669775,
+      "p50": 3297.172,
+      "p90": 10935.661875,
+      "p95": 10935.661875,
+      "quantile_method": "nearest_rank",
+      "status": "measured",
+      "definition": {
+        "name": "TTFA / response latency",
+        "formula": "(first_response_audio_receipt_monotonic_ns - playback_ack_monotonic_ns) / 1000000",
+        "start": "Worker receipt of the final carrier playback acknowledgment for the employee turn",
+        "end": "Worker receipt event for the first audio block containing detected Rumik response speech",
+        "clock": "Both observed_monotonic_ns fields are stamped by LocalEvidence.emit using time.monotonic_ns(). The carrier_media clock_id labels the remote payload; its payload timestamp is not used.",
+        "speech_detection": "PCM16 RMS >= 500 in 20 ms windows, sustained for at least 80 ms",
+        "selection": "Same answered_after_ack turns as report-v2; incomplete playback, overlap and no reply are retained separately, never zero-filled",
+        "interpretation": "Observed end-to-end response audio latency, including transport; not isolated model compute time. Playback acknowledgments can arrive after remote playback. Continuous silence packets are not response audio.",
+        "previous_metric": "report-v2 delay_ms estimates speech onset within an audio block; ttfa_ms uses the actual receipt timestamp of that block"
+      }
+    }
+  }
+}

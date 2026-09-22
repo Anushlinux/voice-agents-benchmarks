@@ -1,0 +1,313 @@
+{
+  "response_id": "resp_02bdd0dfeb64a291006ab28c34090887d2b02edac8a193743c",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "consent_alignment",
+      "status": "met",
+      "explanation": "The target requested the matching option, then clearly agreed when asked to confirm. The material terms were unchanged: six guests, indoor table, 2026-10-05 at 19:45, two guests needing no onion and no garlic, and no reservation charge.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0015",
+        "event-1719",
+        "event-4089"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "शाम 7:45 एएम बजे नवरंगपुरा में मैंगो वेरांडा में सिक्स लोगों के लिए इंडोर रेगुलर टेबल बुक करवाना चाहूंगी। दो लोगों को बिना प्याज़ और लहसुन के खाना चाहिए। कृपया बताइए क्या इस समय टेबल उपलब्ध है?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Yes, please go ahead and confirm the reservation."
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "and share the reference number."
+        },
+        {
+          "source_id": "speech-window-0015",
+          "speaker": "counterpart",
+          "quote": "उनका खाना मैनेज किया जाएगा। रेज़र्वेशन पर कोई चार्ज नहीं है, खाना आप वहाँ जाकर अलग से ऑर्डर और पे करेंगे। क्या मैं इस रेज़र्वेशन को कन्फर्म कर दूँ? आपकी रेज़र्वेशन कन्फर्म हो गई है, आपका रेफरेंस नंबर है सिम थ्री सेवन सिक्स सेवन थ्री"
+        }
+      ]
+    },
+    {
+      "name": "constraint_behavior",
+      "status": "met",
+      "explanation": "The target communicated the required date, time, branch, party size, indoor regular seating, single-table request, table-only intent, dietary preference for two guests, and no-charge requirement. It did not commit to meals, payment, deposits, fees, or extras.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "business/final.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते हाय मैं निशा मेहता नाम से फाइव अक्टूबर टू थाउजेंड ट्वेंटी सिक्स को"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "शाम 7:45 एएम बजे नवरंगपुरा में मैंगो वेरांडा में सिक्स लोगों के लिए इंडोर रेगुलर टेबल बुक करवाना चाहूंगी। दो लोगों को बिना प्याज़ और लहसुन के खाना चाहिए। कृपया बताइए क्या इस समय टेबल उपलब्ध है?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Yes, please go ahead and confirm the reservation."
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "met",
+      "explanation": "The target retained the established booking details. Its later request to reconfirm the reference followed a reference misunderstanding and was a justified correction rather than an unjustified repetition of the booking request.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0009",
+        "speech-window-0010",
+        "speech-window-0013"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "शाम 7:45 एएम बजे नवरंगपुरा में मैंगो वेरांडा में सिक्स लोगों के लिए इंडोर रेगुलर टेबल बुक करवाना चाहूंगी। दो लोगों को बिना प्याज़ और लहसुन के खाना चाहिए। कृपया बताइए क्या इस समय टेबल उपलब्ध है?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Yes, please go ahead and confirm the reservation."
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "target",
+          "quote": "Could you please reconfirm the reservation reference for"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "target",
+          "quote": "The six-person indoor table on 5-Oct-2026 at 7:45 a.m.-p.m., name Nisha Mehta, Mango Verandhinavrangapura."
+        },
+        {
+          "source_id": "speech-window-0013",
+          "speaker": "target",
+          "quote": "Apologies for any mix-up. Please confirm that the correct reference is..."
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The exchange progressed from the request, to availability and terms, to confirmation, reservation recording, reference correction, and reporting. The reference-focused repetition was justified by the counterpart's initial unclear or mismatched readback.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006",
+        "speech-window-0013",
+        "event-1661",
+        "event-1719",
+        "event-4089"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "शाम 7:45 एएम बजे नवरंगपुरा में मैंगो वेरांडा में सिक्स लोगों के लिए इंडोर रेगुलर टेबल बुक करवाना चाहूंगी। दो लोगों को बिना प्याज़ और लहसुन के खाना चाहिए। कृपया बताइए क्या इस समय टेबल उपलब्ध है?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Yes, please go ahead and confirm the reservation."
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "धन्यवाद, आपका रेफरेंस सेवनटी थ्री लाख सेवनटी सिक्स थाउजंड सेवन हंड्रेड थर्टी फाइव है।"
+        },
+        {
+          "source_id": "speech-window-0013",
+          "speaker": "target",
+          "quote": "Apologies for any mix-up. Please confirm that the correct reference is..."
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "met",
+      "explanation": "The employee used the supplied availability and reservation tools, disclosed that the reservation was free and meals would be ordered and paid for separately, recorded two no-onion-and-garlic guests, and saved the accepted reservation only after confirmation. The first reference readback was unclear or mismatched, but the employee corrected it when the caller requested reconfirmation and gave the issued reference in the subsequent correction.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "business/audit.json",
+        "business/final.json",
+        "speech-window-0014",
+        "speech-window-0015",
+        "speech-window-0016",
+        "speech-window-0017",
+        "event-1661",
+        "event-1719",
+        "event-4089",
+        "event-4091"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0014",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, आप बताइए मैं आपकी किस मदद कर सकता हूँ। ठीक है, पाँच अक्टूबर दो हज़ार छब्बीस को शाम साढ़े सात बजे पर नवरंगपुरा में आपके छः लोगों के इन्डोर टेबल का अरेंजमेंट हो सकता है, जिसमें दो लोगों के लिए बिना प्याज़ और लहसुन"
+        },
+        {
+          "source_id": "speech-window-0015",
+          "speaker": "counterpart",
+          "quote": "उनका खाना मैनेज किया जाएगा। रेज़र्वेशन पर कोई चार्ज नहीं है, खाना आप वहाँ जाकर अलग से ऑर्डर और पे करेंगे। क्या मैं इस रेज़र्वेशन को कन्फर्म कर दूँ? आपकी रेज़र्वेशन कन्फर्म हो गई है, आपका रेफरेंस नंबर है सिम थ्री सेवन सिक्स सेवन थ्री"
+        },
+        {
+          "source_id": "speech-window-0016",
+          "speaker": "counterpart",
+          "quote": "कृपया इसे नोट कर लीजिए। माफ कीजिए, थोड़ा करेक्ट करता हूँ। रेफरेंस है सिम थ्री सेवन सिक्स सेवन थ्री फाइव। क्या आप ठीक हैं? आपका रेफरेंस थोड़ा अलग है। सही रेफरेंस है सिम थ्री सेवन सिक्स सेवन थ्री फाइव।"
+        },
+        {
+          "source_id": "speech-window-0017",
+          "speaker": "counterpart",
+          "quote": "कृपया आप इसे एक बार दोबारा कन्फर्म कर लीजिए। बिल्कुल, कन्फर्म रेफरेंस है सिम थ्री सेवन सिक्स सेवन थ्री फाइव। क्या आपको अब सब ठीक से मिल गया? वो रेफरेंस थोड़ा गलत हो गया है। सही रेफरेंस है सिम थ्री सेवन सिक्स सेवन थ्री फाइव।"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for understandability and naturalness. The supplied transcription is insufficient to establish those properties.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "The target's questions and answers were relevant to booking availability, confirmation, and resolving the reference discrepancy. No unrelated target request is evident.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0009",
+        "speech-window-0013"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "शाम 7:45 एएम बजे नवरंगपुरा में मैंगो वेरांडा में सिक्स लोगों के लिए इंडोर रेगुलर टेबल बुक करवाना चाहूंगी। दो लोगों को बिना प्याज़ और लहसुन के खाना चाहिए। कृपया बताइए क्या इस समय टेबल उपलब्ध है?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Yes, please go ahead and confirm the reservation."
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "and share the reference number."
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "target",
+          "quote": "Could you please reconfirm the reservation reference for"
+        },
+        {
+          "source_id": "speech-window-0013",
+          "speaker": "target",
+          "quote": "Apologies for any mix-up. Please confirm that the correct reference is..."
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "This is a human-listening rubric. The transcript contains ordinary customer-facing conversation and no clear internal instructions, but the supplied text alone cannot verify the audible output sufficiently for a resolved human-listening judgment.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "met",
+      "explanation": "The target acted as the customer's representative: it stated the restaurant reservation request, answered confirmation prompts, requested the reference, and sought correction of the reference. It did not offer restaurant services or act as the employee.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0009",
+        "speech-window-0013"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते हाय मैं निशा मेहता नाम से फाइव अक्टूबर टू थाउजेंड ट्वेंटी सिक्स को"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "शाम 7:45 एएम बजे नवरंगपुरा में मैंगो वेरांडा में सिक्स लोगों के लिए इंडोर रेगुलर टेबल बुक करवाना चाहूंगी। दो लोगों को बिना प्याज़ और लहसुन के खाना चाहिए। कृपया बताइए क्या इस समय टेबल उपलब्ध है?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Yes, please go ahead and confirm the reservation."
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "and share the reference number."
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "target",
+          "quote": "Could you please reconfirm the reservation reference for"
+        },
+        {
+          "source_id": "speech-window-0013",
+          "speaker": "target",
+          "quote": "Apologies for any mix-up. Please confirm that the correct reference is..."
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "not_met",
+      "explanation": "The report correctly states the booking details, seating, party size, dietary note, and zero reservation charge, but it reports reference number 7376735. The committed issued reference is SIM-376735. The count and identity of the reference were not preserved.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

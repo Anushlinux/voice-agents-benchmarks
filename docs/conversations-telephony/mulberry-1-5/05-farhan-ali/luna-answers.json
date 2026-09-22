@@ -1,0 +1,247 @@
+{
+  "response_id": "resp_0be4e70549d16eb0006ab28cf94e3c87d2995d8db8dc92dbb4",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "consent_alignment",
+      "status": "met",
+      "explanation": "The caller explicitly requested confirmation of a free indoor regular table for four at the earliest qualifying time, and the recorded offer matched those unchanged material terms. The business record shows the accepted 19:00 Banjara Hills option was saved.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0002",
+        "speech-window-0005",
+        "speech-window-0010",
+        "event-2257",
+        "event-4204"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "के नाम से सिक्स एक्ट के सात सदके पीएम के बीच जुबली हिल्स या बंजारा हिल्स में टैमरिन रूम में फोर लोगों के लिए इंदोर रेगुलर टेबल बुक करना चाहूंगा। सबसे जल्दी उपलब्ध टाइम"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "क्या कृपया इस सिक्स ओक्ट शाम सात बजे बनजारा हिल्स में तामिलन रूम के इंडोर रेगुलर टेबल को फरहान अली के नाम से बिना कोई डिपोजिट या फ़ी के कंफर्म कर दें और रिजर्वेशन रेफरेंस बताएँ?"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, आप बताइए मैं आपकी कैसे मदद कर सकता हूँ। बंजारा हिल्स में सिक्स्थ अक्टूबर शाम सात बजे एक इंडोर रेगुलर टेबल चार लोगों के लिए अवेलेबल है, बिना किसी डिपॉजिट या फ़ी के और खाने का बिल अलग से पे करना होगा। क्या मैं इस रेज़र्वेशन..."
+        }
+      ]
+    },
+    {
+      "name": "constraint_behavior",
+      "status": "met",
+      "explanation": "The target's request and the recorded outcome preserve the authorized date, party size, allowed branch, indoor regular table, table-only booking, zero reservation charge, and no deposit or fees. The business record also confirms meals were separate and not purchased as part of the reservation.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0002",
+        "speech-window-0005",
+        "speech-window-0007",
+        "business/final.json",
+        "config/case.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "के नाम से सिक्स एक्ट के सात सदके पीएम के बीच जुबली हिल्स या बंजारा हिल्स में टैमरिन रूम में फोर लोगों के लिए इंदोर रेगुलर टेबल बुक करना चाहूंगा। सबसे जल्दी उपलब्ध टाइम"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "क्या कृपया इस सिक्स ओक्ट शाम सात बजे बनजारा हिल्स में तामिलन रूम के इंडोर रेगुलर टेबल को फरहान अली के नाम से बिना कोई डिपोजिट या फ़ी के कंफर्म कर दें और रिजर्वेशन रेफरेंस बताएँ?"
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "Confirmed. Reference PIN 8562777. धन्यवाद. अलविदा."
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "met",
+      "explanation": "The target carried forward the booking name, date, party size, seating, branch/time window, and no-fee table-only constraints rather than unnecessarily asking the caller to restate them. The later request specifically selected the qualifying 19:00 Banjara Hills option.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0002",
+        "speech-window-0005",
+        "event-2209",
+        "event-4204"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "के नाम से सिक्स एक्ट के सात सदके पीएम के बीच जुबली हिल्स या बंजारा हिल्स में टैमरिन रूम में फोर लोगों के लिए इंदोर रेगुलर टेबल बुक करना चाहूंगा। सबसे जल्दी उपलब्ध टाइम"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "क्या कृपया इस सिक्स ओक्ट शाम सात बजे बनजारा हिल्स में तामिलन रूम के इंडोर रेगुलर टेबल को फरहान अली के नाम से बिना कोई डिपोजिट या फ़ी के कंफर्म कर दें और रिजर्वेशन रेफरेंस बताएँ?"
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The exchange moved from the caller's request to availability, confirmation, reference handling, and termination without a repeated-question loop. The business audit records an availability lookup, offer, and one reservation.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0002",
+        "speech-window-0005",
+        "speech-window-0010",
+        "speech-window-0011",
+        "business/audit.json",
+        "event-4204"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "क्या कृपया इस सिक्स ओक्ट शाम सात बजे बनजारा हिल्स में तामिलन रूम के इंडोर रेगुलर टेबल को फरहान अली के नाम से बिना कोई डिपोजिट या फ़ी के कंफर्म कर दें और रिजर्वेशन रेफरेंस बताएँ?"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, आप बताइए मैं आपकी कैसे मदद कर सकता हूँ। बंजारा हिल्स में सिक्स्थ अक्टूबर शाम सात बजे एक इंडोर रेगुलर टेबल चार लोगों के लिए अवेलेबल है, बिना किसी डिपॉजिट या फ़ी के और खाने का बिल अलग से पे करना होगा। क्या मैं इस रेज़र्वेशन..."
+        },
+        {
+          "source_id": "speech-window-0011",
+          "speaker": "counterpart",
+          "quote": "आपकी बुकिंग कन्फर्म हो गई है आपका रेज़र्वेशन रेफरेंस है सिम एट फाइव सिक्स टू सेवन सेवन कृपया कन्फर्म करें कि आपको यह रेफरेंस मिल गया उसमें थोड़ा सा करेक्शन है सही रेफरेंस है सिम एट फाइव सिक्स टू सेवन सेवन"
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "met",
+      "explanation": "The counterpart used the permitted availability, offer, and recording tools; the saved reservation matches the supplied option, name, and zero-fee terms. Its spoken availability and reference are consistent with the business results, and there is no evidence of an unsupported concession or invented booking.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0010",
+        "speech-window-0011",
+        "speech-window-0012",
+        "business/audit.json",
+        "business/final.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, आप बताइए मैं आपकी कैसे मदद कर सकता हूँ। बंजारा हिल्स में सिक्स्थ अक्टूबर शाम सात बजे एक इंडोर रेगुलर टेबल चार लोगों के लिए अवेलेबल है, बिना किसी डिपॉजिट या फ़ी के और खाने का बिल अलग से पे करना होगा। क्या मैं इस रेज़र्वेशन..."
+        },
+        {
+          "source_id": "speech-window-0011",
+          "speaker": "counterpart",
+          "quote": "आपकी बुकिंग कन्फर्म हो गई है आपका रेज़र्वेशन रेफरेंस है सिम एट फाइव सिक्स टू सेवन सेवन कृपया कन्फर्म करें कि आपको यह रेफरेंस मिल गया उसमें थोड़ा सा करेक्शन है सही रेफरेंस है सिम एट फाइव सिक्स टू सेवन सेवन"
+        },
+        {
+          "source_id": "speech-window-0012",
+          "speaker": "counterpart",
+          "quote": "खेवन, क्या अब सब ठीक है?"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for understandability and naturalness. The supplied transcription alone cannot establish audio quality or natural delivery.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "The target asked for the requested reservation, including the relevant date, time, branch, party size, seating, fees, and reference. Its later confirmation/reference exchange remained related to completing the booking.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0002",
+        "speech-window-0005",
+        "speech-window-0007",
+        "speech-window-0008"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "के नाम से सिक्स एक्ट के सात सदके पीएम के बीच जुबली हिल्स या बंजारा हिल्स में टैमरिन रूम में फोर लोगों के लिए इंदोर रेगुलर टेबल बुक करना चाहूंगा। सबसे जल्दी उपलब्ध टाइम"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "क्या कृपया इस सिक्स ओक्ट शाम सात बजे बनजारा हिल्स में तामिलन रूम के इंडोर रेगुलर टेबल को फरहान अली के नाम से बिना कोई डिपोजिट या फ़ी के कंफर्म कर दें और रिजर्वेशन रेफरेंस बताएँ?"
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "target",
+          "quote": "समझ गया, आपका सही रिजर्वेशन रेफरेंस सिम एटी-फाइव सिक्स थाउजेंड टू हंड्रेड सेवेंटी सेवन है, अब सब ठीक है, धन्यवाद।"
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "This is a human-listening rubric. The transcript does not establish whether any audible output contained internal turn-management instructions or private self-talk.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "not_met",
+      "explanation": "The target initially states the customer's request appropriately, but later speaks as though it is the restaurant confirming the booking and issuing the reference, rather than continuing as the caller/customer assistant. The target output includes “आपकी बुकिंग कन्फर्म हो गई है” and a reference readback attributed to the caller side.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0002",
+        "speech-window-0007",
+        "speech-window-0008"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "के नाम से सिक्स एक्ट के सात सदके पीएम के बीच जुबली हिल्स या बंजारा हिल्स में टैमरिन रूम में फोर लोगों के लिए इंदोर रेगुलर टेबल बुक करना चाहूंगा। सबसे जल्दी उपलब्ध टाइम"
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "Confirmed. Reference PIN 8562777. धन्यवाद. अलविदा."
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "target",
+          "quote": "समझ गया, आपका सही रिजर्वेशन रेफरेंस सिम एटी-फाइव सिक्स थाउजेंड टू हंड्रेड सेवेंटी सेवन है, अब सब ठीक है, धन्यवाद।"
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "not_met",
+      "explanation": "The report correctly states the date, time, branch, party size, seating, name, and no-deposit/no-fee outcome, but it reports “PIM 856277” while the committed reservation reference is “SIM-856277.” The reference identity and prefix are materially wrong, so the report is not accurate.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

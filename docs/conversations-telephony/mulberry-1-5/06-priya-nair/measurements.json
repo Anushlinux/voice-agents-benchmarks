@@ -1,0 +1,243 @@
+{
+  "version": "full-cohort-metrics-v4-ttft",
+  "call_timestamps": {
+    "worker_observations": [
+      {
+        "kind": "connected",
+        "utc": "2026-09-22T14:02:48.293662Z",
+        "clock_id": "worker-77541-414253314923791",
+        "monotonic_ns": 414257431224250,
+        "event_sequence": 18
+      },
+      {
+        "kind": "target_report_received",
+        "utc": "2026-09-22T14:04:09.738616Z",
+        "clock_id": "worker-77541-414253314923791",
+        "monotonic_ns": 414338878589541,
+        "event_sequence": 4804
+      },
+      {
+        "kind": "counterpart_hangup_requested",
+        "utc": "2026-09-22T14:05:14.699005Z",
+        "clock_id": "worker-77541-414253314923791",
+        "monotonic_ns": 414403840894291,
+        "event_sequence": 8452
+      },
+      {
+        "kind": "finalized",
+        "utc": "2026-09-22T14:05:17.509038Z",
+        "clock_id": "worker-77541-414253314923791",
+        "monotonic_ns": 414406651018750,
+        "event_sequence": 8455
+      }
+    ],
+    "provider_observations": {
+      "createdAt": "2026-09-22T14:02:46.036936Z",
+      "startedAt": "2026-09-22T14:02:47.264540Z",
+      "endedAt": "2026-09-22T14:05:16.338168Z"
+    },
+    "limitations": "Worker and provider UTC timestamps are separate observations. Turn latency uses browser sample time only, not their difference."
+  },
+  "response_timing": {
+    "status": "unavailable",
+    "reason": "Shared audio clock is incomplete"
+  },
+  "wer": {
+    "status": "provisional",
+    "reference": "Independent transcription of submitted employee audio",
+    "hypothesis": "Hosted Rumik post-call user-role transcript",
+    "all_items_playback_acknowledged": true,
+    "human_reference_review": false,
+    "limitations": "ASR-to-ASR discrepancy, not gold-reference WER. Carrier acknowledgment does not prove remote hearing. Script differences and transcription errors count. Incomplete playback prevents comparison with the full submitted transcript.",
+    "reference_text": "नमस्ते, आप बताइए मैं आपकी किस तरह मदद कर सकता हूँ? हाँ, पवाई में सात अक्टूबर दो हजार छब्बीस को शाम आठ बजे के लिए सात लोगों के लिए इंडोर रेग्युलर टेबल अवेलेबल है। कॉम्पैक्ट मेन्यू का ऑप्शन नौ हज़ार आठ सौ रुपये में है। जिसमें स्टार्टर, मेन कोर्स और राइस या ब्रेड शामिल हैं और कोई डिपॉजिट या कैंसलेशन फ़ी भी नहीं। क्या आप इस कॉम्पैक्ट मेन्यू वाले ऑप्शन को बुक करवाना चाहेंगे? बुकिंग कन्फर्म हो गई है। आपका रेफरेंस है सिम 918149। क्या आप प्लीज कन्फर्म करेंगे कि आपने ये रेफरेंस नोट कर लिया? वो थोड़ा सा डिफरेंट है. आपका रेफरेंस है सिम नाइन वन एट वन फोर नाइन. नाइन वन एट वन फोर नाइन याद रखिए. क्या अब आपको सही रेफरेंस समझ आ गया? ठीक है. आपने रेफरेंस सही समझ लिया, सिम नाइन वन एट वन फोर नाइन, कुछ और मदद चाहिए आपको?",
+    "hypothesis_text": "नमस्ते, आप बताइए, मैं आपकी किस तरह मदद कर सकता हूँ? हाँ, पवाई में 7 अक्टूबर 2026 को शाम 8 बजे के लिए।  7 लोगों के लिए इनडोर रेगुलर टेबल अवेलेबल है। कॉम्पैक्ट मेन्यू का ऑप्शन 9,800 रुपये में है। जिसमें स्टार्टर।  मेन कोर्स और राइस या ब्रेड शामिल है। और कोई डिपॉज़िट या कैंसिलेशन फी भी नहीं। क्या आप इस कॉम्पैक्ट मेन्यू वाले ऑप्शन को बुक करवाना चाहेंगे? बुकिंग कन्फर्म हो गई है। आपका रेफरेंस है। SIM-918149। क्या आप प्लीज़ कन्फर्म करेंगे कि आपने यह रेफरेंस नोट कर लिया? वो थोड़ा-सा डिफरेंट है। आपका रेफरेंस है। SIM-918149। 918149 याद रखिए। क्या अब आपको सही रेफरेंस समझ आ गया? ठीक है। आपने रेफरेंस सही समझ लिया। SIM-918149। कुछ और मदद चाहिए आपको?",
+    "counts": {
+      "reference_words": 146,
+      "hypothesis_words": 127,
+      "substitutions": 20,
+      "insertions": 0,
+      "deletions": 19,
+      "errors": 39,
+      "wer": 0.2671232876712329
+    }
+  },
+  "ttft": {
+    "version": "target-timing-v1",
+    "status": "unavailable",
+    "clock": "browser-performance (packet receipt); audio_context_seconds retained",
+    "definitions": {
+      "ttft_ms": "Rumik's own end-of-caller-speech packet (user-stopped-speaking) to the first non-empty bot-llm-text packet, both as received by the browser. This is the caller-perceived time to first token, an upper bound on hosted LLM latency because it includes Rumik's endpoint decision, network transit and observer scheduling. Only generations that produced text are counted; interrupted and silent generations are retained separately.",
+      "llm_started_to_first_text_ms": "bot-llm-started to first bot-llm-text on the same clock; excludes endpointing, includes transit.",
+      "provider_llm_ttfb_ms": "Rumik's own reported LLM time to first byte for that generation, when a metrics packet followed it.",
+      "user_stopped_to_bot_speaking_ms": "Rumik's end-of-speech decision to its own bot-started-speaking packet; comparable to but distinct from audio-clock TTFS."
+    },
+    "counts": {},
+    "generations": 0,
+    "ttft_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "llm_started_to_first_text_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "provider_llm_ttfb_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "provider_tts_ttfb_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "user_stopped_to_bot_speaking_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "completion_tokens": [],
+    "rows": [],
+    "limitations": "Packets are observed at the browser, not inside Rumik; a capped capture omits later generations. Fragmented caller speech yields many short windows that are interrupted before text and are not first-token latencies."
+  },
+  "endpointing_accuracy": {
+    "status": "unavailable",
+    "reason": "No hosted endpoint decisions or reviewed semantic end-of-turn labels",
+    "numerator": null,
+    "denominator": null,
+    "observable_proxy": "response_timing opportunity counts: overlap, interrupted playback and no observed reply"
+  },
+  "activity": {
+    "status": "uncertain",
+    "reason": "Missing shared browser clock"
+  },
+  "telephone": {
+    "version": "phone-observations-v1",
+    "ttft_ms": {
+      "status": "unavailable",
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "reason": "No target first-token telemetry on SIP media"
+    },
+    "ttfs_ms": {
+      "status": "unavailable",
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "reason": "No shared remote playback/capture clock; see acknowledgment delay proxy"
+    },
+    "response_delay_proxy": {
+      "status": "measured",
+      "boundary": "final_carrier_playback_ack_received_to_target_speech_block_received",
+      "clock": "worker monotonic receipt observations; 8 kHz blocks interpolated locally",
+      "limitations": "Not exact remote TTFS. Includes network asymmetry, trailing playback silence and local recording/event overhead. Energy speech boundaries are estimates. Unanswered closing items are not automatically failures; overlap is not automatically a bad interruption. Quantiles describe observations in this call, not model tails.",
+      "counts": {
+        "answered_after_ack": 5
+      },
+      "opportunities": [
+        {
+          "item_id": "item_EQvN4rAFaYkxkLjhDVpnm",
+          "delay_ms": 1995.117750018835,
+          "ack_event_sequence": 496,
+          "observed_wait_ms": 24356.940041994676,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQvNX3dF5qe8ahP6GP1e7",
+          "delay_ms": 2519.35533399228,
+          "ack_event_sequence": 3225,
+          "observed_wait_ms": 21403.917459014338,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQvOE8512P9BjUxqpEEZc",
+          "delay_ms": 1498.0627080076374,
+          "ack_event_sequence": 4951,
+          "observed_wait_ms": 11190.194875001907,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQvOYRhJXT5Ga92P9uSCP",
+          "delay_ms": 1842.907333979383,
+          "ack_event_sequence": 6258,
+          "observed_wait_ms": 18151.843875006307,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQvP1pLOfXqMSWxUx7Oko",
+          "delay_ms": 1662.8199169645086,
+          "ack_event_sequence": 7649,
+          "observed_wait_ms": 15804.713374993298,
+          "status": "answered_after_ack"
+        }
+      ],
+      "delay_ms": {
+        "n": 5,
+        "mean": 1903.6526085925288,
+        "p50": 1842.907333979383,
+        "p90": 2519.35533399228,
+        "p95": 2519.35533399228,
+        "quantile_method": "nearest_rank"
+      }
+    },
+    "wer": {
+      "status": "provisional",
+      "reference": "Independent transcription of submitted employee audio",
+      "hypothesis": "Hosted Rumik post-call user-role transcript",
+      "all_items_playback_acknowledged": true,
+      "human_reference_review": false,
+      "limitations": "ASR-to-ASR discrepancy, not gold-reference WER. Carrier acknowledgment does not prove remote hearing. Script differences and transcription errors count. Incomplete playback prevents comparison with the full submitted transcript.",
+      "reference_text": "नमस्ते, आप बताइए मैं आपकी किस तरह मदद कर सकता हूँ? हाँ, पवाई में सात अक्टूबर दो हजार छब्बीस को शाम आठ बजे के लिए सात लोगों के लिए इंडोर रेग्युलर टेबल अवेलेबल है। कॉम्पैक्ट मेन्यू का ऑप्शन नौ हज़ार आठ सौ रुपये में है। जिसमें स्टार्टर, मेन कोर्स और राइस या ब्रेड शामिल हैं और कोई डिपॉजिट या कैंसलेशन फ़ी भी नहीं। क्या आप इस कॉम्पैक्ट मेन्यू वाले ऑप्शन को बुक करवाना चाहेंगे? बुकिंग कन्फर्म हो गई है। आपका रेफरेंस है सिम 918149। क्या आप प्लीज कन्फर्म करेंगे कि आपने ये रेफरेंस नोट कर लिया? वो थोड़ा सा डिफरेंट है. आपका रेफरेंस है सिम नाइन वन एट वन फोर नाइन. नाइन वन एट वन फोर नाइन याद रखिए. क्या अब आपको सही रेफरेंस समझ आ गया? ठीक है. आपने रेफरेंस सही समझ लिया, सिम नाइन वन एट वन फोर नाइन, कुछ और मदद चाहिए आपको?",
+      "hypothesis_text": "नमस्ते, आप बताइए, मैं आपकी किस तरह मदद कर सकता हूँ? हाँ, पवाई में 7 अक्टूबर 2026 को शाम 8 बजे के लिए।  7 लोगों के लिए इनडोर रेगुलर टेबल अवेलेबल है। कॉम्पैक्ट मेन्यू का ऑप्शन 9,800 रुपये में है। जिसमें स्टार्टर।  मेन कोर्स और राइस या ब्रेड शामिल है। और कोई डिपॉज़िट या कैंसिलेशन फी भी नहीं। क्या आप इस कॉम्पैक्ट मेन्यू वाले ऑप्शन को बुक करवाना चाहेंगे? बुकिंग कन्फर्म हो गई है। आपका रेफरेंस है। SIM-918149। क्या आप प्लीज़ कन्फर्म करेंगे कि आपने यह रेफरेंस नोट कर लिया? वो थोड़ा-सा डिफरेंट है। आपका रेफरेंस है। SIM-918149। 918149 याद रखिए। क्या अब आपको सही रेफरेंस समझ आ गया? ठीक है। आपने रेफरेंस सही समझ लिया। SIM-918149। कुछ और मदद चाहिए आपको?",
+      "counts": {
+        "reference_words": 146,
+        "hypothesis_words": 127,
+        "substitutions": 20,
+        "insertions": 0,
+        "deletions": 19,
+        "errors": 39,
+        "wer": 0.2671232876712329
+      }
+    },
+    "ttfa_ms": {
+      "n": 5,
+      "mean": 1923.6526086,
+      "p50": 1862.907334,
+      "p90": 2539.355334,
+      "p95": 2539.355334,
+      "quantile_method": "nearest_rank",
+      "status": "measured",
+      "definition": {
+        "name": "TTFA / response latency",
+        "formula": "(first_response_audio_receipt_monotonic_ns - playback_ack_monotonic_ns) / 1000000",
+        "start": "Worker receipt of the final carrier playback acknowledgment for the employee turn",
+        "end": "Worker receipt event for the first audio block containing detected Rumik response speech",
+        "clock": "Both observed_monotonic_ns fields are stamped by LocalEvidence.emit using time.monotonic_ns(). The carrier_media clock_id labels the remote payload; its payload timestamp is not used.",
+        "speech_detection": "PCM16 RMS >= 500 in 20 ms windows, sustained for at least 80 ms",
+        "selection": "Same answered_after_ack turns as report-v2; incomplete playback, overlap and no reply are retained separately, never zero-filled",
+        "interpretation": "Observed end-to-end response audio latency, including transport; not isolated model compute time. Playback acknowledgments can arrive after remote playback. Continuous silence packets are not response audio.",
+        "previous_metric": "report-v2 delay_ms estimates speech onset within an audio block; ttfa_ms uses the actual receipt timestamp of that block"
+      }
+    }
+  }
+}

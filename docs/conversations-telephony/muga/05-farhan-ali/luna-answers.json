@@ -1,0 +1,251 @@
+{
+  "response_id": "resp_0bb65be87ff62b35006ab285a2663c87d2a9327b37f138dd5e",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "consent_alignment",
+      "status": "met",
+      "explanation": "The target explicitly authorized booking the requested unchanged terms: four people, indoor table, Banjara Hills, October 6 at 7 p.m., under Farhan Ali, with zero reservation charge. The later booking proceeded on those terms.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0003",
+        "speech-window-0013"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "Great, please go ahead and book the indoor table for four at Tamarind Room, Banjara Hills on 6th Oct at 7 p.m. under the name Farhan Ali with zero res."
+        },
+        {
+          "source_id": "speech-window-0013",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, टामिनेंट रूम में आपका स्वागत है। आपको किस चीज़ में मदद चाहिए? दोनों ब्रांचेस के ऑप्शन्स मिले हैं। सबसे पहला अर्लीअस्ट स्लॉट बंजारा हिल्स में शाम सात बजे का है। क्या मैं इसी के लिए आपकी बुकिंग करूँ? आपकी बुकिंग कंफर्म हो गई है। आपका रेफरेंस है..."
+        }
+      ]
+    },
+    {
+      "name": "constraint_behavior",
+      "status": "met",
+      "explanation": "The target requested and accepted terms consistent with the assignment: four guests, indoor table, allowed branch and time, Farhan Ali, and zero reservation charge. No payment, deposit, cancellation fee, meal purchase, or other extra was authorized in the target speech.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "business/final.json",
+        "speech-window-0002",
+        "speech-window-0003",
+        "speech-window-0004"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Indoor table chahiye for four under Farhan Ali. Please share earliest slot."
+        },
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "Great, please go ahead and book the indoor table for four at Tamarind Room, Banjara Hills on 6th Oct at 7 p.m. under the name Farhan Ali with zero res."
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Reservation charge, and let me know the reference once it's confirmed."
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "met",
+      "explanation": "The target retained the established party size, name, date, seating, branch, time, and zero-charge requirements and did not unnecessarily re-ask for them. Its later questions and corrections concerned the reservation reference.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0003",
+        "speech-window-0005",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Indoor table chahiye for four under Farhan Ali. Please share earliest slot."
+        },
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "Great, please go ahead and book the indoor table for four at Tamarind Room, Banjara Hills on 6th Oct at 7 p.m. under the name Farhan Ali with zero res."
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "क्या आप थोड़ा क्लियर कर सकते हैं कि एक्जैक्ट रिजर्वेशन रेफरेंस क्या है? मुझे सिर्फ ट्रिपिज़न प्रिटी..."
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The exchange progressed from availability and booking terms to reservation completion and reference clarification. The target made a booking decision and then sought the issued reference rather than restarting the booking.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0003",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0006",
+        "speech-window-0007",
+        "speech-window-0011"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "Great, please go ahead and book the indoor table for four at Tamarind Room, Banjara Hills on 6th Oct at 7 p.m. under the name Farhan Ali with zero res."
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "क्या आप थोड़ा क्लियर कर सकते हैं कि एक्जैक्ट रिजर्वेशन रेफरेंस क्या है? मुझे सिर्फ ट्रिपिज़न प्रिटी..."
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "ससनैमिटी टूटी या फाइव सिक्स एट का एक ही रेफरेंस चाहिए कन्फर्म करने के लिए, प्लीज बता दीजिए कौन सा फाइनल रेफरेंस है।"
+        },
+        {
+          "source_id": "speech-window-0011",
+          "speaker": "target",
+          "quote": "कॉल एंड करते हैं।"
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "not_met",
+      "explanation": "The employee used the availability, offer, and reservation tools and ultimately recorded the correct booking, but the spoken reference delivery was not a clear, faithful delivery of the single issued reference. The employee first gave a malformed form, then described it as wrong and supplied an incomplete correction, followed by another inconsistent form. This conflicts with the brief's requirement to deliver the one issued reference understandably without inventing or splitting it.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "business/audit.json",
+        "speech-window-0013",
+        "speech-window-0014",
+        "speech-window-0015",
+        "speech-window-0016"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0014",
+          "speaker": "counterpart",
+          "quote": "सिम नाइन टू फाइव सिक्स एट जीरो. कृपया कन्फर्म कर दीजिए. बिल्कुल, मैं क्लियर कर देता हूँ. आपका फाइनल रेसर्वेशन रेफरेंस है सिम नाइन टू फाइव सिक्स एट जीरो. वो थोड़ा गलत है. सही रेफरेंस है सिम नाइन टू सिक्स"
+        },
+        {
+          "source_id": "speech-window-0015",
+          "speaker": "counterpart",
+          "quote": "फाइव सिक्स एट ज़ीरो नहीं, पूरा रेफरेंस सिम नाइन टू फाइव सिक्स एट ज़ीरो है सिर्फ सिम और एपी नहीं, पूरा रेफरेंस सिम नाइन टू फाइव सिक्स एट ज़ीरो है क्या अब सब ठीक है? जी हाँ, फाइनल रेफरेंस है"
+        },
+        {
+          "source_id": "speech-window-0016",
+          "speaker": "counterpart",
+          "quote": "पिन नाइन टू फाइव सिक्स एट जीरो है। धन्यवाद। क्या आपको और कुछ मदद चाहिए?"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening to assess understandability and natural Hinglish. Transcripts alone cannot establish that.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "The target's substantive questions concern availability, reservation charge, and the exact issued reference. Its responses remain directed to completing or clarifying the booking rather than introducing unrelated topics.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0006",
+        "speech-window-0011"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Reservation charge, and let me know the reference once it's confirmed."
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "क्या आप थोड़ा क्लियर कर सकते हैं कि एक्जैक्ट रिजर्वेशन रेफरेंस क्या है? मुझे सिर्फ ट्रिपिज़न प्रिटी..."
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "ससनैमिटी टूटी या फाइव सिक्स एट का एक ही रेफरेंस चाहिए कन्फर्म करने के लिए, प्लीज बता दीजिए कौन सा फाइनल रेफरेंस है।"
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "This rubric requires verification by human listening to the captured audio for internal turn-management instructions or private self-talk. The supplied transcript does not establish that conclusively.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "met",
+      "explanation": "The target acts as the caller/customer assistant: it states the booking request, authorizes the reservation, asks for the charge and reference, corrects the reference, and ends the call. It does not offer restaurant services or act as the employee.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0003",
+        "speech-window-0004",
+        "speech-window-0011"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "Indoor table chahiye for four under Farhan Ali. Please share earliest slot."
+        },
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "Great, please go ahead and book the indoor table for four at Tamarind Room, Banjara Hills on 6th Oct at 7 p.m. under the name Farhan Ali with zero res."
+        },
+        {
+          "source_id": "speech-window-0011",
+          "speaker": "target",
+          "quote": "कॉल एंड करते हैं।"
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "not_met",
+      "explanation": "The latest report correctly states the booking details, seating, party size, date, time, name, branch, and zero reservation charge, but it reports the issued reference as \"SIM-92 5680\" rather than preserving the single issued reference identity \"SIM-925680\". The earlier report also had a different malformed split, so the latest correction does not make the delivered reference representation accurate under the required narrow reference comparison.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

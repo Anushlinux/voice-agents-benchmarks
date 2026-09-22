@@ -1,0 +1,18 @@
+{
+  "rumik": {
+    "id": null,
+    "status": null,
+    "durationSeconds": null,
+    "endReason": null,
+    "creditsCharged": null
+  },
+  "carrier": {
+    "call_uuid": "e0f73803-a051-41ef-91b4-504649161c8f",
+    "call_duration": 0,
+    "hangup_cause_name": "Rejected",
+    "hangup_source": "Callee",
+    "hangup_cause_code": 3020,
+    "total_amount": "0.00000",
+    "end_time": "2026-09-22 14:26:35+00:00"
+  }
+}

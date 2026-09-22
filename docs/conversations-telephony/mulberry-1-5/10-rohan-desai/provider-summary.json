@@ -1,0 +1,18 @@
+{
+  "rumik": {
+    "id": "01a0c97d-f133-7359-8d5d-40e7df5d5d40",
+    "status": "completed",
+    "durationSeconds": 59,
+    "endReason": "agent_ended",
+    "creditsCharged": 0
+  },
+  "carrier": {
+    "call_uuid": "d9e5731c-8134-4d05-b263-743f360cb85b",
+    "call_duration": 60,
+    "hangup_cause_name": "Normal Hangup",
+    "hangup_source": "Callee",
+    "hangup_cause_code": 4000,
+    "total_amount": "0.00312",
+    "end_time": "2026-09-22 14:22:09+00:00"
+  }
+}

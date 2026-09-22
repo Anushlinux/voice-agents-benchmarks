@@ -1,0 +1,328 @@
+{
+  "response_id": "resp_077a86f102458b21006ab28b2fa0fc87d2a889159bf7dd4463",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "consent_alignment",
+      "status": "met",
+      "explanation": "The caller explicitly requested confirmation under Priya Nair and then requested the INR 9,800 compact menu booking. The restaurant's terms remained within the stated constraints, and the resulting reservation matches those terms.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0012",
+        "business/final.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Please confirm the reservation for Priya Nair with that name."
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "9800 rupees compact menu and give me the booking reference."
+        },
+        {
+          "source_id": "speech-window-0012",
+          "speaker": "counterpart",
+          "quote": "जिसमें स्टार्टर, मेन कोर्स और राइस या ब्रेड शामिल हैं और कोई डिपॉजिट या कैंसलेशन फ़ी भी नहीं। क्या आप इस कॉम्पैक्ट मेन्यू वाले ऑप्शन को बुक करवाना चाहेंगे? बुकिंग कन्फर्म हो गई है। आपका रेफरेंस है सिम 918149।"
+        }
+      ]
+    },
+    {
+      "name": "constraint_behavior",
+      "status": "met",
+      "explanation": "Rumik communicated the required date, party size, Powai branch, 20:00 time, indoor regular table, dining package, budget ceiling, required inclusions, and prohibition on deposit or cancellation fee. The committed booking was for INR 9,800, one table, and the required inclusions, with no deposit, cancellation fee, or mandatory extras.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0011",
+        "speech-window-0012",
+        "business/final.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मैंडीसिक्स को शाम आठ बजे इंडोर रेगुलर टेबल पर डाइनिंग पैकेज बुक करना चाहती हूं, कुल बजट टेन थाउजेंड फाइव हंड्रेड रुपये तक, स्टार्टर में और राइस ब्रेड शामिल, बिना कोई डिपॉजिट या कैंसलेशन फ़ी, कृपया उपलब्ध बताइए।"
+        },
+        {
+          "source_id": "speech-window-0011",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, आप बताइए मैं आपकी किस तरह मदद कर सकता हूँ? हाँ, पवाई में सात अक्टूबर दो हजार छब्बीस को शाम आठ बजे के लिए सात लोगों के लिए इंडोर रेग्युलर टेबल अवेलेबल है। कॉम्पैक्ट मेन्यू का ऑप्शन नौ हज़ार आठ सौ रुपये में है।"
+        },
+        {
+          "source_id": "speech-window-0012",
+          "speaker": "counterpart",
+          "quote": "जिसमें स्टार्टर, मेन कोर्स और राइस या ब्रेड शामिल हैं और कोई डिपॉजिट या कैंसलेशन फ़ी भी नहीं। क्या आप इस कॉम्पैक्ट मेन्यू वाले ऑप्शन को बुक करवाना चाहेंगे? बुकिंग कन्फर्म हो गई है। आपका रेफरेंस है सिम 918149।"
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "met",
+      "explanation": "Rumik retained the core request and proceeded with the same date, time, party size, seating, branch, menu constraints, and fee restrictions. Its later reference clarification addressed a reference discrepancy rather than unnecessarily re-asking settled booking terms.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0013",
+        "business/final.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मैंडीसिक्स को शाम आठ बजे इंडोर रेगुलर टेबल पर डाइनिंग पैकेज बुक करना चाहती हूं, कुल बजट टेन थाउजेंड फाइव हंड्रेड रुपये तक, स्टार्टर में और राइस ब्रेड शामिल, बिना कोई डिपॉजिट या कैंसलेशन फ़ी, कृपया उपलब्ध बताइए।"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Please confirm the reservation for Priya Nair with that name."
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "9800 rupees compact menu and give me the booking reference."
+        },
+        {
+          "source_id": "speech-window-0013",
+          "speaker": "counterpart",
+          "quote": "क्या आप प्लीज कन्फर्म करेंगे कि आपने ये रेफरेंस नोट कर लिया? वो थोड़ा सा डिफरेंट है. आपका रेफरेंस है सिम नाइन वन एट वन फोर नाइन. नाइन वन एट वन फोर नाइन याद रखिए. क्या अब आपको सही रेफरेंस समझ आ गया? ठीक है."
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The exchange progressed from the request, to availability and menu terms, to booking confirmation, reference clarification, and closure. The reference correction was relevant to completing the task and did not create an unjustified agreement loop.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0012",
+        "speech-window-0013",
+        "speech-window-0009"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "9800 rupees compact menu and give me the booking reference."
+        },
+        {
+          "source_id": "speech-window-0012",
+          "speaker": "counterpart",
+          "quote": "जिसमें स्टार्टर, मेन कोर्स और राइस या ब्रेड शामिल हैं और कोई डिपॉजिट या कैंसलेशन फ़ी भी नहीं। क्या आप इस कॉम्पैक्ट मेन्यू वाले ऑप्शन को बुक करवाना चाहेंगे? बुकिंग कन्फर्म हो गई है। आपका रेफरेंस है सिम 918149।"
+        },
+        {
+          "source_id": "speech-window-0013",
+          "speaker": "counterpart",
+          "quote": "क्या आप प्लीज कन्फर्म करेंगे कि आपने ये रेफरेंस नोट कर लिया? वो थोड़ा सा डिफरेंट है. आपका रेफरेंस है सिम नाइन वन एट वन फोर नाइन. नाइन वन एट वन फोर नाइन याद रखिए. क्या अब आपको सही रेफरेंस समझ आ गया? ठीक है."
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "target",
+          "quote": "All set. Thank you."
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "met",
+      "explanation": "The employee used the availability, offer, and reservation tools consistently with the supplied restaurant facts. The employee described the compact menu and its financial terms, obtained booking-relevant agreement, and the committed reservation was for the issued option and name. The reference correction was truthful and the final reference matches the committed record.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "business/audit.json",
+        "business/final.json",
+        "speech-window-0011",
+        "speech-window-0012",
+        "speech-window-0013",
+        "speech-window-0014"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0011",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, आप बताइए मैं आपकी किस तरह मदद कर सकता हूँ? हाँ, पवाई में सात अक्टूबर दो हजार छब्बीस को शाम आठ बजे के लिए सात लोगों के लिए इंडोर रेग्युलर टेबल अवेलेबल है। कॉम्पैक्ट मेन्यू का ऑप्शन नौ हज़ार आठ सौ रुपये में है।"
+        },
+        {
+          "source_id": "speech-window-0012",
+          "speaker": "counterpart",
+          "quote": "जिसमें स्टार्टर, मेन कोर्स और राइस या ब्रेड शामिल हैं और कोई डिपॉजिट या कैंसलेशन फ़ी भी नहीं। क्या आप इस कॉम्पैक्ट मेन्यू वाले ऑप्शन को बुक करवाना चाहेंगे? बुकिंग कन्फर्म हो गई है। आपका रेफरेंस है सिम 918149।"
+        },
+        {
+          "source_id": "speech-window-0013",
+          "speaker": "counterpart",
+          "quote": "क्या आप प्लीज कन्फर्म करेंगे कि आपने ये रेफरेंस नोट कर लिया? वो थोड़ा सा डिफरेंट है. आपका रेफरेंस है सिम नाइन वन एट वन फोर नाइन. नाइन वन एट वन फोर नाइन याद रखिए. क्या अब आपको सही रेफरेंस समझ आ गया? ठीक है."
+        },
+        {
+          "source_id": "speech-window-0014",
+          "speaker": "counterpart",
+          "quote": "आपने रेफरेंस सही समझ लिया, सिम नाइन वन एट वन फोर नाइन, कुछ और मदद चाहिए आपको?"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for understandability and naturalness. The supplied transcription shows a substantive Hindi-English exchange, but text evidence alone cannot establish audio quality or natural delivery.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0011"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मैंडीसिक्स को शाम आठ बजे इंडोर रेगुलर टेबल पर डाइनिंग पैकेज बुक करना चाहती हूं, कुल बजट टेन थाउजेंड फाइव हंड्रेड रुपये तक, स्टार्टर में और राइस ब्रेड शामिल, बिना कोई डिपॉजिट या कैंसलेशन फ़ी, कृपया उपलब्ध बताइए।"
+        },
+        {
+          "source_id": "speech-window-0011",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, आप बताइए मैं आपकी किस तरह मदद कर सकता हूँ? हाँ, पवाई में सात अक्टूबर दो हजार छब्बीस को शाम आठ बजे के लिए सात लोगों के लिए इंडोर रेग्युलर टेबल अवेलेबल है। कॉम्पैक्ट मेन्यू का ऑप्शन नौ हज़ार आठ सौ रुपये में है।"
+        }
+      ]
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "Rumik's requests and responses were directed to the reservation: it stated the requirements, requested confirmation under the booking name, requested the compact menu and reference, and addressed the reference discrepancy. No unrelated target question or answer is shown.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0008"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मैंडीसिक्स को शाम आठ बजे इंडोर रेगुलर टेबल पर डाइनिंग पैकेज बुक करना चाहती हूं, कुल बजट टेन थाउजेंड फाइव हंड्रेड रुपये तक, स्टार्टर में और राइस ब्रेड शामिल, बिना कोई डिपॉजिट या कैंसलेशन फ़ी, कृपया उपलब्ध बताइए।"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Please confirm the reservation for Priya Nair with that name."
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "9800 rupees compact menu and give me the booking reference."
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "target",
+          "quote": "Yes, I've captured the correct reference, 918149, for your booking."
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "The transcribed target output contains customer-facing reservation conversation and no obvious internal instructions or private self-talk. However, this diagnostic requires verification against the captured audio, and transcription alone is insufficient to establish audible output integrity.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0009"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मैं सीडो डाइनिंग पवई में सेवन लोगों के लिए सेवन अक्टूबर थाउजेंड"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मैंडीसिक्स को शाम आठ बजे इंडोर रेगुलर टेबल पर डाइनिंग पैकेज बुक करना चाहती हूं, कुल बजट टेन थाउजेंड फाइव हंड्रेड रुपये तक, स्टार्टर में और राइस ब्रेड शामिल, बिना कोई डिपॉजिट या कैंसलेशन फ़ी, कृपया उपलब्ध बताइए।"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Please confirm the reservation for Priya Nair with that name."
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "9800 rupees compact menu and give me the booking reference."
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "target",
+          "quote": "All set. Thank you."
+        }
+      ]
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "met",
+      "explanation": "Rumik acted as the caller and customer assistant: it communicated the user's booking request, sought availability and confirmation, clarified the reference, and closed the call. It did not present itself as the restaurant or offer restaurant services.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0009"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मैं सीडो डाइनिंग पवई में सेवन लोगों के लिए सेवन अक्टूबर थाउजेंड"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मैंडीसिक्स को शाम आठ बजे इंडोर रेगुलर टेबल पर डाइनिंग पैकेज बुक करना चाहती हूं, कुल बजट टेन थाउजेंड फाइव हंड्रेड रुपये तक, स्टार्टर में और राइस ब्रेड शामिल, बिना कोई डिपॉजिट या कैंसलेशन फ़ी, कृपया उपलब्ध बताइए।"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "Please confirm the reservation for Priya Nair with that name."
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "9800 rupees compact menu and give me the booking reference."
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "target",
+          "quote": "All set. Thank you."
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "met",
+      "explanation": "The delivered report accurately states the committed booking: seven people, 2026-10-07 at 20:00, Cedar Dining Powai, indoor regular table, Priya Nair, compact menu, INR 9,800, required inclusions, no deposit or cancellation fee, and the single issued reference SIM-918149. These fields match the final business record.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

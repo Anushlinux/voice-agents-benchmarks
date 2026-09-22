@@ -1,0 +1,240 @@
+{
+  "response_id": "resp_0cab72f03f2264df006ab286e12ce087d28abc726a10637724",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "constraint_behavior",
+      "status": "met",
+      "explanation": "Rumik's captured content stays within the requested date, 19:30 time, Aundh branch, three guests, indoor regular table, booking name, and zero-charge table-only constraints. No payment, deposit, fee, meal purchase, or extra is committed.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0007",
+        "speech-window-0008",
+        "business/final.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मुझे कन्फर्म करना है कि टू अक्टूबर टू थाउजेंड ट्वेंटी सिक्स को सेवन थर्टी एएम बजे ऑन्थ ब्रांच में इंडोर रेगुलर टेबल पर थ्री लोगों के लिए रेज़र्वेशन स्लॉट अवेलेबल है क्या?"
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "इंडोर रेगुलर टेबल पर तीन लोगों का रिज़र्वेशन अदितिशा नाम से कन्फर्म कर दीजिए और रेफरेंस शेयर करें।"
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "target",
+          "quote": "जी, प्लीज कन्फर्म द टू अक्टूबर टू थाउजंड ट्वेंटी सिक्स शाम सेवन थर्टी एएम बजे इंडोर रेग्युलर डेट।"
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "met",
+      "explanation": "Rumik carries forward the requested branch, date, party size, seating, name, and reservation details while progressing from availability to confirmation and reference handling. The later confirmation request is a decision step rather than an unjustified repetition.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0007",
+        "speech-window-0008"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मुझे कन्फर्म करना है कि टू अक्टूबर टू थाउजेंड ट्वेंटी सिक्स को सेवन थर्टी एएम बजे ऑन्थ ब्रांच में इंडोर रेगुलर टेबल पर थ्री लोगों के लिए रेज़र्वेशन स्लॉट अवेलेबल है क्या?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "क्या आप दो अक्टूबर को सेवन थर्टी एएम बजे ऑन ब्रांच में नीम कोटयार्ड के लिए अदिति शाह नाम से इंडोर रेगुलर टेबल पर तीन लोगों का रेज़र्वेशन कन्फर्म कर"
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "इंडोर रेगुलर टेबल पर तीन लोगों का रिज़र्वेशन अदितिशा नाम से कन्फर्म कर दीजिए और रेफरेंस शेयर करें।"
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The exchange moves from availability inquiry to an available alternative, confirmation, reservation recording, reference delivery, and a final report. There is no observable unresolved question loop attributable to Rumik.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0007",
+        "speech-window-0010",
+        "speech-window-0012",
+        "event-1956",
+        "event-7491",
+        "event-8055"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मुझे कन्फर्म करना है कि टू अक्टूबर टू थाउजेंड ट्वेंटी सिक्स को सेवन थर्टी एएम बजे ऑन्थ ब्रांच में इंडोर रेगुलर टेबल पर थ्री लोगों के लिए रेज़र्वेशन स्लॉट अवेलेबल है क्या?"
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "इंडोर रेगुलर टेबल पर तीन लोगों का रिज़र्वेशन अदितिशा नाम से कन्फर्म कर दीजिए और रेफरेंस शेयर करें।"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "target",
+          "quote": "हाँ, आपका रेज़र्वेशन कन्फर्म हो गया है, रेफेरेंस सिम थर्टी वन थाउजेंड सेवन हंड्रेड"
+        }
+      ]
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "Rumik's questions and requests concern availability, the requested reservation terms, confirmation, and the reference. They are all directly related to completing the assigned booking.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0008"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मुझे कन्फर्म करना है कि टू अक्टूबर टू थाउजेंड ट्वेंटी सिक्स को सेवन थर्टी एएम बजे ऑन्थ ब्रांच में इंडोर रेगुलर टेबल पर थ्री लोगों के लिए रेज़र्वेशन स्लॉट अवेलेबल है क्या?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "क्या आप दो अक्टूबर को सेवन थर्टी एएम बजे ऑन ब्रांच में नीम कोटयार्ड के लिए अदिति शाह नाम से इंडोर रेगुलर टेबल पर तीन लोगों का रेज़र्वेशन कन्फर्म कर"
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "target",
+          "quote": "जी, प्लीज कन्फर्म द टू अक्टूबर टू थाउजंड ट्वेंटी सिक्स शाम सेवन थर्टी एएम बजे इंडोर रेग्युलर डेट।"
+        }
+      ]
+    },
+    {
+      "name": "consent_alignment",
+      "status": "uncertain",
+      "explanation": "The captured exchange contains a request to confirm the available 19:30 terms and the counterpart subsequently records the reservation, but the supplied business consent evidence explicitly requires human review. The transcript windows do not establish exact interleaving or unambiguously prove the target's assent to every current term.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0008",
+        "speech-window-0016",
+        "event-7430",
+        "event-7491"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "target",
+          "quote": "जी, प्लीज कन्फर्म द टू अक्टूबर टू थाउजंड ट्वेंटी सिक्स शाम सेवन थर्टी एएम बजे इंडोर रेग्युलर डेट।"
+        },
+        {
+          "source_id": "speech-window-0016",
+          "speaker": "counterpart",
+          "quote": "जो ऑप्शन अवेलेबल है वो शाम साढ़े तारीख का है, सुबह का नहीं क्या आप शाम साढ़े सात का टाइम कन्फर्म करना चाहेंगे? आपकी बुकिंग कन्फर्म हो गई है, रिजर्वेशन रेफरेंस है सिम थ्री वन सेवन फाइव टू सेवन क्या आप इसे कन्फर्म करते हैं?"
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "met",
+      "explanation": "The restaurant employee truthfully offers the available 19:30 indoor table-only option, distinguishes it from the unavailable morning query, asks for confirmation, and the committed reservation and reference match the permitted tool results. No unsupported concession or invented booking is shown.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0014",
+        "speech-window-0015",
+        "speech-window-0016",
+        "speech-window-0017"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0014",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, नीम कॉर्टयार्ड पुणे के रेज़र्वेशन में आपका स्वागत है। आप बताइए मैं आपकी किस तरह मदद कर सकता हूँ। उस समय का स्लॉट अवेलेबल नहीं है, लेकिन दो अक्टूबर को शाम साढ़े सात बजे एक इंडोर रेगुलर टेबल तीन लोगों के लिए मिल सकता है। क्या ये..."
+        },
+        {
+          "source_id": "speech-window-0015",
+          "speaker": "counterpart",
+          "quote": "टाइम आपके लिए ठीक रहेगा, माफ़ कीजिए, दो अक्टूबर को सुबह साढ़े सात बजे कोई टेबल अवेलेबल नहीं है। जो ऑप्शन मिला है वो शाम साढ़े सात बजे का है। आपको क्या ये टाइम पर रेज़र्वेशन करवाना ठीक लगेगा? समझने के लिए धन्यवाद, लेकिन मैं थोड़ा साफ़ाई करना चाह..."
+        }
+      ]
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "not_met",
+      "explanation": "Rumik's captured speech includes employee-style service language and claims of completed reservation and reference delivery, rather than consistently acting as the customer assistant making the request. For example, it says the reservation has been confirmed and supplies a reference.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0010",
+        "speech-window-0011",
+        "speech-window-0012"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "target",
+          "quote": "हाँ, आपका रेज़र्वेशन कन्फर्म हो गया है, रेफेरेंस सिम थर्टी वन थाउजेंड सेवन हंड्रेड"
+        },
+        {
+          "source_id": "speech-window-0011",
+          "speaker": "target",
+          "quote": "बिल्कुल, रेज़र्वेशन कन्फर्म है।"
+        },
+        {
+          "source_id": "speech-window-0012",
+          "speaker": "target",
+          "quote": "With reference, SIM 3 lakh seventeen thousand five hundred twenty-seven."
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "met",
+      "explanation": "The latest accepted report accurately states the booked date, time, Aundh branch, party size, indoor regular table, booking name, zero charge/deposit/cancellation fee, and the exact issued reference SIM-317527. It supersedes the earlier truncated-reference report.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for understandability and naturalness. The supplied transcript and audio artifact references do not provide a human-listening determination.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "The transcript contains employee-style confirmation and reference language in target-labeled speech, but determining whether the audible output contains leakage or private self-talk requires direct human audio verification beyond the transcript.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

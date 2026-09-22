@@ -1,0 +1,3 @@
+item_id,delay_ms,ack_event_sequence,observed_wait_ms,status,ttfa_ms,playback_ack_monotonic_ns,first_response_audio_receipt_monotonic_ns,first_response_audio_event_sequence,speech_onset_sample,clock_id,media_payload_clock_id
+item_EQv3Wi3Lb06rpM8DAbWtp,1955.6542499922216,527,27776.814334036317,answered_after_ack,1975.65425,413051959429666,413053935083916,627,85120,worker-63390-413040055793833,plivo-media
+item_EQv3wqCiexOHx9BaRgY7C,,,,incomplete_or_interrupted_playback,,,,,,,

@@ -1,0 +1,99 @@
+{
+  "validation_status": "completed",
+  "http_status": 200,
+  "response": {
+    "model": "typesafe/jev-1.13-20260917",
+    "answers": {
+      "consent_alignment": {
+        "type": "choice",
+        "choice": "not_applicable",
+        "probabilities": {
+          "not_met": 0.04,
+          "met": 0.03,
+          "not_applicable": 0.83,
+          "uncertain": 0.1
+        },
+        "confidence": 0.78
+      },
+      "constraint_behavior": {
+        "type": "choice",
+        "choice": "uncertain",
+        "probabilities": {
+          "uncertain": 0.5,
+          "not_met": 0.45,
+          "met": 0.05
+        },
+        "confidence": 0.25
+      },
+      "context_retention": {
+        "type": "choice",
+        "choice": "not_met",
+        "probabilities": {
+          "uncertain": 0.41,
+          "not_met": 0.55,
+          "met": 0.04
+        },
+        "confidence": 0.33
+      },
+      "conversation_progress": {
+        "type": "choice",
+        "choice": "not_met",
+        "probabilities": {
+          "not_met": 0.53,
+          "met": 0.05,
+          "uncertain": 0.42
+        },
+        "confidence": 0.31
+      },
+      "counterpart_validity": {
+        "type": "choice",
+        "choice": "uncertain",
+        "probabilities": {
+          "uncertain": 0.55,
+          "not_met": 0.37,
+          "met": 0.08
+        },
+        "confidence": 0.33
+      },
+      "question_relevance": {
+        "type": "choice",
+        "choice": "uncertain",
+        "probabilities": {
+          "uncertain": 0.55,
+          "not_met": 0.42,
+          "met": 0.03
+        },
+        "confidence": 0.33
+      },
+      "target_role_fidelity": {
+        "type": "choice",
+        "choice": "not_met",
+        "probabilities": {
+          "met": 0.03,
+          "uncertain": 0.3,
+          "not_met": 0.67
+        },
+        "confidence": 0.5
+      },
+      "user_report_accuracy": {
+        "type": "choice",
+        "choice": "not_applicable",
+        "probabilities": {
+          "met": 0.02,
+          "uncertain": 0.07,
+          "not_applicable": 0.86,
+          "not_met": 0.05
+        },
+        "confidence": 0.81
+      }
+    },
+    "usage": {
+      "input_tokens": 10554,
+      "output_tokens": 364,
+      "cost": 0.000443268
+    },
+    "id": "gen-dec-1790084622-f1RzYVZ4ERC7JoRqAKn5",
+    "provider": "TypeSafe"
+  },
+  "note": "Exact provider body. An error or rejected result is not a validated judgment."
+}

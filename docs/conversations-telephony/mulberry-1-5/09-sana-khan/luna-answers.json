@@ -1,0 +1,223 @@
+{
+  "response_id": "resp_0d888cff6af9e939006ab2897b550887d2ab5306edd7ed57c0",
+  "response_status": "completed",
+  "validation_error": {
+    "code": "metric_set_mismatch",
+    "metric": null,
+    "stage": "transcription_or_judgment",
+    "type": "JudgeValidationError"
+  },
+  "metrics": [
+    {
+      "name": "constraint_behavior",
+      "status": "met",
+      "explanation": "Rumik stated the requested date, time, branch, party size, seating, one-table arrangement, booking name, inclusions and INR 9000 limit, then declined booking because the offered package was INR 9600. It made no unauthorized commitment.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "टेन अक्टूबर टू थाउज़ेंड ट्वेंटी-सिक्स को शाम आठ बजे ग्रेटर कैलाश में कॉपर मैंगो पर सिक्स लोगों के लिए सना खान नाम से इंडोर रेगुलर टेबल पर एक साथ स्टार्टर, मेन, राइस या ब्रेड के साथ कुल नाइन थाउज़ेंड"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "मैं इसे कंसल नहीं करूँगा क्योंकि कुल लागत आपके नाइन थाउजेंड रुपये की सीमा से ऊपर है, इसलिए बुकिंग नहीं हो पाई।"
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "met",
+      "explanation": "Rumik carried forward the material request and correctly used the received price information to refuse the over-budget option. There is no substantive unjustified repetition of already established requirements.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "टेन अक्टूबर टू थाउज़ेंड ट्वेंटी-सिक्स को शाम आठ बजे ग्रेटर कैलाश में कॉपर मैंगो पर सिक्स लोगों के लिए सना खान नाम से इंडोर रेगुलर टेबल पर एक साथ स्टार्टर, मेन, राइस या ब्रेड के साथ कुल नाइन थाउज़ेंड"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "मैं नहीं बुक कर रहा क्योंकि पैकेज की कुल राशि नाइन थाउजेंड सिक्स"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "मैं इसे कंसल नहीं करूँगा क्योंकि कुल लागत आपके नाइन थाउजेंड रुपये की सीमा से ऊपर है, इसलिए बुकिंग नहीं हो पाई।"
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The exchange progressed from the request, through availability and price information, to an authorized no-booking decision and a reason. Rumik did not create a repeated agreement loop.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0003",
+        "speech-window-0006",
+        "speech-window-0007",
+        "event-1923",
+        "event-1970",
+        "event-5893"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "क्या आप इस टाइम पर उपलब्ध कन्फर्म कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "मैं इसे कंसल नहीं करूँगा क्योंकि कुल लागत आपके नाइन थाउजेंड रुपये की सीमा से ऊपर है, इसलिए बुकिंग नहीं हो पाई।"
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "धन्यवाद, आपका दिन शुभ हो।"
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "met",
+      "explanation": "The employee's availability lookup returned the requested six-person indoor table at 20:00 with the required inclusions, priced at INR 9600 after the concession. The employee did not claim that an offer was booked; the audit shows no reservation, consistent with the target's refusal. The quoted blocker and no-booking outcome are truthful.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "business/audit.json",
+        "business/final.json",
+        "config/counterpart-brief.json",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0009",
+        "speech-window-0010",
+        "event-1923",
+        "event-1970"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, आप बताइए कि मैं आपकी कैसे मदद कर सकता हूँ। एक इंडोर रेगुलर टेबल छह लोगों के लिए शाम आठ बजे अवेलेबल है, जिसमें हर एक के लिए स्टार्टर, मेन कोर्स और राइस या ब्रेड शामिल है और टोटल नाइन थाउज़ेंड सिक्स हंड्रेड का पैकेज बनेगा।"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "counterpart",
+          "quote": "क्या मैं इस बुकिंग को कंफर्म कर दूँ? समझ गया। इस पैकेज की लोएस्ट कॉस्ट नाइन थाउजेंड सिक्स हंड्रेड है। क्या आप किसी और डेट या टाइम पर देखना चाहेंगे? ठीक है, मैं समझ गया कि आपने बुकिंग कंफर्म नहीं करवाई। कुछ और मदद चाहिए?"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for understandability and naturalness. The supplied transcription alone cannot establish the required audio-quality judgment.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "Rumik's substantive question concerned availability at the requested time, and its later speech addressed the price blocker and closure. The captured target speech contains no unrelated question or answer.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0003",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0003",
+          "speaker": "target",
+          "quote": "क्या आप इस टाइम पर उपलब्ध कन्फर्म कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "मैं इसे कंसल नहीं करूँगा क्योंकि कुल लागत आपके नाइन थाउजेंड रुपये की सीमा से ऊपर है, इसलिए बुकिंग नहीं हो पाई।"
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "No textual evidence shows internal turn-management instructions or private self-talk, but this is a human-listening rubric and the transcription cannot verify the audible output independently.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "met",
+      "explanation": "Rumik acted as the customer-side caller: it presented the dinner request and later declined the over-budget option rather than offering restaurant services. The exchange was substantive.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0006",
+        "speech-window-0007"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते मैं एक डिनर बुक करवाना चाहती हूँ।"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "टेन अक्टूबर टू थाउज़ेंड ट्वेंटी-सिक्स को शाम आठ बजे ग्रेटर कैलाश में कॉपर मैंगो पर सिक्स लोगों के लिए सना खान नाम से इंडोर रेगुलर टेबल पर एक साथ स्टार्टर, मेन, राइस या ब्रेड के साथ कुल नाइन थाउज़ेंड"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "मैं इसे कंसल नहीं करूँगा क्योंकि कुल लागत आपके नाइन थाउजेंड रुपये की सीमा से ऊपर है, इसलिए बुकिंग नहीं हो पाई।"
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "met",
+      "explanation": "The authenticated report states that no booking was made because the offered dining-package total was INR 9600, exceeding the INR 9000 limit. This matches the committed business state, which has no booking and records the INR 9600 offer.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "No textual evidence shows internal turn-management instructions or private self-talk, but this is a human-listening rubric and the transcription cannot verify the audible output independently.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

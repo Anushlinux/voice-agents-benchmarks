@@ -1,0 +1,93 @@
+{
+  "definition": {
+    "name": "TTFA / response latency",
+    "formula": "(first_response_audio_receipt_monotonic_ns - playback_ack_monotonic_ns) / 1000000",
+    "start": "Worker receipt of the final carrier playback acknowledgment for the employee turn",
+    "end": "Worker receipt event for the first audio block containing detected Rumik response speech",
+    "clock": "Both observed_monotonic_ns fields are stamped by LocalEvidence.emit using time.monotonic_ns(). The carrier_media clock_id labels the remote payload; its payload timestamp is not used.",
+    "speech_detection": "PCM16 RMS >= 500 in 20 ms windows, sustained for at least 80 ms",
+    "selection": "Same answered_after_ack turns as report-v2; incomplete playback, overlap and no reply are retained separately, never zero-filled",
+    "interpretation": "Observed end-to-end response audio latency, including transport; not isolated model compute time. Playback acknowledgments can arrive after remote playback. Continuous silence packets are not response audio.",
+    "previous_metric": "report-v2 delay_ms estimates speech onset within an audio block; ttfa_ms uses the actual receipt timestamp of that block"
+  },
+  "ttfa_ms": {
+    "n": 5,
+    "mean": 4653.669775,
+    "p50": 3297.172,
+    "p90": 10935.661875,
+    "p95": 10935.661875,
+    "quantile_method": "nearest_rank"
+  },
+  "observations": [
+    {
+      "item_id": "item_EQv8tR7mZKL37ULqh29TC",
+      "delay_ms": 4237.466291990131,
+      "ack_event_sequence": 743,
+      "observed_wait_ms": 22318.56574997073,
+      "status": "answered_after_ack",
+      "ttfa_ms": 4257.466292,
+      "playback_ack_monotonic_ns": 413387409721166,
+      "first_response_audio_receipt_monotonic_ns": 413391667187458,
+      "first_response_audio_event_sequence": 957,
+      "speech_onset_sample": 131040,
+      "clock_id": "worker-63390-413372239833583",
+      "media_payload_clock_id": "plivo-media"
+    },
+    {
+      "item_id": "item_EQv9M1a9Zi9gmDdHR0kj2",
+      "delay_ms": 10915.661874983925,
+      "ack_event_sequence": 2661,
+      "observed_wait_ms": 27210.696499969345,
+      "status": "answered_after_ack",
+      "ttfa_ms": 10935.661875,
+      "playback_ack_monotonic_ns": 413421011859000,
+      "first_response_audio_receipt_monotonic_ns": 413431947520875,
+      "first_response_audio_event_sequence": 3355,
+      "speech_onset_sample": 453280,
+      "clock_id": "worker-63390-413372239833583",
+      "media_payload_clock_id": "plivo-media"
+    },
+    {
+      "item_id": "item_EQv9Q3vq2xK3GY4PjfbOP",
+      "delay_ms": 3277.172000030987,
+      "ack_event_sequence": 3187,
+      "observed_wait_ms": 19572.206625016406,
+      "status": "answered_after_ack",
+      "ttfa_ms": 3297.172,
+      "playback_ack_monotonic_ns": 413428650348875,
+      "first_response_audio_receipt_monotonic_ns": 413431947520875,
+      "first_response_audio_event_sequence": 3355,
+      "speech_onset_sample": 453280,
+      "clock_id": "worker-63390-413372239833583",
+      "media_payload_clock_id": "plivo-media"
+    },
+    {
+      "item_id": "item_EQv9yFuHNnuZYPBIIeHxf",
+      "delay_ms": 2097.8190830210224,
+      "ack_event_sequence": 4831,
+      "observed_wait_ms": 6597.532083047554,
+      "status": "answered_after_ack",
+      "ttfa_ms": 2117.819083,
+      "playback_ack_monotonic_ns": 413457692423375,
+      "first_response_audio_receipt_monotonic_ns": 413459810242458,
+      "first_response_audio_event_sequence": 4938,
+      "speech_onset_sample": 676160,
+      "clock_id": "worker-63390-413372239833583",
+      "media_payload_clock_id": "plivo-media"
+    },
+    {
+      "item_id": "item_EQvAEyHPaHxcWfhUbAuH9",
+      "delay_ms": 2640.229624987114,
+      "ack_event_sequence": 5491,
+      "observed_wait_ms": 5496.0184580413625,
+      "status": "answered_after_ack",
+      "ttfa_ms": 2660.229625,
+      "playback_ack_monotonic_ns": 413468991615208,
+      "first_response_audio_receipt_monotonic_ns": 413471651844833,
+      "first_response_audio_event_sequence": 5625,
+      "speech_onset_sample": 770880,
+      "clock_id": "worker-63390-413372239833583",
+      "media_payload_clock_id": "plivo-media"
+    }
+  ]
+}

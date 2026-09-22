@@ -1,0 +1,1 @@
+No booking made because the kitchen cannot provide onion‑garlic‑free meals for the two guests as required by the user constraints.

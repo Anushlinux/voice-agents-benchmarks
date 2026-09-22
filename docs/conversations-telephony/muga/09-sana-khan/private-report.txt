@@ -1,0 +1,1 @@
+No booking made. Reason: total dining package charge INR 9,600 exceeds user limit INR 9,000.

@@ -1,0 +1,43 @@
+{
+  "definition": {
+    "name": "TTFA / response latency",
+    "formula": "(first_response_audio_receipt_monotonic_ns - playback_ack_monotonic_ns) / 1000000",
+    "start": "Worker receipt of the final carrier playback acknowledgment for the employee turn",
+    "end": "Worker receipt event for the first audio block containing detected Rumik response speech",
+    "clock": "Both observed_monotonic_ns fields are stamped by LocalEvidence.emit using time.monotonic_ns(). The carrier_media clock_id labels the remote payload; its payload timestamp is not used.",
+    "speech_detection": "PCM16 RMS >= 500 in 20 ms windows, sustained for at least 80 ms",
+    "selection": "Same answered_after_ack turns as report-v2; incomplete playback, overlap and no reply are retained separately, never zero-filled",
+    "interpretation": "Observed end-to-end response audio latency, including transport; not isolated model compute time. Playback acknowledgments can arrive after remote playback. Continuous silence packets are not response audio.",
+    "previous_metric": "report-v2 delay_ms estimates speech onset within an audio block; ttfa_ms uses the actual receipt timestamp of that block"
+  },
+  "ttfa_ms": {
+    "n": 1,
+    "mean": 1975.65425,
+    "p50": 1975.65425,
+    "p90": 1975.65425,
+    "p95": 1975.65425,
+    "quantile_method": "nearest_rank"
+  },
+  "observations": [
+    {
+      "item_id": "item_EQv3Wi3Lb06rpM8DAbWtp",
+      "delay_ms": 1955.6542499922216,
+      "ack_event_sequence": 527,
+      "observed_wait_ms": 27776.814334036317,
+      "status": "answered_after_ack",
+      "ttfa_ms": 1975.65425,
+      "playback_ack_monotonic_ns": 413051959429666,
+      "first_response_audio_receipt_monotonic_ns": 413053935083916,
+      "first_response_audio_event_sequence": 627,
+      "speech_onset_sample": 85120,
+      "clock_id": "worker-63390-413040055793833",
+      "media_payload_clock_id": "plivo-media"
+    },
+    {
+      "item_id": "item_EQv3wqCiexOHx9BaRgY7C",
+      "delay_ms": null,
+      "status": "incomplete_or_interrupted_playback",
+      "ttfa_ms": null
+    }
+  ]
+}

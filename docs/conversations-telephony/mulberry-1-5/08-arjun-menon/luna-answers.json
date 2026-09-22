@@ -1,0 +1,237 @@
+{
+  "response_id": "resp_095c3c6ee0cb9adc006ab288e1765087d2a59207f998915960",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "constraint_behavior",
+      "status": "met",
+      "explanation": "Rumik stated the requested date, party size, indoor regular table, booking name, no-deposit/no-cancellation-fee terms, and the restricted time window. It did not agree to an alternative time or any charge, and it correctly concluded that no booking was made.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0006",
+        "speech-window-0007"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मैं रिभरमेन्ट फूड पोछी में नाइन अक्टोबर को शाम सेवन"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मैं सात थर्टी एएम के बीच थ्री लोगों के लिए इंडोर रेगुलर टेबल बुक करना चाहता हूँ, नाम अर्जुन मेनू के तहत बिना कोई डिपॉजिट या कैंसलेशन फ़ी के क्या आप इस टाइम-स्लॉट में उपलब्धता कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "कोई उपलब्ध तबल नहीं मिल पाया, इसलिए बुकिंग नहीं हुई। धन्यवाद।"
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "धन्यवाद, अभी बस इतना ही کافی है।"
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "met",
+      "explanation": "The exchange retains the requested party size, seating, date, name, and time restriction, and the target does not accept the offered out-of-window alternatives. It closes with no booking after the availability issue is communicated.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मैं सात थर्टी एएम के बीच थ्री लोगों के लिए इंडोर रेगुलर टेबल बुक करना चाहता हूँ, नाम अर्जुन मेनू के तहत बिना कोई डिपॉजिट या कैंसलेशन फ़ी के क्या आप इस टाइम-स्लॉट में उपलब्धता कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "हमें केवल शाम सेवन सेवन थर्टी एएम के बीच डबल बुक करनी है, इसलिए एट फिफ्टीन एएम का टाइम हमारे मानदंडों में नहीं आता। क्या आप सेवन सेवन थर्टी एएम के किसी"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "उपलब्ध स्लॉट को चुनेंगे"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "कोई उपलब्ध तबल नहीं मिल पाया, इसलिए बुकिंग नहीं हुई। धन्यवाद।"
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The target makes the booking request, communicates the time constraint, responds to the alternatives, and ends with the correct no-booking decision rather than entering an unjustified agreement loop.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006",
+        "speech-window-0007"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मैं सात थर्टी एएम के बीच थ्री लोगों के लिए इंडोर रेगुलर टेबल बुक करना चाहता हूँ, नाम अर्जुन मेनू के तहत बिना कोई डिपॉजिट या कैंसलेशन फ़ी के क्या आप इस टाइम-स्लॉट में उपलब्धता कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "हमें केवल शाम सेवन सेवन थर्टी एएम के बीच डबल बुक करनी है, इसलिए एट फिफ्टीन एएम का टाइम हमारे मानदंडों में नहीं आता। क्या आप सेवन सेवन थर्टी एएम के किसी"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "कोई उपलब्ध तबल नहीं मिल पाया, इसलिए बुकिंग नहीं हुई। धन्यवाद।"
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "धन्यवाद, अभी बस इतना ही کافی है।"
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "met",
+      "explanation": "The counterpart truthfully states that no table is available in the requested window, identifies the two available alternatives, and does not claim a reservation or invent a reference. The final no-booking state is consistent with the restaurant record.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0008",
+        "speech-window-0009",
+        "business/final.json"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, आप बताइए मैं आपकी कैसे मदद कर सकता हूँ? माफ़ कीजिए, नाइन्थ अक्टूबर को सात से साढ़े सात के बीच कोई टेबल उपलब्ध नहीं है. सिर्फ छः बजे और आठ पंद्रह का टाइम मिल सकता है. आपको कौन सा टाइम ठीक लगेगा? समझ गया,"
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "counterpart",
+          "quote": "लेकिन इस समय सात से साढ़े सात के बीच कोई भी टेबल उपलब्ध नहीं है। क्या आप किसी और डेट या समय पर देखना चाहेंगे? ठीक है, कोई बुकिंग नहीं हुई। क्या आपको और कुछ मदद चाहिए?"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for understandability and natural Hinglish. The supplied transcription alone cannot establish audio quality, naturalness, or acoustic intelligibility.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "The target's questions and answers concern the requested reservation, availability, acceptable timing, and closure. No unrelated task content is evident in the captured target speech.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006",
+        "speech-window-0007"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मैं सात थर्टी एएम के बीच थ्री लोगों के लिए इंडोर रेगुलर टेबल बुक करना चाहता हूँ, नाम अर्जुन मेनू के तहत बिना कोई डिपॉजिट या कैंसलेशन फ़ी के क्या आप इस टाइम-स्लॉट में उपलब्धता कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "हमें केवल शाम सेवन सेवन थर्टी एएम के बीच डबल बुक करनी है, इसलिए एट फिफ्टीन एएम का टाइम हमारे मानदंडों में नहीं आता। क्या आप सेवन सेवन थर्टी एएम के किसी"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "कोई उपलब्ध तबल नहीं मिल पाया, इसलिए बुकिंग नहीं हुई। धन्यवाद।"
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "धन्यवाद, अभी बस इतना ही کافی है।"
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "Whether the audible output contained internal turn-management instructions or private self-talk requires verification from the audio itself. The transcription does not prove the absence of such leakage acoustically.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "met",
+      "explanation": "The target acts as the caller seeking a reservation, states the user's booking requirements, rejects unavailable times, and closes without booking. It does not present itself as the restaurant employee.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते, मैं रिभरमेन्ट फूड पोछी में नाइन अक्टोबर को शाम सेवन"
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मैं सात थर्टी एएम के बीच थ्री लोगों के लिए इंडोर रेगुलर टेबल बुक करना चाहता हूँ, नाम अर्जुन मेनू के तहत बिना कोई डिपॉजिट या कैंसलेशन फ़ी के क्या आप इस टाइम-स्लॉट में उपलब्धता कर सकते हैं?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "हमें केवल शाम सेवन सेवन थर्टी एएम के बीच डबल बुक करनी है, इसलिए एट फिफ्टीन एएम का टाइम हमारे मानदंडों में नहीं आता। क्या आप सेवन सेवन थर्टी एएम के किसी"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "कोई उपलब्ध तबल नहीं मिल पाया, इसलिए बुकिंग नहीं हुई। धन्यवाद।"
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "met",
+      "explanation": "The private report accurately states that no qualifying indoor table for three was available in the requested Fort Kochi date/time window, that only earlier or later slots were offered, and that no reservation was made. This matches the final business state, which contains no booking and lists only 18:00 and 20:15 options.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

@@ -1,0 +1,212 @@
+{
+  "version": "full-cohort-metrics-v4-ttft",
+  "call_timestamps": {
+    "worker_observations": [
+      {
+        "kind": "connected",
+        "utc": "2026-09-22T14:21:11.921926Z",
+        "clock_id": "worker-77541-415356894236833",
+        "monotonic_ns": 415361080315541,
+        "event_sequence": 19
+      },
+      {
+        "kind": "target_report_received",
+        "utc": "2026-09-22T14:21:45.836902Z",
+        "clock_id": "worker-77541-415356894236833",
+        "monotonic_ns": 415394996224541,
+        "event_sequence": 1999
+      },
+      {
+        "kind": "finalized",
+        "utc": "2026-09-22T14:22:11.723848Z",
+        "clock_id": "worker-77541-415356894236833",
+        "monotonic_ns": 415420883884375,
+        "event_sequence": 3342
+      }
+    ],
+    "provider_observations": {
+      "createdAt": "2026-09-22T14:21:09.894437Z",
+      "startedAt": "2026-09-22T14:21:10.718961Z",
+      "endedAt": "2026-09-22T14:22:08.826445Z"
+    },
+    "limitations": "Worker and provider UTC timestamps are separate observations. Turn latency uses browser sample time only, not their difference."
+  },
+  "response_timing": {
+    "status": "unavailable",
+    "reason": "Shared audio clock is incomplete"
+  },
+  "wer": {
+    "status": "unavailable",
+    "reference": "Independent transcription of submitted employee audio",
+    "hypothesis": "Hosted Rumik post-call user-role transcript",
+    "all_items_playback_acknowledged": false,
+    "human_reference_review": false,
+    "limitations": "ASR-to-ASR discrepancy, not gold-reference WER. Carrier acknowledgment does not prove remote hearing. Script differences and transcription errors count. Incomplete playback prevents comparison with the full submitted transcript.",
+    "reference_text": "नमस्ते, मैं आपकी क्या मदद कर सकता हूँ? रोहन जी, किचन में जो मील बेस है उसमें प्याज़ और लहसुन निकाला नहीं जा सकता। पूरे अनियन-लहसुन फ्री ऑप्शन अभी अवेलेबल नहीं है। क्या आप फिर भी वो टाइम पर टेबल बुक करवाना चाहेंगे? समझ गया, कोई बुकिंग नहीं कर... क्या आपको किसी और चीज़ में मदद चाहिए? धन्यवाद।",
+    "hypothesis_text": "नमस्ते, मैं आपकी क्या मदद कर सकता हूँ? रोहन जी। किचन में जो मील बेस है, उसे।  प्याज़ और लहसुन निकाला नहीं जा सकता। पूरे अनियन-लहसुन-फ्री ऑप्शन अभी अवेलेबल नहीं है। क्या आप फिर भी वो टाइम पर टेबल बुक करवाना चाहेंगे? समझ गया। कोई बुकिंग नहीं कर रहे हैं। क्या आपको किसी और चीज़ में मदद चाहिए?",
+    "counts": null
+  },
+  "ttft": {
+    "version": "target-timing-v1",
+    "status": "unavailable",
+    "clock": "browser-performance (packet receipt); audio_context_seconds retained",
+    "definitions": {
+      "ttft_ms": "Rumik's own end-of-caller-speech packet (user-stopped-speaking) to the first non-empty bot-llm-text packet, both as received by the browser. This is the caller-perceived time to first token, an upper bound on hosted LLM latency because it includes Rumik's endpoint decision, network transit and observer scheduling. Only generations that produced text are counted; interrupted and silent generations are retained separately.",
+      "llm_started_to_first_text_ms": "bot-llm-started to first bot-llm-text on the same clock; excludes endpointing, includes transit.",
+      "provider_llm_ttfb_ms": "Rumik's own reported LLM time to first byte for that generation, when a metrics packet followed it.",
+      "user_stopped_to_bot_speaking_ms": "Rumik's end-of-speech decision to its own bot-started-speaking packet; comparable to but distinct from audio-clock TTFS."
+    },
+    "counts": {},
+    "generations": 0,
+    "ttft_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "llm_started_to_first_text_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "provider_llm_ttfb_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "provider_tts_ttfb_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "user_stopped_to_bot_speaking_ms": {
+      "n": 0,
+      "mean": null,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "quantile_method": "nearest_rank"
+    },
+    "completion_tokens": [],
+    "rows": [],
+    "limitations": "Packets are observed at the browser, not inside Rumik; a capped capture omits later generations. Fragmented caller speech yields many short windows that are interrupted before text and are not first-token latencies."
+  },
+  "endpointing_accuracy": {
+    "status": "unavailable",
+    "reason": "No hosted endpoint decisions or reviewed semantic end-of-turn labels",
+    "numerator": null,
+    "denominator": null,
+    "observable_proxy": "response_timing opportunity counts: overlap, interrupted playback and no observed reply"
+  },
+  "activity": {
+    "status": "uncertain",
+    "reason": "Missing shared browser clock"
+  },
+  "telephone": {
+    "version": "phone-observations-v1",
+    "ttft_ms": {
+      "status": "unavailable",
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "reason": "No target first-token telemetry on SIP media"
+    },
+    "ttfs_ms": {
+      "status": "unavailable",
+      "n": 0,
+      "p50": null,
+      "p90": null,
+      "p95": null,
+      "reason": "No shared remote playback/capture clock; see acknowledgment delay proxy"
+    },
+    "response_delay_proxy": {
+      "status": "measured",
+      "boundary": "final_carrier_playback_ack_received_to_target_speech_block_received",
+      "clock": "worker monotonic receipt observations; 8 kHz blocks interpolated locally",
+      "limitations": "Not exact remote TTFS. Includes network asymmetry, trailing playback silence and local recording/event overhead. Energy speech boundaries are estimates. Unanswered closing items are not automatically failures; overlap is not automatically a bad interruption. Quantiles describe observations in this call, not model tails.",
+      "counts": {
+        "answered_after_ack": 3,
+        "incomplete_or_interrupted_playback": 1
+      },
+      "opportunities": [
+        {
+          "item_id": "item_EQverNgM5sKoAwwI5QbEG",
+          "delay_ms": 2197.2330000135116,
+          "ack_event_sequence": 382,
+          "observed_wait_ms": 19109.920290997252,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQvfDSVmJSprdufeRuPOy",
+          "delay_ms": 1798.0402079992928,
+          "ack_event_sequence": 2104,
+          "observed_wait_ms": 11315.307208045851,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQvfaNtmK0FJksCmS1ZsW",
+          "delay_ms": 1495.22695800988,
+          "ack_event_sequence": 3016,
+          "observed_wait_ms": 5924.070540990215,
+          "status": "answered_after_ack"
+        },
+        {
+          "item_id": "item_EQvflTfIRkD0LcGTSgdlf",
+          "delay_ms": null,
+          "status": "incomplete_or_interrupted_playback"
+        }
+      ],
+      "delay_ms": {
+        "n": 3,
+        "mean": 1830.1667220075615,
+        "p50": 1798.0402079992928,
+        "p90": 2197.2330000135116,
+        "p95": 2197.2330000135116,
+        "quantile_method": "nearest_rank"
+      }
+    },
+    "wer": {
+      "status": "unavailable",
+      "reference": "Independent transcription of submitted employee audio",
+      "hypothesis": "Hosted Rumik post-call user-role transcript",
+      "all_items_playback_acknowledged": false,
+      "human_reference_review": false,
+      "limitations": "ASR-to-ASR discrepancy, not gold-reference WER. Carrier acknowledgment does not prove remote hearing. Script differences and transcription errors count. Incomplete playback prevents comparison with the full submitted transcript.",
+      "reference_text": "नमस्ते, मैं आपकी क्या मदद कर सकता हूँ? रोहन जी, किचन में जो मील बेस है उसमें प्याज़ और लहसुन निकाला नहीं जा सकता। पूरे अनियन-लहसुन फ्री ऑप्शन अभी अवेलेबल नहीं है। क्या आप फिर भी वो टाइम पर टेबल बुक करवाना चाहेंगे? समझ गया, कोई बुकिंग नहीं कर... क्या आपको किसी और चीज़ में मदद चाहिए? धन्यवाद।",
+      "hypothesis_text": "नमस्ते, मैं आपकी क्या मदद कर सकता हूँ? रोहन जी। किचन में जो मील बेस है, उसे।  प्याज़ और लहसुन निकाला नहीं जा सकता। पूरे अनियन-लहसुन-फ्री ऑप्शन अभी अवेलेबल नहीं है। क्या आप फिर भी वो टाइम पर टेबल बुक करवाना चाहेंगे? समझ गया। कोई बुकिंग नहीं कर रहे हैं। क्या आपको किसी और चीज़ में मदद चाहिए?",
+      "counts": null
+    },
+    "ttfa_ms": {
+      "n": 3,
+      "mean": 1850.166722,
+      "p50": 1818.040208,
+      "p90": 2217.233,
+      "p95": 2217.233,
+      "quantile_method": "nearest_rank",
+      "status": "measured",
+      "definition": {
+        "name": "TTFA / response latency",
+        "formula": "(first_response_audio_receipt_monotonic_ns - playback_ack_monotonic_ns) / 1000000",
+        "start": "Worker receipt of the final carrier playback acknowledgment for the employee turn",
+        "end": "Worker receipt event for the first audio block containing detected Rumik response speech",
+        "clock": "Both observed_monotonic_ns fields are stamped by LocalEvidence.emit using time.monotonic_ns(). The carrier_media clock_id labels the remote payload; its payload timestamp is not used.",
+        "speech_detection": "PCM16 RMS >= 500 in 20 ms windows, sustained for at least 80 ms",
+        "selection": "Same answered_after_ack turns as report-v2; incomplete playback, overlap and no reply are retained separately, never zero-filled",
+        "interpretation": "Observed end-to-end response audio latency, including transport; not isolated model compute time. Playback acknowledgments can arrive after remote playback. Continuous silence packets are not response audio.",
+        "previous_metric": "report-v2 delay_ms estimates speech onset within an audio block; ttfa_ms uses the actual receipt timestamp of that block"
+      }
+    }
+  }
+}

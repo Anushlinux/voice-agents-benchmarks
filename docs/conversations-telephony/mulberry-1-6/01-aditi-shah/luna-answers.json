@@ -1,0 +1,10 @@
+{
+  "response_id": null,
+  "response_status": null,
+  "validation_error": {
+    "stage": "transcription_or_judgment",
+    "type": "ValueError"
+  },
+  "metrics": [],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

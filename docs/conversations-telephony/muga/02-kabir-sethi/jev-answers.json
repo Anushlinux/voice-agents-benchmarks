@@ -1,0 +1,11 @@
+{
+  "validation_status": "error",
+  "http_status": 400,
+  "response": {
+    "error": {
+      "message": "HTTP 400: {\"detail\":{\"error_type\":\"max_tokens_exceeded\"}}",
+      "code": 400
+    }
+  },
+  "note": "Exact provider body. An error or rejected result is not a validated judgment."
+}

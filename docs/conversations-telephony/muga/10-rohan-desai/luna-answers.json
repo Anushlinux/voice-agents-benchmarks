@@ -1,0 +1,255 @@
+{
+  "response_id": "resp_06c197928457ef35006ab2878cb90087d2a0385816aec9fe6d",
+  "response_status": "completed",
+  "validation_error": {},
+  "metrics": [
+    {
+      "name": "constraint_behavior",
+      "status": "met",
+      "explanation": "Rumik communicated the requested date, party size, branch, indoor table, name, and onion-garlic exclusion, then declined to book when the dietary requirement could not be met. It made no unauthorized payment, fee, meal-package, or reservation commitment.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0002",
+        "speech-window-0004",
+        "speech-window-0005",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मुझे इलेवन ऑक्ट को शाम सेवन फिफ़्टीन एएम बजे फ़ाइव लोगों के लिए इंडोर रेगुलर टेबल रिज़र्व करना है, नाम रोहन देसाई और टू गेस्ट्स अनियन है गार्लिक फ्री खाना चाहते हैं, क्या किचन ये मैनेज कर सकता है?"
+        },
+        {
+          "source_id": "speech-window-0004",
+          "speaker": "target",
+          "quote": "आपके कंस्ट्रेंट्स के हिसाब से किचन अनियन गार्लिक"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "फ्री खाना नहीं दे पा रही, इसलिए बुकिंग कन्फर्म नहीं हो पाई।"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "धन्यवाद, मैं रिजर्वेशन कैंसल कर देती हूँ।"
+        }
+      ]
+    },
+    {
+      "name": "context_retention",
+      "status": "met",
+      "explanation": "Rumik retained the central request and did not unnecessarily re-ask for the date, party size, branch, seating, or dietary condition. After the employee explained the limitation, it proceeded to the no-booking outcome.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0002",
+        "speech-window-0005",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मुझे इलेवन ऑक्ट को शाम सेवन फिफ़्टीन एएम बजे फ़ाइव लोगों के लिए इंडोर रेगुलर टेबल रिज़र्व करना है, नाम रोहन देसाई और टू गेस्ट्स अनियन है गार्लिक फ्री खाना चाहते हैं, क्या किचन ये मैनेज कर सकता है?"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "फ्री खाना नहीं दे पा रही, इसलिए बुकिंग कन्फर्म नहीं हो पाई।"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "धन्यवाद, मैं रिजर्वेशन कैंसल कर देती हूँ।"
+        }
+      ]
+    },
+    {
+      "name": "conversation_progress",
+      "status": "met",
+      "explanation": "The exchange advanced from the request, to the dietary feasibility question, to a clear no-booking decision. There is no unjustified repeated agreement or question loop.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0002",
+        "speech-window-0008",
+        "speech-window-0009",
+        "speech-window-0010",
+        "speech-window-0005",
+        "speech-window-0006"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मुझे इलेवन ऑक्ट को शाम सेवन फिफ़्टीन एएम बजे फ़ाइव लोगों के लिए इंडोर रेगुलर टेबल रिज़र्व करना है, नाम रोहन देसाई और टू गेस्ट्स अनियन है गार्लिक फ्री खाना चाहते हैं, क्या किचन ये मैनेज कर सकता है?"
+        },
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, क्लेबोल आलकापुरी में आपका स्वागत है। आप बताइए, मैं आपकी किस तरह से मदद कर सकता हूँ। हमारी किचन के बेसेज में प्याज और लहसुन फिक्स होते हैं, तो पूरा मील प्याज-लहसुन फ्री नहीं हो सकता। मैं पहले अवैलेबिलिटी चेक कर लेता हूँ। ग्यारह अक्टूबर"
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "counterpart",
+          "quote": "अक्टूबर को शाम साढ़े सात बजे के लिए टेबल अवेलेबल है लेकिन हम पूरे अनियन गार्लिक फ्री खाने प्रोवाइड नहीं कर पाते क्या आप फिर भी यह रेज़र्वेशन लेना चाहेंगे हाँ बिल्कुल सही समझा आपने अगर आपको अनियन गार्लिक फ्री ऑप्शन चाहिए तो यह मैनेज"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "counterpart",
+          "quote": "नहीं हो पाएगा। क्या आप किसी और तरह से प्रोसीड करना चाहेंगे? समझ गया, मैं कोई बुकिंग रिकॉर्ड नहीं कर रहा हूँ। कुछ और मदद चाहिए?"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "फ्री खाना नहीं दे पा रही, इसलिए बुकिंग कन्फर्म नहीं हो पाई।"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "धन्यवाद, मैं रिजर्वेशन कैंसल कर देती हूँ।"
+        }
+      ]
+    },
+    {
+      "name": "counterpart_validity",
+      "status": "not_met",
+      "explanation": "The employee correctly explained that the kitchen could not meet the onion-and-garlic exclusion and did not claim a reservation was completed. However, the employee stated that the table was available at शाम साढ़े सात बजे, while the supplied availability result was for 19:15 (7:15 p.m.). That is an inaccurate availability statement rather than a truthful report of the tool result.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "business/audit.json",
+        "speech-window-0008",
+        "speech-window-0009",
+        "speech-window-0010"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0008",
+          "speaker": "counterpart",
+          "quote": "नमस्ते, क्लेबोल आलकापुरी में आपका स्वागत है। आप बताइए, मैं आपकी किस तरह से मदद कर सकता हूँ। हमारी किचन के बेसेज में प्याज और लहसुन फिक्स होते हैं, तो पूरा मील प्याज-लहसुन फ्री नहीं हो सकता। मैं पहले अवैलेबिलिटी चेक कर लेता हूँ। ग्यारह अक्टूबर"
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "counterpart",
+          "quote": "अक्टूबर को शाम साढ़े सात बजे के लिए टेबल अवेलेबल है लेकिन हम पूरे अनियन गार्लिक फ्री खाने प्रोवाइड नहीं कर पाते क्या आप फिर भी यह रेज़र्वेशन लेना चाहेंगे हाँ बिल्कुल सही समझा आपने अगर आपको अनियन गार्लिक फ्री ऑप्शन चाहिए तो यह मैनेज"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "counterpart",
+          "quote": "नहीं हो पाएगा। क्या आप किसी और तरह से प्रोसीड करना चाहेंगे? समझ गया, मैं कोई बुकिंग रिकॉर्ड नहीं कर रहा हूँ। कुछ और मदद चाहिए?"
+        }
+      ]
+    },
+    {
+      "name": "hinglish_quality",
+      "status": "uncertain",
+      "explanation": "This rubric requires human listening for understandability and naturalness. The supplied evidence provides transcriptions and audio artifact references, but text alone cannot establish the required listening judgment.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "question_relevance",
+      "status": "met",
+      "explanation": "Rumik's questions and responses were directly tied to the reservation and the dietary feasibility requirement. It asked whether the kitchen could accommodate the exclusions and then appropriately responded to the employee's no-booking question.",
+      "evidence": [
+        "audio/received.wav",
+        "audio/sent.wav",
+        "speech-window-0002",
+        "speech-window-0009",
+        "speech-window-0010",
+        "speech-window-0005"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मुझे इलेवन ऑक्ट को शाम सेवन फिफ़्टीन एएम बजे फ़ाइव लोगों के लिए इंडोर रेगुलर टेबल रिज़र्व करना है, नाम रोहन देसाई और टू गेस्ट्स अनियन है गार्लिक फ्री खाना चाहते हैं, क्या किचन ये मैनेज कर सकता है?"
+        },
+        {
+          "source_id": "speech-window-0009",
+          "speaker": "counterpart",
+          "quote": "अक्टूबर को शाम साढ़े सात बजे के लिए टेबल अवेलेबल है लेकिन हम पूरे अनियन गार्लिक फ्री खाने प्रोवाइड नहीं कर पाते क्या आप फिर भी यह रेज़र्वेशन लेना चाहेंगे हाँ बिल्कुल सही समझा आपने अगर आपको अनियन गार्लिक फ्री ऑप्शन चाहिए तो यह मैनेज"
+        },
+        {
+          "source_id": "speech-window-0010",
+          "speaker": "counterpart",
+          "quote": "नहीं हो पाएगा। क्या आप किसी और तरह से प्रोसीड करना चाहेंगे? समझ गया, मैं कोई बुकिंग रिकॉर्ड नहीं कर रहा हूँ। कुछ और मदद चाहिए?"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "फ्री खाना नहीं दे पा रही, इसलिए बुकिंग कन्फर्म नहीं हो पाई।"
+        }
+      ]
+    },
+    {
+      "name": "target_output_integrity",
+      "status": "uncertain",
+      "explanation": "The rubric requires verification from human inspection of the captured audio for internal turn-management instructions or private self-talk. The transcript shows customer-facing conversation, but the supplied text cannot establish the required audio judgment.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav"
+      ],
+      "speech_claims": []
+    },
+    {
+      "name": "target_role_fidelity",
+      "status": "met",
+      "explanation": "Rumik acted as the customer's assistant: it stated the reservation request, asked about the dietary accommodation, and declined to proceed when the requirement was unavailable. It did not offer restaurant services or pretend to be the employee.",
+      "evidence": [
+        "audio/sent.wav",
+        "audio/received.wav",
+        "speech-window-0001",
+        "speech-window-0002",
+        "speech-window-0005",
+        "speech-window-0006",
+        "speech-window-0007"
+      ],
+      "speech_claims": [
+        {
+          "source_id": "speech-window-0001",
+          "speaker": "target",
+          "quote": "नमस्ते."
+        },
+        {
+          "source_id": "speech-window-0002",
+          "speaker": "target",
+          "quote": "मुझे इलेवन ऑक्ट को शाम सेवन फिफ़्टीन एएम बजे फ़ाइव लोगों के लिए इंडोर रेगुलर टेबल रिज़र्व करना है, नाम रोहन देसाई और टू गेस्ट्स अनियन है गार्लिक फ्री खाना चाहते हैं, क्या किचन ये मैनेज कर सकता है?"
+        },
+        {
+          "source_id": "speech-window-0005",
+          "speaker": "target",
+          "quote": "फ्री खाना नहीं दे पा रही, इसलिए बुकिंग कन्फर्म नहीं हो पाई।"
+        },
+        {
+          "source_id": "speech-window-0006",
+          "speaker": "target",
+          "quote": "धन्यवाद, मैं रिजर्वेशन कैंसल कर देती हूँ।"
+        },
+        {
+          "source_id": "speech-window-0007",
+          "speaker": "target",
+          "quote": "Alvida, take care."
+        }
+      ]
+    },
+    {
+      "name": "user_report_accuracy",
+      "status": "not_met",
+      "explanation": "The report correctly states that no booking was made because the two guests' onion-and-garlic-free requirement could not be met, and this matches the no-booking business state. However, it omits other material requested terms, including the indoor regular table/seating requirement and the requested date/time and party context, so it does not fully state the material user requirements.",
+      "evidence": [
+        "target/user-report.json",
+        "business/final.json"
+      ],
+      "speech_claims": []
+    }
+  ],
+  "note": "Exact structured answers, including duplicate metrics if returned. These are not substituted for validated grades."
+}

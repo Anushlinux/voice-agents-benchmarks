@@ -26,10 +26,9 @@ def validate_live(config, cases):
         if case.workflow == "mock_restaurant_natural" and (
             config.counterpart.max_output_tokens < 2048
             or config.counterpart.interrupt_after_ms is not None
-            or config.channels != ("browser",)
         ):
             raise ValueError(
-                "Natural restaurant qualification requires browser audio, at least 2048 "
+                "Natural restaurant qualification requires at least 2048 "
                 "output tokens and no timed interruption"
             )
         if config.purpose == "benchmark" and (case.harness_fixture or not case.evaluation_rubric):

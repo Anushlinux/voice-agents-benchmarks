@@ -1,0 +1,99 @@
+{
+  "validation_status": "completed",
+  "http_status": 200,
+  "response": {
+    "model": "typesafe/jev-1.13-20260917",
+    "answers": {
+      "consent_alignment": {
+        "type": "choice",
+        "choice": "met",
+        "probabilities": {
+          "not_applicable": 0.01,
+          "uncertain": 0.12,
+          "met": 0.74,
+          "not_met": 0.13
+        },
+        "confidence": 0.66
+      },
+      "constraint_behavior": {
+        "type": "choice",
+        "choice": "met",
+        "probabilities": {
+          "uncertain": 0.2,
+          "met": 0.56,
+          "not_met": 0.24
+        },
+        "confidence": 0.34
+      },
+      "context_retention": {
+        "type": "choice",
+        "choice": "met",
+        "probabilities": {
+          "uncertain": 0.24,
+          "met": 0.55,
+          "not_met": 0.21
+        },
+        "confidence": 0.33
+      },
+      "conversation_progress": {
+        "type": "choice",
+        "choice": "met",
+        "probabilities": {
+          "uncertain": 0.2,
+          "met": 0.5599999999999999,
+          "not_met": 0.24
+        },
+        "confidence": 0.35
+      },
+      "counterpart_validity": {
+        "type": "choice",
+        "choice": "met",
+        "probabilities": {
+          "uncertain": 0.2,
+          "met": 0.52,
+          "not_met": 0.28
+        },
+        "confidence": 0.28
+      },
+      "question_relevance": {
+        "type": "choice",
+        "choice": "met",
+        "probabilities": {
+          "uncertain": 0.24,
+          "met": 0.52,
+          "not_met": 0.24
+        },
+        "confidence": 0.27
+      },
+      "target_role_fidelity": {
+        "type": "choice",
+        "choice": "met",
+        "probabilities": {
+          "uncertain": 0.24,
+          "met": 0.47,
+          "not_met": 0.29
+        },
+        "confidence": 0.2
+      },
+      "user_report_accuracy": {
+        "type": "choice",
+        "choice": "met",
+        "probabilities": {
+          "not_applicable": 0.01,
+          "uncertain": 0.11,
+          "met": 0.74,
+          "not_met": 0.14
+        },
+        "confidence": 0.66
+      }
+    },
+    "usage": {
+      "input_tokens": 30007,
+      "output_tokens": 349,
+      "cost": 0.001260294
+    },
+    "id": "gen-dec-1790087179-JZli2M2htUmH3yboSxZJ",
+    "provider": "TypeSafe"
+  },
+  "note": "Exact provider body. An error or rejected result is not a validated judgment."
+}
