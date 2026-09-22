@@ -41,14 +41,17 @@ def create_app(store=None, tools_secret=None, phone_hub=None, *, callback_log=No
         description="Benchmark health, authenticated business tools, and carrier callbacks.",
     )
 
+    record_callback = None
     if callback_log is not None:
         log_path = Path(callback_log)
         log_path.parent.mkdir(parents=True, exist_ok=True)
 
-        def record_callback(record):
+        def write_callback(record):
             # Never retain authorization headers, request bodies, or task contents.
             with log_path.open("a", encoding="utf-8") as output:
                 output.write(json.dumps(record) + "\n")
+
+        record_callback = write_callback
 
         @app.middleware("http")
         async def callback_diagnostics(request, call_next):
@@ -112,7 +115,8 @@ def create_app(store=None, tools_secret=None, phone_hub=None, *, callback_log=No
                 try:
                     store.resolve("rumik", body.call_id)
                 except KeyError:
-                    store.bind_phone(body.phone_number, body.agent_id, body.call_id)
+                    agent = phone_hub.canonical_agent(body.agent_id) if phone_hub else body.agent_id
+                    store.bind_phone(body.phone_number, agent, body.call_id)
                 result = business.serve_user_task(body.call_id, body.agent_id)
                 request.state.callback_stage = "task_served"
                 return result
@@ -158,13 +162,85 @@ def create_app(store=None, tools_secret=None, phone_hub=None, *, callback_log=No
 
     if phone_hub is not None:
         from plivo.utils import validate_v3_signature
+        from plivo.utils.signature_v3 import construct_get_url, get_signature_v3
+
+        carrier_fields = (
+            "CallUUID",
+            "From",
+            "To",
+            "Direction",
+            "CallStatus",
+            "Event",
+            "HangupCause",
+            "HangupCauseName",
+            "HangupCauseCode",
+            "PlivoHangupCause",
+            "HangupSource",
+            "StreamId",
+            "Status",
+            "ErrorCode",
+            "Reason",
+        )
+
+        def note_carrier(event, run_id, params=None, status=None, detail=None):
+            """Retain non-secret carrier callback facts so a failed call stays diagnosable."""
+            if record_callback is None:
+                return
+            record_callback(
+                {
+                    "utc": datetime.now(UTC).isoformat(),
+                    "event": event,
+                    "run_id": str(run_id),
+                    "status": status,
+                    "detail": detail,
+                    "params": {k: params.get(k) for k in carrier_fields if k in (params or {})},
+                }
+            )
 
         def signature(headers, method, path, params=None, query="", websocket=False):
             base = phone_hub.config.runtime.public_base_url.rstrip("/")
-            if websocket:
-                base = base.replace("https://", "wss://", 1)
             url = base + path + ("?" + query if query else "")
             try:
+                if websocket:
+                    # The Python SDK rejects wss URLs before validating their HMAC.
+                    # Verify the configured public host/path directly. Live Plivo
+                    # upgrades sign the http form even when delivered over wss.
+                    nonce = headers.get("x-plivo-signature-v3-nonce", "")
+                    signatures = headers.get("x-plivo-signature-v3", "").split(",")
+                    if not nonce or not any(signatures):
+                        return False
+                    token = phone_hub.client.token.encode()
+                    candidates = {
+                        scheme: get_signature_v3(
+                            token, construct_get_url(uri, {}).decode(), nonce.encode()
+                        ).decode()
+                        for scheme, uri in (
+                            ("v3-https", url),
+                            ("v3-wss", url.replace("https://", "wss://", 1)),
+                            ("v3-http-upgrade", url.replace("https://", "http://", 1)),
+                        )
+                    }
+                    matched = next(
+                        (
+                            name
+                            for name, expected in candidates.items()
+                            if any(
+                                hmac.compare_digest(expected, value.strip()) for value in signatures
+                            )
+                        ),
+                        False,
+                    )
+                    note_carrier(
+                        "carrier_signature_check",
+                        path.split("/")[-2],
+                        detail={
+                            "matched": matched,
+                            "nonce_present": bool(nonce),
+                            "signature_lengths": [len(value) for value in signatures],
+                            "header_names": [key for key in headers if "plivo" in key],
+                        },
+                    )
+                    return matched
                 return validate_v3_signature(
                     method,
                     url,
@@ -185,6 +261,13 @@ def create_app(store=None, tools_secret=None, phone_hub=None, *, callback_log=No
             if len(pairs) != len(params) or not signature(
                 request.headers, "POST", request.url.path, params, request.url.query
             ):
+                note_carrier(
+                    "carrier_signature_rejected",
+                    request.path_params.get("run_id"),
+                    params,
+                    401,
+                    "duplicate_fields" if len(pairs) != len(params) else "signature",
+                )
                 raise HTTPException(401, "Invalid carrier signature")
             return params
 
@@ -194,7 +277,9 @@ def create_app(store=None, tools_secret=None, phone_hub=None, *, callback_log=No
             try:
                 xml = await asyncio.to_thread(phone_hub.answer, run_id, params)
             except (KeyError, ValueError) as exc:
+                note_carrier("carrier_answer_rejected", run_id, params, 409, str(exc))
                 raise HTTPException(409, "Unknown call or mismatched route") from exc
+            note_carrier("carrier_answer", run_id, params, 200)
             return Response(xml, media_type="application/xml")
 
         @app.post("/callbacks/plivo/status/{run_id}")
@@ -210,31 +295,54 @@ def create_app(store=None, tools_secret=None, phone_hub=None, *, callback_log=No
             try:
                 await asyncio.to_thread(save)
             except (KeyError, ValueError) as exc:
+                note_carrier("carrier_status_rejected", run_id, params, 409, str(exc))
                 raise HTTPException(409, "Unknown carrier call") from exc
+            note_carrier("carrier_status", run_id, params, 200)
             session = phone_hub.sessions.get(run_id)
-            if session and (
-                params.get("CallStatus") == "completed" or params.get("Event") == "failed"
-            ):
+            ended = params.get("Event") in {"failed", "Hangup"} or params.get("CallStatus") in {
+                "completed",
+                "busy",
+                "failed",
+                "no-answer",
+                "cancel",
+                "timeout",
+            }
+            if session and ended:
                 session.closed.set()
             return {"ok": True}
 
         @app.websocket("/callbacks/plivo/media/{run_id}/{token}")
         async def carrier_media(run_id: UUID, token: str, websocket: WebSocket):
             session = phone_hub.sessions.get(run_id)
-            if (
-                not session
-                or not hmac.compare_digest(session.token, token)
-                or session.socket is not None
-                or not signature(
-                    websocket.headers,
-                    "GET",
-                    websocket.url.path,
-                    query=websocket.url.query,
-                    websocket=True,
-                )
+            if not session:
+                reason = "unknown_attempt"
+            elif not hmac.compare_digest(session.token, token):
+                reason = "wrong_stream_token"
+            elif session.socket is not None:
+                reason = "already_attached"
+            elif not signature(
+                websocket.headers,
+                "GET",
+                websocket.url.path,
+                query=websocket.url.query,
+                websocket=True,
             ):
+                reason = "invalid_or_missing_signature"
+            else:
+                reason = None
+            if reason:
+                note_carrier(
+                    "carrier_media_rejected",
+                    run_id,
+                    None,
+                    1008,
+                    reason
+                    + "; signature headers present: "
+                    + str("x-plivo-signature-v3" in websocket.headers),
+                )
                 await websocket.close(code=1008)
                 return
+            note_carrier("carrier_media_accepted", run_id, None, 101)
             await websocket.accept()
             await session.attach(websocket)
 

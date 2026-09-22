@@ -205,6 +205,22 @@ def write_attempt_report(directory, destination, pipeline):
             f"{number(row.get('ttfs_ms'))} | {row['status']} |"
         )
     text.append("")
+    if telephone := measurements.get("telephone"):
+        text.extend(
+            [
+                "## Telephone timing",
+                "",
+                "The browser timing table above does not apply to this telephone call. "
+                "TTFT and exact remote TTFS are unavailable. The separately named delay "
+                "proxy measures carrier acknowledgment receipt to received target speech. "
+                "It includes network and local observation effects.",
+                "",
+                "```json",
+                json.dumps(telephone, ensure_ascii=False, indent=2),
+                "```",
+                "",
+            ]
+        )
     text.extend(["## Evaluation stages", "", "| Stage | Status |", "| --- | --- |"])
     for name, stage in pipeline.get("stages", {}).items():
         text.append(f"| {name} | {stage['status']} |")

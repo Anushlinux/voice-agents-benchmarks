@@ -86,3 +86,70 @@ def test_signed_answer_returns_narrow_stream_and_binds_call(store, prepared):
         assert "audio/x-mulaw;rate=8000" in response.text
         assert "test-token" not in response.text
     assert store.resolve("plivo", "answered") == run_id
+
+
+def test_answer_accepts_carrier_number_formats_and_sip_destination(store, prepared):
+    _, (run_id, _) = prepared
+    hub = hub_for(store, run_id)
+    hub.config = hub.config.model_copy(
+        update={
+            "runtime": hub.config.runtime.model_copy(
+                update={"target_sip_uri": "sip:+10000000002@sip.example"}
+            )
+        }
+    )
+    hub.agent_aliases = {"ua_handle"}
+    assert hub.canonical_agent("ua_handle") == hub.agent_id
+    assert hub.canonical_agent("someone-else") == "someone-else"
+    path = f"/callbacks/plivo/answer/{run_id}"
+    with TestClient(create_app(store, "tools-secret", hub)) as client:
+        params = {
+            "CallUUID": "sip-leg",
+            "From": "10000000001",
+            "To": "sip:+10000000002@sip.example",
+        }
+        assert client.post(path, data=params, headers=signed(path, params)).status_code == 200
+        wrong = {"CallUUID": "other-leg", "From": "10000000009", "To": "+10000000002"}
+        assert client.post(path, data=wrong, headers=signed(path, wrong)).status_code == 409
+    assert store.resolve("plivo", "sip-leg") == run_id
+
+
+@pytest.mark.parametrize("status", ["no-answer", "failed", "busy", "cancel", "timeout"])
+def test_early_hangup_wakes_waiting_phone_session(store, prepared, status):
+    from threading import Event
+
+    _, (run_id, _) = prepared
+    hub = hub_for(store, run_id)
+    hub.sessions[run_id].closed = Event()
+    path = f"/callbacks/plivo/status/{run_id}"
+    params = {
+        "CallUUID": "rejected-call",
+        "From": "+10000000001",
+        "To": "+10000000002",
+        "CallStatus": status,
+        "Event": "Hangup",
+        "HangupCause": "CALL_REJECTED",
+    }
+    with TestClient(create_app(store, "tools-secret", hub)) as client:
+        assert client.post(path, data=params, headers=signed(path, params)).status_code == 200
+    assert hub.sessions[run_id].closed.is_set()
+    assert store.resolve("plivo", "rejected-call") == run_id
+
+
+@pytest.mark.parametrize("scheme", ["wss", "https", "http"])
+def test_media_accepts_signed_public_upgrade_url(store, prepared, scheme):
+    _, (run_id, _) = prepared
+    hub = hub_for(store, run_id)
+
+    async def attach(socket):
+        await socket.send_json({"attached": True})
+        await socket.close()
+
+    hub.sessions[run_id].attach = attach
+    path = f"/callbacks/plivo/media/{run_id}/session-token"
+    uri = scheme + "://benchmark.example" + path
+    value = get_signature_v3(b"test-token", uri, b"test-nonce").decode()
+    headers = {"x-plivo-signature-v3": value, "x-plivo-signature-v3-nonce": "test-nonce"}
+    with TestClient(create_app(store, "tools-secret", hub)) as client:
+        with client.websocket_connect(path, headers=headers) as socket:
+            assert socket.receive_json() == {"attached": True}

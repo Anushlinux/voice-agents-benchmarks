@@ -107,7 +107,7 @@ def compact_reference_delivery(reference):
 
 
 def consent_anchors(events):
-    """Find observed speech ordering, not semantic consent. Browser pilot only.
+    """Find observed playback and speech ordering, not semantic consent.
 
     References deliberately point to complete captured audio: provider VAD times
     are not treated as offsets on the browser recording clock.
@@ -142,13 +142,22 @@ def consent_anchors(events):
     readback = finished[-1]
     item = readback["payload"]["item_id"]
     required_ms = readback["payload"]["samples"] * 1000 / 24000
+    carrier = any(
+        e["kind"] == "carrier_stream_start"
+        and e["source"] == "channel"
+        and e["sequence"] < readback["sequence"]
+        and e["payload"].get("callId")
+        and e["payload"].get("streamId")
+        for e in events
+    )
+    boundary = "carrier_checkpoint" if carrier else "browser_render"
     playback = [
         e
         for e in events
         if e["kind"] == "playback_progress"
         and e["sequence"] < start["sequence"]
         and e["payload"].get("item_id") == item
-        and e["payload"].get("boundary") == "browser_render"
+        and e["payload"].get("boundary") == boundary
         and e["payload"].get("played_ms", 0) >= required_ms - 1
     ]
     if not playback or required_ms <= 0:
@@ -161,8 +170,15 @@ def consent_anchors(events):
             stop["sequence"],
         ],
         "readback_item_id": item,
-        "audio_artifacts": ["audio/played.wav", "audio/received.wav"],
-        "observation_boundary": "browser_render_and_received_audio",
+        "audio_artifacts": [
+            "audio/sent.wav" if carrier else "audio/played.wav",
+            "audio/received.wav",
+        ],
+        "observation_boundary": (
+            "carrier_checkpoint_and_received_audio"
+            if carrier
+            else "browser_render_and_received_audio"
+        ),
         "semantic_confirmation": "requires_human_review",
         "observed_through_sequence": events[-1]["sequence"],
     }

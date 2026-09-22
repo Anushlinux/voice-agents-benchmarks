@@ -94,6 +94,12 @@ def validate_live(config, cases):
     required = ["DATABASE_URL", "RUMIK_API_KEY", "OPENAI_API_KEY", "BENCH_TOOLS_SECRET"]
     if "phone" in config.channels:
         required += ["PLIVO_AUTH_ID", "PLIVO_AUTH_TOKEN"]
+        sip_username = os.environ.get("PLIVO_SIP_AUTH_USERNAME")
+        sip_password = os.environ.get("PLIVO_SIP_AUTH_PASSWORD")
+        if bool(sip_username) != bool(sip_password):
+            raise ValueError("SIP username and password must be supplied together")
+        if sip_username and not config.runtime.target_sip_uri:
+            raise ValueError("SIP credentials require an explicit SIP destination")
         if not config.runtime.caller_number or not config.runtime.target_number:
             raise ValueError("Intended benchmark phone endpoints are required")
         if not config.target.plivo_sip_trunk_id or not config.target.plivo_termination_uri:
@@ -160,7 +166,12 @@ async def execute_batch(
     await asyncio.to_thread(store.migrate)
     target = RumikClient(os.environ["RUMIK_API_KEY"])
     carrier = (
-        PlivoClient(os.environ["PLIVO_AUTH_ID"], os.environ["PLIVO_AUTH_TOKEN"])
+        PlivoClient(
+            os.environ["PLIVO_AUTH_ID"],
+            os.environ["PLIVO_AUTH_TOKEN"],
+            sip_username=os.environ.get("PLIVO_SIP_AUTH_USERNAME"),
+            sip_password=os.environ.get("PLIVO_SIP_AUTH_PASSWORD"),
+        )
         if "phone" in config.channels
         else None
     )
@@ -203,6 +214,7 @@ async def execute_batch(
                 raise ValueError("; ".join(issues))
         if hub:
             hub.agent_id = snapshot["agent"]["id"]
+            hub.agent_aliases = {v for v in (snapshot["agent"].get("handle"),) if v}
         identity = snapshot_digest(snapshot)
         plans = make_plan(cases, config.channels, repetitions, seed, batch_id)
         dependencies = {}

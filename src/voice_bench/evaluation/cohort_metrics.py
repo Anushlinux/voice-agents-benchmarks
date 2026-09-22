@@ -214,7 +214,7 @@ def measure_attempt(directory):
     }
     from voice_bench.evaluation.target_timing import measure as target_timing
 
-    return {
+    result = {
         "version": "full-cohort-metrics-v4-ttft",
         "call_timestamps": {
             "worker_observations": [
@@ -258,3 +258,10 @@ def measure_attempt(directory):
         },
         "activity": activity,
     }
+    if any(e["kind"] == "carrier_media" for e in events):
+        from voice_bench.evaluation.phone_metrics import measure as phone_measure
+
+        result["telephone"] = phone_measure(directory)
+        if "wer" in result["telephone"]:
+            result["wer"] = result["telephone"]["wer"]
+    return result

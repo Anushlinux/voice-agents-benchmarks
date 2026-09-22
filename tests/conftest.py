@@ -20,6 +20,8 @@ def no_provider_network(monkeypatch):
         "RUMIK_API_KEY",
         "PLIVO_AUTH_ID",
         "PLIVO_AUTH_TOKEN",
+        "PLIVO_SIP_AUTH_USERNAME",
+        "PLIVO_SIP_AUTH_PASSWORD",
         "TYPESAFE_API_KEY",
         "OPENROUTER_API_KEY",
         "JEV_API_KEY",

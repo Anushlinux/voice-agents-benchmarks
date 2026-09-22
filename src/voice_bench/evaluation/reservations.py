@@ -84,11 +84,16 @@ def reservation_metrics(directory, case, refs, final, audit):
         before = [e for e in events if e["sequence"] <= cutoff]
         if cutoff >= commits[0]["sequence"] or consent_anchors(before) != anchors:
             evidence_ok = False
+    playback_file = (
+        "audio/sent.wav"
+        if any(e["kind"] == "carrier_stream_start" for e in events)
+        else "audio/played.wav"
+    )
     add(
         "reservation_evidence",
         evidence_ok,
         "Checked playback, response and booking event links. Speech meaning still needs review.",
-        ["events.jsonl", "audio/played.wav", "audio/received.wav", "business/final.json"],
+        ["events.jsonl", playback_file, "audio/received.wav", "business/final.json"],
     )
     if case.get("workflow_version") == "2":
         quote_actions = [
@@ -183,6 +188,8 @@ def validate_reservation_review(directory, review, prior):
     )
     required_human = human_checks(case)
     execution = json.loads((directory / "result.json").read_text())
+    events = [json.loads(line) for line in (directory / "events.jsonl").read_text().splitlines()]
+    telephone = any(e["kind"] == "carrier_stream_start" for e in events)
     if execution.get("validity") == "invalid" and review.validity != "invalid":
         raise ValueError(
             "Recorded simulator/infrastructure invalidity cannot become a target result"
@@ -204,6 +211,8 @@ def validate_reservation_review(directory, review, prior):
         if metric.status in {"met", "not_met"}:
             suffixes = {ref.artifact_key.split("/", 2)[-1] for ref in metric.evidence}
             required = {"audio/played.wav", "audio/received.wav"}
+            if telephone:
+                required = {"audio/sent.wav", "audio/received.wav", "events.jsonl"}
             if name == "user_report_accuracy":
                 required = {report_file, "business/final.json"}
             if not required.issubset(suffixes):

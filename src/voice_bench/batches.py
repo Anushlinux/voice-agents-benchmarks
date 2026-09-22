@@ -7,6 +7,7 @@ import json
 import random
 from uuid import UUID, uuid4, uuid5
 
+from voice_bench.channels.phone.adapter import carrier_leg_ended
 from voice_bench.contracts import ExecutionCase, PlannedRun
 from voice_bench.evidence.local import (
     canonical,
@@ -265,10 +266,7 @@ async def recover(store, batch_id, root, target, carrier=None):
                     await carrier.hangup(binding["call_id"])
                     record = await carrier.call(binding["call_id"])
                     records["plivo"] = record
-                    statuses.append(
-                        record.get("call_status")
-                        in {"completed", "failed", "busy", "no-answer", "cancel"}
-                    )
+                    statuses.append(carrier_leg_ended(record))
             if statuses:
                 confirmed = all(statuses)
             if run.get("dispatch_intent") and run["context"]["channel"] == "phone":

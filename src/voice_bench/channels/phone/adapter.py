@@ -9,13 +9,18 @@ from uuid import uuid4
 from xml.etree.ElementTree import Element, SubElement, tostring
 
 import httpx
+from starlette.websockets import WebSocketDisconnect
 
 from voice_bench.channels.media import MediaSession
+from voice_bench.numbers import same_endpoint
 
 
 class PlivoClient:
-    def __init__(self, account, token, transport=None):
+    def __init__(self, account, token, transport=None, *, sip_username=None, sip_password=None):
+        if bool(sip_username) != bool(sip_password):
+            raise ValueError("SIP username and password must be supplied together")
         self.account, self.token = account, token
+        self.sip_username, self.sip_password = sip_username, sip_password
         self.client = httpx.AsyncClient(
             base_url=f"https://api.plivo.com/v1/Account/{account}/",
             auth=(account, token),
@@ -24,16 +29,26 @@ class PlivoClient:
         )
 
     async def dial(self, source, target, base, run_id, maximum):
+        credentials = {}
+        if self.sip_username:
+            if not target.startswith(("sip:", "sips:")):
+                raise ValueError("SIP credentials require an explicit SIP destination")
+            credentials = {
+                "sip_auth_username": self.sip_username,
+                "sip_auth_password": self.sip_password,
+            }
         response = await self.client.post(
             "Call/",
             json={
-                "from": source,
+                # Plivo documents E.164 caller IDs without the plus sign.
+                "from": source.lstrip("+"),
                 "to": target,
                 "answer_url": f"{base}/callbacks/plivo/answer/{run_id}",
                 "answer_method": "POST",
                 "hangup_url": f"{base}/callbacks/plivo/status/{run_id}",
                 "hangup_method": "POST",
                 "time_limit": maximum,
+                **credentials,
             },
         )
         response.raise_for_status()
@@ -46,6 +61,9 @@ class PlivoClient:
 
     async def call(self, call_id):
         response = await self.client.get(f"Call/{call_id}/")
+        if response.status_code == 404:
+            # The call record is published after the leg ends; keep polling until then.
+            return {"call_status": "record_pending"}
         response.raise_for_status()
         return response.json()
 
@@ -65,6 +83,7 @@ class PhoneSession(MediaSession):
         self.pending = {}
         self.played_samples = {}
         self.sequence = 0
+        self.media_chunk = None
         self.media_timeout = media_timeout
         self.sender = None
         self.send_lock = asyncio.Lock()
@@ -78,23 +97,73 @@ class PhoneSession(MediaSession):
                 event = await asyncio.wait_for(socket.receive_json(), self.media_timeout)
                 await self.handle(event)
         except Exception as exc:
-            self.fail(type(exc).__name__)
+            reason = type(exc).__name__
+            self.fail(reason)
+            try:
+                await self.evidence.emit(
+                    "channel",
+                    "carrier_stream_failed",
+                    {"reason": reason, "detail": str(exc)[:200], "events_seen": self.sequence},
+                )
+            except Exception:
+                pass
         finally:
             self.closed.set()
 
     async def handle(self, event):
         sequence = int(event["sequenceNumber"])
-        if sequence != self.sequence + 1:
-            raise ValueError("Carrier stream sequence gap")
-        self.sequence = sequence
         kind = event["event"]
+        if sequence < 0:
+            raise ValueError("Invalid carrier event sequence")
+        if self.stream_id is None:
+            await self.evidence.emit(
+                "channel",
+                "carrier_initial_event",
+                {"event": kind, "sequence": sequence, "keys": sorted(event)},
+            )
+        zero_start = kind == "start" and self.stream_id is None and sequence == self.sequence == 0
+        if sequence != self.sequence + 1 and not zero_start:
+            await self.evidence.emit(
+                "channel",
+                "carrier_sequence_anomaly",
+                {
+                    "event": kind,
+                    "received": sequence,
+                    "previous": self.sequence,
+                    "chunk": event.get("media", {}).get("chunk"),
+                },
+            )
+        # Playback acknowledgments can reuse the preceding event number on
+        # live Plivo streams. Audio continuity is checked by media.chunk below;
+        # the shared event counter is diagnostic, not proof of lost audio.
+        self.sequence = max(self.sequence, sequence)
+        if kind in {"playedStream", "clearedAudio"}:
+            await self.evidence.emit(
+                "channel", "carrier_control", {"event": kind, "sequence": sequence}
+            )
         if kind == "start":
             start = event["start"]
-            if self.stream_id or start["accountId"] != self.account:
+            # Retain the carrier's own description of the stream before any check can fail.
+            await self.evidence.emit(
+                "channel",
+                "carrier_stream_start",
+                {
+                    key: start.get(key)
+                    for key in ("callId", "streamId", "accountId", "tracks", "mediaFormat")
+                },
+            )
+            # accountId is Plivo's numeric internal ID on live streams, not the
+            # REST auth ID. The upgrade is authenticated with this account's
+            # token; the persisted call binding below establishes run ownership.
+            if self.stream_id or not start.get("accountId"):
                 raise ValueError("Unexpected carrier session")
             if await asyncio.to_thread(self.store.resolve, "plivo", start["callId"]) != self.run_id:
                 raise ValueError("Carrier call belongs to another attempt")
-            if start["mediaFormat"] != {"encoding": "audio/x-mulaw", "sampleRate": 8000}:
+            media_format = start["mediaFormat"]
+            if (
+                media_format.get("encoding") != "audio/x-mulaw"
+                or int(media_format.get("sampleRate") or 0) != 8000
+            ):
                 raise ValueError("Unexpected carrier codec")
             self.stream_id = start["streamId"]
             await self.evidence.emit(
@@ -114,6 +183,10 @@ class PhoneSession(MediaSession):
         elif kind == "media":
             if event["media"]["track"] != "inbound":
                 raise ValueError("Unexpected media track")
+            chunk = int(event["media"]["chunk"])
+            if chunk < 0 or (self.media_chunk is not None and chunk != self.media_chunk + 1):
+                raise ValueError("Carrier audio chunk sequence gap")
+            self.media_chunk = chunk
             pcm = audioop.ulaw2lin(base64.b64decode(event["media"]["payload"], validate=True), 2)
             await self.receive(pcm, "plivo-media")
             await self.evidence.emit(
@@ -121,6 +194,7 @@ class PhoneSession(MediaSession):
                 "carrier_media",
                 {
                     "timestamp": event["media"]["timestamp"],
+                    "sequence": sequence,
                     "chunk": event["media"]["chunk"],
                     "samples": len(pcm) // 2,
                 },
@@ -210,8 +284,22 @@ class PhoneSession(MediaSession):
         if self.socket:
             try:
                 await self.socket.close()
-            except RuntimeError:
+            except (RuntimeError, WebSocketDisconnect):
                 pass
+
+
+def carrier_leg_ended(record):
+    """A Plivo call detail record exists only after the leg ends; live legs report no end."""
+    if record.get("call_status") in {
+        "completed",
+        "busy",
+        "failed",
+        "no-answer",
+        "cancel",
+        "timeout",
+    }:
+        return True
+    return bool(record.get("end_time") or record.get("hangup_cause_name"))
 
 
 class PhoneHub:
@@ -219,6 +307,11 @@ class PhoneHub:
         self.store, self.config, self.client = store, config, client
         self.sessions = {}
         self.agent_id = agent_id or config.target.agent_ref
+        self.agent_aliases = set()
+
+    def canonical_agent(self, value):
+        """Map the target's handle to its canonical ID; unknown values stay unchanged."""
+        return self.agent_id if value in self.agent_aliases else value
 
     def correlate(self, run_id, params):
         runtime = self.config.runtime
@@ -232,8 +325,11 @@ class PhoneHub:
                 run_id not in self.sessions
                 or not run.get("dispatch_intent")
                 or run["phase"] not in {"connecting", "in_conversation", "finalizing"}
-                or params.get("From") != runtime.caller_number
-                or params.get("To") != runtime.target_number
+                or not same_endpoint(params.get("From"), runtime.caller_number)
+                or not (
+                    same_endpoint(params.get("To"), runtime.target_number)
+                    or same_endpoint(params.get("To"), runtime.target_sip_uri)
+                )
             ):
                 raise ValueError("Unexpected or stale phone route") from None
             self.store.bind("plivo", params["CallUUID"], run_id)
@@ -278,12 +374,24 @@ class PhoneAdapter:
             config.runtime.media_timeout_seconds,
         )
         self.hub.sessions[run_id] = session
-        reply = await self.hub.client.dial(
-            config.runtime.caller_number,
-            config.runtime.target_number,
-            config.runtime.public_base_url.rstrip("/"),
-            run_id,
-            request.max_duration_seconds,
+        try:
+            reply = await self.hub.client.dial(
+                config.runtime.caller_number,
+                config.runtime.target_sip_uri or config.runtime.target_number,
+                config.runtime.public_base_url.rstrip("/"),
+                run_id,
+                request.max_duration_seconds,
+            )
+        except httpx.HTTPStatusError as exc:
+            # Carrier rejection bodies explain the refusal and contain no credentials.
+            await evidence.emit(
+                "channel",
+                "carrier_dial_rejected",
+                {"status": exc.response.status_code, "detail": exc.response.text[:300]},
+            )
+            raise
+        await evidence.emit(
+            "channel", "carrier_dial_accepted", {"request_uuid": reply.get("request_uuid")}
         )
         await asyncio.to_thread(self.store.bind, "plivo_request", reply["request_uuid"], run_id)
         ready = asyncio.create_task(session.connected.wait())
@@ -309,7 +417,7 @@ class PhoneAdapter:
         await self.hub.client.hangup(ids["plivo"])
         while True:
             record = await self.hub.client.call(ids["plivo"])
-            if record.get("call_status") in {"completed", "busy", "failed", "no-answer", "cancel"}:
+            if carrier_leg_ended(record):
                 break
             await asyncio.sleep(0.5)
         await evidence.json("provider/plivo-call.json", record)

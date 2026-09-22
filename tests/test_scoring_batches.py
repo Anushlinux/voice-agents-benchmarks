@@ -153,3 +153,33 @@ def test_batch_finalization_requires_shutdown_and_records_coverage_gaps(store, p
     assert result["counts"]["not_run"] == 2
     with pytest.raises(FileExistsError):
         finalize_batch(store, batch_id, tmp_path, "v1")
+
+
+@pytest.mark.asyncio
+async def test_phone_recovery_accepts_final_cdr_without_call_status(store, prepared, tmp_path):
+    plans, (first, second) = prepared
+    store.update_run(
+        first, dispatch_intent=True, context=store.run(first)["context"] | {"channel": "phone"}
+    )
+    store.update_run(second, termination_confirmed=True, evidence_sealed=True)
+    store.bind("plivo", "rejected-call", first)
+    evidence = LocalEvidence(tmp_path, plans[0].batch_id, first)
+    await evidence.json("source.json", {"original": True})
+    await evidence.finalize(first)
+    original_manifest = (evidence.directory / "manifest.json").read_bytes()
+
+    class Carrier:
+        async def hangup(self, call_id):
+            assert call_id == "rejected-call"
+
+        async def call(self, call_id):
+            return {
+                "call_uuid": call_id,
+                "hangup_cause_name": "Rejected",
+                "hangup_cause_code": 3020,
+                "end_time": "2026-09-22 06:55:12+00:00",
+            }
+
+    result = await recover(store, plans[0].batch_id, tmp_path, None, Carrier())
+    assert result == [{"run_id": str(first), "termination_confirmed": True}]
+    assert (evidence.directory / "manifest.json").read_bytes() == original_manifest

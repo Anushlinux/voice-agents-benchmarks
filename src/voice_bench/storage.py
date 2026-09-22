@@ -6,6 +6,7 @@ from datetime import UTC, datetime
 from uuid import UUID
 
 from voice_bench.evidence.local import canonical, digest
+from voice_bench.numbers import endpoint_digits
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS vb_batches (
@@ -173,10 +174,11 @@ class PostgresStore:
         with self.connect() as conn:
             conn.execute(
                 "INSERT INTO vb_routes(caller,agent,run_id) VALUES (%s,%s,%s)",
-                (caller, agent, run_id),
+                (endpoint_digits(caller) or caller, agent, run_id),
             )
 
     def bind_phone(self, caller, agent, call_id):
+        caller = endpoint_digits(caller) or caller
         with self.connect() as conn:
             row = conn.execute(
                 "SELECT * FROM vb_routes WHERE caller=%s AND agent=%s FOR UPDATE", (caller, agent)

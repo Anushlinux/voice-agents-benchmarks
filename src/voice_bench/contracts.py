@@ -169,6 +169,9 @@ class RuntimeConfig(Contract):
     public_base_url: str = ""
     caller_number: str = ""
     target_number: str = ""
+    # Optional direct SIP destination for the carrier leg, such as the target's SIP
+    # origination host. target_number stays the number registered on that trunk.
+    target_sip_uri: str = ""
     region: str = "ap-south-1"
     setup_timeout_seconds: int = Field(default=45, gt=0)
     finalize_timeout_seconds: int = Field(default=30, gt=0)

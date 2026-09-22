@@ -124,6 +124,36 @@ def test_available_matching_options_are_not_withheld(inventory):
     assert not store.run(store.id)["state"]["bookings"]
 
 
+@pytest.mark.parametrize("played_ms,accepted", [(999, True), (500, False)])
+def test_phone_booking_requires_complete_carrier_playback_then_response(
+    inventory, played_ms, accepted
+):
+    store = MemoryStore(inventory)
+    events = observations(store.id)
+    for event in events:
+        event["sequence"] += 1
+    events[1]["payload"].update(boundary="carrier_checkpoint", played_ms=played_ms)
+    events.insert(
+        0,
+        {
+            "run_id": str(store.id),
+            "source": "channel",
+            "kind": "carrier_stream_start",
+            "sequence": 0,
+            "payload": {"callId": "call", "streamId": "stream"},
+        },
+    )
+    result = book(store, events=events)
+    assert result["ok"] is accepted
+    if accepted:
+        anchors = result["reservation"]["consent_evidence"]
+        assert anchors["observation_boundary"] == "carrier_checkpoint_and_received_audio"
+        assert anchors["audio_artifacts"] == ["audio/sent.wav", "audio/received.wav"]
+        assert anchors["semantic_confirmation"] == "requires_human_review"
+    else:
+        assert not store.run(store.id)["state"]["bookings"]
+
+
 def test_idempotency_attempt_isolation_and_rejected_requests(inventory):
     store, other = MemoryStore(inventory), MemoryStore(inventory)
     first = book(store)
@@ -252,13 +282,27 @@ def test_preflight_is_unfunded_and_provider_free(custom_case):
     assert "No funded spend/minute limits" in result["blockers"]
 
 
-async def bundle(tmp_path, case, inventory, option="4", damage=None):
+async def bundle(tmp_path, case, inventory, option="4", damage=None, telephone=False):
     from voice_bench.channels.media import AudioRecorder
     from voice_bench.models import AudioFrame
 
     store = MemoryStore(inventory)
     evidence = LocalEvidence(tmp_path / "artifacts", uuid4(), store.id)
     events = observations(store.id)
+    if telephone:
+        for event in events:
+            event["sequence"] += 1
+        events[1]["payload"]["boundary"] = "carrier_checkpoint"
+        events.insert(
+            0,
+            {
+                "run_id": str(store.id),
+                "source": "channel",
+                "kind": "carrier_stream_start",
+                "sequence": 0,
+                "payload": {"callId": "call", "streamId": "stream"},
+            },
+        )
     result = book(store, option, events=events)
     for event in events:
         await evidence.emit(event["source"], event["kind"], event["payload"])
@@ -306,7 +350,7 @@ async def bundle(tmp_path, case, inventory, option="4", damage=None):
         },
     )
     recorder = AudioRecorder(evidence)
-    for name in ("played", "received"):
+    for name in ("sent" if telephone else "played", "received"):
         if damage == "missing_audio" and name == "played":
             continue
         await recorder.write(
@@ -380,6 +424,19 @@ async def test_missing_audio_remains_inconclusive(tmp_path, custom_case, invento
     assert result["verdict"] == "inconclusive"
     with pytest.raises(ValueError, match="required captured evidence"):
         import_review(directory, "false-pass", human_review(directory))
+
+
+@pytest.mark.asyncio
+async def test_phone_evidence_uses_sent_audio_and_carrier_acknowledgments(
+    tmp_path, custom_case, inventory
+):
+    directory, result = await bundle(tmp_path, import_case(*custom_case), inventory, telephone=True)
+    metric = next(m for m in result["metrics"] if m["name"] == "reservation_evidence")
+    assert metric["status"] == "met"
+    assert not (directory / "audio/played.wav").exists()
+    review = human_review(directory)
+    imported = json.loads(import_review(directory, "phone-human-v1", review).read_text())
+    assert imported["verdict"] == "pass"
 
 
 def human_review(directory, *, outcome="passed", invalid=False):
