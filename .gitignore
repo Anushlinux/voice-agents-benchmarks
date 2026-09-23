@@ -18,6 +18,9 @@ artifacts/
 configs/*.local.toml
 *.wav
 *.mp3
+# Authorized conversation audio exports accompanying the committed reports.
+!/docs/conversations/*/*/conversation.mp3
+!/docs/conversations-telephony/*/*/conversation.mp3
 *.flac
 *.pcm
 *.sqlite*
