@@ -133,7 +133,7 @@ caller through a readback. Do not deliberately invent ambiguity where the issued
 code is already clear. Exact identifier count and identity still matter.
 
 This is a design dependency, not proof that a later run falsely passed. The saved
-[run report](../report.md) describes five baseline attempts and no live hard-case
+`report.md` referenced by this historical review describes five baseline attempts and no live hard-case
 or profile results in its inventory. That report is historical evidence, not a
 fresh provider query or a new survey of every possible result directory.
 
@@ -228,3 +228,5 @@ implemented, reviewed and exercised in an explicitly authorized run.
 
 See [VALIDATION.md](VALIDATION.md) for the checks run after moving the files.
 Old validation documents in the archive retain their original dates and claims.
+
+For current published results, use the [web-call](../reports/webcall/README.md) and [telephony](../reports/telephony/README.md) reports. The local root report snapshot has been preserved at `reports/archive/local-webcall-2026-09-21.md` (excluded from Git).

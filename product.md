@@ -1,5 +1,7 @@
 # Rumik benchmark: product and current architecture
 
+**Historical implementation write-up.** For current benchmark results and recordings, use the [web-call](reports/webcall/README.md) and [telephony](reports/telephony/README.md) reports.
+
 ## 1. What we are trying to do
 
 We are building a repeatable way to test whether **hosted Rumik can carry out a user's real-world request through a spoken conversation**. The benchmark gives Rumik an assignment, lets it speak to a simulated person, records what both participants actually do, and checks whether the user's request was completed correctly and within their permissions.
@@ -33,7 +35,7 @@ The important distinction is between **a conversation that sounds successful** a
 
 This document describes the local source and saved artifacts inspected on **20 September 2026**, at source revision `59ef1c8`. It was prepared by reading local files; no new provider call, transcription or paid evaluation was performed.
 
-Some older documentation still says no live results exist or that private user-report delivery is unavailable. The local code and saved run evidence are newer: browser calls have been attempted, and a target-only report callback has been used. Those calls do **not** establish clean end-to-end qualification. See [the run report](/Users/bhaskarpandit/Documents/voice-agents-benchmarks/report.md) for their exact results.
+Some older documentation still says no live results exist or that private user-report delivery is unavailable. The local code and saved run evidence are newer: browser calls have been attempted, and a target-only report callback has been used. Those calls do **not** establish clean end-to-end qualification. See [current published results](reports/README.md) for the newer benchmark cohorts. The original local root report snapshot is preserved at `reports/archive/local-webcall-2026-09-21.md` (excluded from Git).
 
 The architecture below distinguishes current implementation, observed historical behavior and work still needed. Current source must not be projected backward onto recordings made before a fix.
 
@@ -432,4 +434,4 @@ The following are remaining proof or product gaps, not changes performed while p
 | Evidence | [local.py](/Users/bhaskarpandit/Documents/voice-agents-benchmarks/src/voice_bench/evidence/local.py) | Append-only events, seals, checksums and derived versions |
 | Grading | [scoring.py](/Users/bhaskarpandit/Documents/voice-agents-benchmarks/src/voice_bench/evaluation/scoring.py), [openai_judge.py](/Users/bhaskarpandit/Documents/voice-agents-benchmarks/src/voice_bench/evaluation/openai_judge.py) | Rules, evidence references, model constraints and review |
 | Batch accounting | [batches.py](/Users/bhaskarpandit/Documents/voice-agents-benchmarks/src/voice_bench/batches.py) | Denominators, finalization, export and recovery |
-| Latest observations | [report.md](/Users/bhaskarpandit/Documents/voice-agents-benchmarks/report.md) | All locally saved live attempts and evaluation outputs |
+| Current published results | [Benchmark reports](reports/README.md) | Web-call and telephony results with conversation evidence |

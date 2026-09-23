@@ -83,7 +83,7 @@ Develop and inspect locally. Reported calls should run on a qualified fixed Indi
 
 Long conversations fit the current single-call lifecycle within explicit time/spend limits. Completing a user task across calls, approvals, transfers between independently modeled participants, and app actions needs a task coordinator and additional adapters. They are not provided by retry or batch support. Recovery finalizes abandoned attempts; it never resumes a conversation or chooses the next business to call.
 
-Live Rumik task consumption, counterpart audio/tools and the telephone path still require qualification. `/healthz` reports process health; `/readyz` remains 503. See [running instructions](RUNNING.md) and [implementation status](IMPLEMENTATION.md).
+Live Rumik task consumption, counterpart audio/tools and the telephone path still require qualification. `/healthz` reports process health; `/readyz` remains 503. See [running instructions](RUNNING.md) and [published benchmark results](../reports/README.md).
 
 
 ## Persistence and report revisions
